@@ -1,41 +1,42 @@
-import { TimerState } from '../types/training';
+import { TimerState } from "../types/training";
 
 // Calculate total duration of a training session in seconds
 export const calculateTotalDuration = (
   hangTime: number,
   repetitions: number,
   restBetweenReps: number, // Default rest between repetitions
-  restAfterSet: number
+  restAfterSet: number,
 ): number => {
   // Time for all hangs and rests between repetitions
-  const singleSetDuration = (hangTime * repetitions) + (restBetweenReps * (repetitions - 1));
+  const singleSetDuration =
+    hangTime * repetitions + restBetweenReps * (repetitions - 1);
   // Add rest after set
   return singleSetDuration + restAfterSet;
 };
 
 // Format seconds to MM:SS display
 export const formatTime = (seconds: number): string => {
-  if (seconds < 0) return '00:00';
+  if (seconds < 0) return "00:00";
   const minutes = Math.floor(seconds / 60);
   const remainingSeconds = seconds % 60;
-  return `${minutes.toString().padStart(2, '0')}:${remainingSeconds.toString().padStart(2, '0')}`;
+  return `${minutes.toString().padStart(2, "0")}:${remainingSeconds.toString().padStart(2, "0")}`;
 };
 
 // Get state description based on timer state
 export const getStateDescription = (state: TimerState): string => {
   switch (state) {
     case TimerState.HANGING:
-      return 'HANG';
+      return "HANG";
     case TimerState.RESTING_BETWEEN_REPS:
-      return 'REST';
+      return "REST";
     case TimerState.RESTING_AFTER_SET:
-      return 'SET REST';
+      return "SET REST";
     case TimerState.PAUSED:
-      return 'PAUSED';
+      return "PAUSED";
     case TimerState.FINISHED:
-      return 'FINISHED';
+      return "FINISHED";
     default:
-      return 'READY';
+      return "READY";
   }
 };
 

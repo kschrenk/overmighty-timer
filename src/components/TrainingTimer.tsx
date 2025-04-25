@@ -1,22 +1,22 @@
-import React, { useEffect, useState } from 'react';
-import { Pause, Play, SkipForward, StopCircle } from 'lucide-react';
-import { useTraining } from '../context/TrainingContext';
-import { TimerState } from '../types/training';
-import { formatTime, getStateDescription } from '../utils/timerUtils';
+import React, { useEffect, useState } from "react";
+import { Pause, Play, SkipForward, StopCircle } from "lucide-react";
+import { useTraining } from "../context/TrainingContext";
+import { TimerState } from "../types/training";
+import { formatTime, getStateDescription } from "../utils/timerUtils";
 
 const TrainingTimer: React.FC = () => {
   const { state, dispatch } = useTraining();
   const { timerData } = state;
   const [progress, setProgress] = useState(100);
-  
+
   const currentSession = timerData.currentSession;
   const currentSet = currentSession?.sets[timerData.currentSetIndex];
-  
+
   useEffect(() => {
     if (!currentSet) return;
-    
+
     let totalTime = 0;
-    
+
     switch (timerData.timerState) {
       case TimerState.HANGING:
         totalTime = currentSet.hangTime;
@@ -30,39 +30,41 @@ const TrainingTimer: React.FC = () => {
       default:
         totalTime = 0;
     }
-    
+
     if (totalTime > 0) {
       setProgress((timerData.secondsLeft / totalTime) * 100);
     } else {
       setProgress(0);
     }
   }, [timerData.secondsLeft, timerData.timerState, currentSet]);
-  
+
   const handlePauseResume = () => {
     if (timerData.timerState === TimerState.PAUSED) {
-      dispatch({ type: 'RESUME_TIMER' });
+      dispatch({ type: "RESUME_TIMER" });
     } else {
-      dispatch({ type: 'PAUSE_TIMER' });
+      dispatch({ type: "PAUSE_TIMER" });
     }
   };
-  
+
   const handleStop = () => {
-    if (confirm('Are you sure you want to stop the timer?')) {
-      dispatch({ type: 'RESET_TIMER' });
-      dispatch({ type: 'GO_TO_HOME' });
+    if (confirm("Are you sure you want to stop the timer?")) {
+      dispatch({ type: "RESET_TIMER" });
+      dispatch({ type: "GO_TO_HOME" });
     }
   };
-  
+
   const handleSkip = () => {
-    dispatch({ type: 'TICK' });
+    dispatch({ type: "TICK" });
   };
-  
+
   if (!currentSession || !currentSet) {
     return (
       <div className="flex flex-col items-center justify-center min-h-[50vh]">
-        <p className="text-gray-600 dark:text-gray-400 mb-4">No active training session</p>
+        <p className="text-gray-600 dark:text-gray-400 mb-4">
+          No active training session
+        </p>
         <button
-          onClick={() => dispatch({ type: 'GO_TO_HOME' })}
+          onClick={() => dispatch({ type: "GO_TO_HOME" })}
           className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-200 shadow-sm"
         >
           Go to Home
@@ -70,22 +72,22 @@ const TrainingTimer: React.FC = () => {
       </div>
     );
   }
-  
+
   const circumference = 2 * Math.PI * 45;
   const strokeDashoffset = circumference - (progress / 100) * circumference;
-  
+
   const getProgressColor = () => {
     switch (timerData.timerState) {
       case TimerState.HANGING:
-        return 'stroke-red-600';
+        return "stroke-red-600";
       case TimerState.RESTING_BETWEEN_REPS:
       case TimerState.RESTING_AFTER_SET:
-        return 'stroke-green-600';
+        return "stroke-green-600";
       default:
-        return 'stroke-gray-300';
+        return "stroke-gray-300";
     }
   };
-  
+
   return (
     <div className="max-w-md mx-auto p-4 flex flex-col min-h-[calc(100vh-4rem)]">
       <div className="flex-grow flex flex-col items-center justify-center py-8">
@@ -98,7 +100,7 @@ const TrainingTimer: React.FC = () => {
               fill="none"
               strokeWidth="8"
               className="stroke-gray-200 dark:stroke-gray-700"
-              style={{ transform: 'translate(32px, 32px)' }}
+              style={{ transform: "translate(32px, 32px)" }}
             />
             <circle
               cx="128"
@@ -108,10 +110,10 @@ const TrainingTimer: React.FC = () => {
               strokeWidth="8"
               className={`${getProgressColor()} transition-all duration-200`}
               style={{
-                transform: 'translate(32px, 32px)',
+                transform: "translate(32px, 32px)",
                 strokeDasharray: circumference,
                 strokeDashoffset: strokeDashoffset,
-                strokeLinecap: 'round',
+                strokeLinecap: "round",
               }}
             />
           </svg>
@@ -124,23 +126,25 @@ const TrainingTimer: React.FC = () => {
             </div>
           </div>
         </div>
-        
+
         <div className="text-center mb-8">
           <h3 className="text-2xl font-semibold mb-2 text-gray-800 dark:text-gray-100">
             {currentSet.gripType}
           </h3>
           <p className="text-lg text-gray-600 dark:text-gray-300">
             Rep {timerData.currentRepetition + 1} / {currentSet.repetitions}
-            {currentSet.additionalWeight > 0 && 
-              <span className="ml-2 text-blue-600 dark:text-blue-400">+{currentSet.additionalWeight}kg</span>
-            }
+            {currentSet.additionalWeight > 0 && (
+              <span className="ml-2 text-blue-600 dark:text-blue-400">
+                +{currentSet.additionalWeight}kg
+              </span>
+            )}
           </p>
           <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
             Set {timerData.currentSetIndex + 1} of {currentSession.sets.length}
           </p>
         </div>
       </div>
-      
+
       <div className="flex justify-center items-center space-x-6 py-6 border-t border-gray-200 dark:border-gray-700">
         <button
           onClick={handleStop}
@@ -149,15 +153,17 @@ const TrainingTimer: React.FC = () => {
         >
           <StopCircle size={32} />
         </button>
-        
+
         <button
           onClick={handlePauseResume}
           className={`p-5 rounded-full shadow-md hover:shadow-lg transition-all duration-200 ${
             timerData.timerState === TimerState.PAUSED
-              ? 'bg-green-600 text-white hover:bg-green-700'
-              : 'bg-gray-700 text-white hover:bg-gray-800'
+              ? "bg-green-600 text-white hover:bg-green-700"
+              : "bg-gray-700 text-white hover:bg-gray-800"
           }`}
-          aria-label={timerData.timerState === TimerState.PAUSED ? 'Resume' : 'Pause'}
+          aria-label={
+            timerData.timerState === TimerState.PAUSED ? "Resume" : "Pause"
+          }
         >
           {timerData.timerState === TimerState.PAUSED ? (
             <Play size={36} />
@@ -165,7 +171,7 @@ const TrainingTimer: React.FC = () => {
             <Pause size={36} />
           )}
         </button>
-        
+
         <button
           onClick={handleSkip}
           className="p-4 rounded-full bg-blue-100 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 hover:bg-blue-200 dark:hover:bg-blue-900/30 transition-all duration-200 shadow-sm hover:shadow"

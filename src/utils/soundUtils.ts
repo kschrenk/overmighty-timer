@@ -1,44 +1,65 @@
+type WindowWithWebkit = Window & {
+  webkitAudioContext: typeof AudioContext;
+};
+
 // Sound frequencies for different states
 const FREQUENCIES = {
   startHang: 880, // A5
-  endHang: 660,   // E5
+  endHang: 660, // E5
   startRest: 440, // A4
-  endSet: 220,    // A3
-  endTraining: [440, 660, 880] // A4, E5, A5 chord
+  endSet: 220, // A3
+  endTraining: [440, 660, 880], // A4, E5, A5 chord
 };
 
 // Play a tone with given frequency
 export const playTone = (frequency: number, duration: number = 200): void => {
   try {
-    const audioContext = new (window.AudioContext || (window as any).webkitAudioContext)();
+    const AudioContextClass =
+      window.AudioContext ||
+      ("webkitAudioContext" in window
+        ? (window as WindowWithWebkit).webkitAudioContext
+        : null);
+
+    if (!AudioContextClass) {
+      throw new Error("AudioContext not supported");
+    }
+
+    const audioContext = new AudioContextClass();
+
     const oscillator = audioContext.createOscillator();
     const gainNode = audioContext.createGain();
-    
-    oscillator.type = 'sine';
+
+    oscillator.type = "sine";
     oscillator.frequency.value = frequency;
-    
+
     // Apply fade in/out to avoid clicks
     gainNode.gain.setValueAtTime(0, audioContext.currentTime);
     gainNode.gain.linearRampToValueAtTime(0.5, audioContext.currentTime + 0.01);
-    gainNode.gain.linearRampToValueAtTime(0, audioContext.currentTime + (duration / 1000));
-    
+    gainNode.gain.linearRampToValueAtTime(
+      0,
+      audioContext.currentTime + duration / 1000,
+    );
+
     oscillator.connect(gainNode);
     gainNode.connect(audioContext.destination);
-    
+
     oscillator.start();
-    oscillator.stop(audioContext.currentTime + (duration / 1000));
-    
+    oscillator.stop(audioContext.currentTime + duration / 1000);
+
     // Clean up
     setTimeout(() => {
       audioContext.close();
     }, duration + 100);
   } catch (error) {
-    console.error('Error playing sound:', error);
+    console.error("Error playing sound:", error);
   }
 };
 
 // Play a sequence of tones
-export const playToneSequence = (frequencies: number[], duration: number = 200): void => {
+export const playToneSequence = (
+  frequencies: number[],
+  duration: number = 200,
+): void => {
   frequencies.forEach((freq, index) => {
     setTimeout(() => playTone(freq, duration), index * duration);
   });
@@ -72,16 +93,16 @@ export const playEndTrainingSound = (): void => {
 // General state change notification
 export const playStateChangeSound = (state: string): void => {
   switch (state) {
-    case 'hanging':
+    case "hanging":
       playStartHangSound();
       break;
-    case 'restingBetweenReps':
+    case "restingBetweenReps":
       playEndHangSound();
       break;
-    case 'restingAfterSet':
+    case "restingAfterSet":
       playEndSetSound();
       break;
-    case 'finished':
+    case "finished":
       playEndTrainingSound();
       break;
     default:

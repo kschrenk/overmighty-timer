@@ -14,12 +14,12 @@ export interface TrainingSession {
 }
 
 export enum TimerState {
-  IDLE = 'idle',
-  HANGING = 'hanging',
-  RESTING_BETWEEN_REPS = 'restingBetweenReps',
-  RESTING_AFTER_SET = 'restingAfterSet',
-  PAUSED = 'paused',
-  FINISHED = 'finished'
+  IDLE = "idle",
+  HANGING = "hanging",
+  RESTING_BETWEEN_REPS = "restingBetweenReps",
+  RESTING_AFTER_SET = "restingAfterSet",
+  PAUSED = "paused",
+  FINISHED = "finished",
 }
 
 export interface TimerData {
