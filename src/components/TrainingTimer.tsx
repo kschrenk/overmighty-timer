@@ -92,29 +92,24 @@ const TrainingTimer: React.FC = () => {
     <div className="max-w-md mx-auto p-4 flex flex-col min-h-[calc(100vh-4rem)]">
       <div className="flex-grow flex flex-col items-center justify-center py-8">
         <div className="relative w-64 h-64 mb-6">
-          <svg className="w-full h-full -rotate-90 transform">
+          <svg className="w-full h-full">
             <circle
-              cx="128"
-              cy="128"
-              r="45"
-              fill="none"
-              strokeWidth="8"
-              className="stroke-gray-200 dark:stroke-gray-700"
-              style={{ transform: "translate(32px, 32px)" }}
+              cx="50%"
+              cy="50%"
+              r="45%"
+              strokeWidth="10"
+              stroke="gray"
+              fill="transparent"
             />
             <circle
-              cx="128"
-              cy="128"
-              r="45"
-              fill="none"
-              strokeWidth="8"
-              className={`${getProgressColor()} transition-all duration-200`}
-              style={{
-                transform: "translate(32px, 32px)",
-                strokeDasharray: circumference,
-                strokeDashoffset: strokeDashoffset,
-                strokeLinecap: "round",
-              }}
+              cx="50%"
+              cy="50%"
+              r="45%"
+              strokeWidth="10"
+              fill="transparent"
+              strokeDasharray={`${circumference}`}
+              strokeDashoffset={strokeDashoffset}
+              className={`transition-all duration-200 ${getProgressColor()}`}
             />
           </svg>
           <div className="absolute inset-0 flex flex-col items-center justify-center">
@@ -126,7 +121,6 @@ const TrainingTimer: React.FC = () => {
             </div>
           </div>
         </div>
-
         <div className="text-center mb-8">
           <h3 className="text-2xl font-semibold mb-2 text-gray-800 dark:text-gray-100">
             {currentSet.gripType}
