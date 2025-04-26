@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import { Pause, Play, SkipForward, StopCircle } from "lucide-react";
 import { useTraining } from "../context/TrainingContext";
 import { TimerState } from "../types/training";
 import { formatTime, getStateDescription } from "../utils/timerUtils";
@@ -7,7 +6,9 @@ import { formatTime, getStateDescription } from "../utils/timerUtils";
 const TrainingTimer: React.FC = () => {
   const { state, dispatch } = useTraining();
   const { timerData } = state;
+
   const [progress, setProgress] = useState(100);
+  console.log("🚀 progress:", progress);
 
   const currentSession = timerData.currentSession;
   const currentSet = currentSession?.sets[timerData.currentSetIndex];
@@ -15,7 +16,7 @@ const TrainingTimer: React.FC = () => {
   useEffect(() => {
     if (!currentSet) return;
 
-    let totalTime = 0;
+    let totalTime: number = 0;
 
     switch (timerData.timerState) {
       case TimerState.HANGING:
@@ -31,31 +32,34 @@ const TrainingTimer: React.FC = () => {
         totalTime = 0;
     }
 
-    if (totalTime > 0) {
-      setProgress((timerData.secondsLeft / totalTime) * 100);
+    if (timerData.secondsLeft > 0) {
+      setProgress(((totalTime - timerData.secondsLeft) * 100) / totalTime);
     } else {
-      setProgress(0);
+      setProgress(100); // Fill the circle when timer ends
     }
+
+    return () => setProgress(0);
   }, [timerData.secondsLeft, timerData.timerState, currentSet]);
 
-  const handlePauseResume = () => {
-    if (timerData.timerState === TimerState.PAUSED) {
-      dispatch({ type: "RESUME_TIMER" });
-    } else {
-      dispatch({ type: "PAUSE_TIMER" });
-    }
-  };
-
-  const handleStop = () => {
-    if (confirm("Are you sure you want to stop the timer?")) {
-      dispatch({ type: "RESET_TIMER" });
-      dispatch({ type: "GO_TO_HOME" });
-    }
-  };
-
-  const handleSkip = () => {
-    dispatch({ type: "TICK" });
-  };
+  // @TODO: Implement features in the next PRs
+  // const handlePauseResume = () => {
+  //   if (timerData.timerState === TimerState.PAUSED) {
+  //     dispatch({ type: "RESUME_TIMER" });
+  //   } else {
+  //     dispatch({ type: "PAUSE_TIMER" });
+  //   }
+  // };
+  //
+  // const handleStop = () => {
+  //   if (confirm("Are you sure you want to stop the timer?")) {
+  //     dispatch({ type: "RESET_TIMER" });
+  //     dispatch({ type: "GO_TO_HOME" });
+  //   }
+  // };
+  //
+  // const handleSkip = () => {
+  //   dispatch({ type: "TICK" });
+  // };
 
   if (!currentSession || !currentSet) {
     return (
@@ -73,16 +77,17 @@ const TrainingTimer: React.FC = () => {
     );
   }
 
-  const circumference = 2 * Math.PI * 45;
+  const radius = 56;
+  const circumference = 2 * Math.PI * radius;
   const strokeDashoffset = circumference - (progress / 100) * circumference;
 
   const getProgressColor = () => {
     switch (timerData.timerState) {
       case TimerState.HANGING:
-        return "stroke-red-600";
+        return "stroke-green-600";
       case TimerState.RESTING_BETWEEN_REPS:
       case TimerState.RESTING_AFTER_SET:
-        return "stroke-green-600";
+        return "stroke-red-600";
       default:
         return "stroke-gray-300";
     }
@@ -92,24 +97,30 @@ const TrainingTimer: React.FC = () => {
     <div className="max-w-md mx-auto p-4 flex flex-col min-h-[calc(100vh-4rem)]">
       <div className="flex-grow flex flex-col items-center justify-center py-8">
         <div className="relative w-64 h-64 mb-6">
-          <svg className="w-full h-full">
+          <svg className="w-full h-full" viewBox="0 0 128 128">
+            {/* Background circle */}
             <circle
-              cx="50%"
-              cy="50%"
-              r="45%"
-              strokeWidth="10"
-              stroke="gray"
+              cx={64}
+              cy={64}
+              r={radius}
+              strokeWidth={10}
+              className="stroke-gray-300 dark:stroke-gray-700"
               fill="transparent"
             />
+            {/* Progress circle */}
             <circle
-              cx="50%"
-              cy="50%"
-              r="45%"
-              strokeWidth="10"
+              cx={64}
+              cy={64}
+              r={radius}
+              strokeWidth={10}
               fill="transparent"
               strokeDasharray={`${circumference}`}
               strokeDashoffset={strokeDashoffset}
               className={`transition-all duration-200 ${getProgressColor()}`}
+              style={{
+                transform: "rotate(-90deg) scale(1, -1)",
+                transformOrigin: "center",
+              }}
             />
           </svg>
           <div className="absolute inset-0 flex flex-col items-center justify-center">
@@ -138,42 +149,39 @@ const TrainingTimer: React.FC = () => {
           </p>
         </div>
       </div>
-
-      <div className="flex justify-center items-center space-x-6 py-6 border-t border-gray-200 dark:border-gray-700">
-        <button
-          onClick={handleStop}
-          className="p-4 rounded-full bg-red-100 dark:bg-red-900/20 text-red-600 dark:text-red-400 hover:bg-red-200 dark:hover:bg-red-900/30 transition-all duration-200 shadow-sm hover:shadow"
-          aria-label="Stop timer"
-        >
-          <StopCircle size={32} />
-        </button>
-
-        <button
-          onClick={handlePauseResume}
-          className={`p-5 rounded-full shadow-md hover:shadow-lg transition-all duration-200 ${
-            timerData.timerState === TimerState.PAUSED
-              ? "bg-green-600 text-white hover:bg-green-700"
-              : "bg-gray-700 text-white hover:bg-gray-800"
-          }`}
-          aria-label={
-            timerData.timerState === TimerState.PAUSED ? "Resume" : "Pause"
-          }
-        >
-          {timerData.timerState === TimerState.PAUSED ? (
-            <Play size={36} />
-          ) : (
-            <Pause size={36} />
-          )}
-        </button>
-
-        <button
-          onClick={handleSkip}
-          className="p-4 rounded-full bg-blue-100 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 hover:bg-blue-200 dark:hover:bg-blue-900/30 transition-all duration-200 shadow-sm hover:shadow"
-          aria-label="Skip to next"
-        >
-          <SkipForward size={32} />
-        </button>
-      </div>
+      {/*<div className="flex justify-center items-center space-x-6 py-6 border-t border-gray-200 dark:border-gray-700">*/}
+      {/*  <button*/}
+      {/*    onClick={handleStop}*/}
+      {/*    className="p-4 rounded-full bg-red-100 dark:bg-red-900/20 text-red-600 dark:text-red-400 hover:bg-red-200 dark:hover:bg-red-900/30 transition-all duration-200 shadow-sm hover:shadow"*/}
+      {/*    aria-label="Stop timer"*/}
+      {/*  >*/}
+      {/*    <StopCircle size={32} />*/}
+      {/*  </button>*/}
+      {/*  <button*/}
+      {/*    onClick={handlePauseResume}*/}
+      {/*    className={`p-5 rounded-full shadow-md hover:shadow-lg transition-all duration-200 ${*/}
+      {/*      timerData.timerState === TimerState.PAUSED*/}
+      {/*        ? "bg-green-600 text-white hover:bg-green-700"*/}
+      {/*        : "bg-gray-700 text-white hover:bg-gray-800"*/}
+      {/*    }`}*/}
+      {/*    aria-label={*/}
+      {/*      timerData.timerState === TimerState.PAUSED ? "Resume" : "Pause"*/}
+      {/*    }*/}
+      {/*  >*/}
+      {/*    {timerData.timerState === TimerState.PAUSED ? (*/}
+      {/*      <Play size={36} />*/}
+      {/*    ) : (*/}
+      {/*      <Pause size={36} />*/}
+      {/*    )}*/}
+      {/*  </button>*/}
+      {/*  <button*/}
+      {/*    onClick={handleSkip}*/}
+      {/*    className="p-4 rounded-full bg-blue-100 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 hover:bg-blue-200 dark:hover:bg-blue-900/30 transition-all duration-200 shadow-sm hover:shadow"*/}
+      {/*    aria-label="Skip to next"*/}
+      {/*  >*/}
+      {/*    <SkipForward size={32} />*/}
+      {/*  </button>*/}
+      {/*</div>*/}
     </div>
   );
 };

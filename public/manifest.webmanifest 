@@ -1,6 +1,6 @@
 {
   "name": "Overmighty Timer",
-  "short_name": "OT",
+  "short_name": "Overmighty Timer",
   "start_url": ".",
   "display": "standalone",
   "background_color": "#2563eb",
