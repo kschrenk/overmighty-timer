@@ -50,7 +50,7 @@ const TrainingList: React.FC = () => {
         </h2>
         <button
           onClick={handleCreateSession}
-          className="flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-all duration-200 shadow-sm hover:shadow"
+          className="flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 transition-all duration-200 shadow-sm hover:shadow"
         >
           <PlusCircle size={20} className="mr-2" />
           Create New
@@ -64,7 +64,7 @@ const TrainingList: React.FC = () => {
           </p>
           <button
             onClick={handleCreateSession}
-            className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-all duration-200 shadow-sm hover:shadow"
+            className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 transition-all duration-200 shadow-sm hover:shadow"
           >
             Create Your First Session
           </button>
@@ -74,13 +74,13 @@ const TrainingList: React.FC = () => {
           {state.trainingSessions.map((session) => (
             <div
               key={session.id}
-              className="bg-white rounded-xl border border-gray-200 overflow-hidden shadow-sm hover:shadow-md transition-all duration-200"
+              className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 overflow-hidden shadow-sm hover:shadow-md transition-all duration-200"
             >
-              <div className="p-6 border-b border-gray-100">
-                <h3 className="text-xl font-semibold text-gray-800 mb-2">
+              <div className="p-6 border-b border-gray-100 dark:border-gray-700">
+                <h3 className="text-xl font-semibold text-gray-800 dark:text-gray-100 mb-2">
                   {session.name}
                 </h3>
-                <div className="flex items-center text-gray-500">
+                <div className="flex items-center text-gray-500 dark:text-gray-300">
                   <Clock size={16} className="mr-1" />
                   <span className="text-sm font-medium">
                     {formatTime(calculateSessionDuration(session.id))}
@@ -92,22 +92,22 @@ const TrainingList: React.FC = () => {
                 </div>
               </div>
 
-              <div className="divide-y divide-gray-100">
+              <div className="divide-y divide-gray-100 dark:divide-gray-700">
                 {session.sets.map((set, index) => (
                   <div
                     key={set.id}
-                    className="p-4 hover:bg-gray-50 transition-colors duration-200"
+                    className="p-4 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors duration-200"
                   >
                     <div className="flex justify-between items-center">
-                      <span className="font-medium text-gray-700">
+                      <span className="font-medium text-gray-700 dark:text-gray-200">
                         Set {index + 1}: {set.gripType}
                       </span>
-                      <span className="text-gray-500">
+                      <span className="text-gray-500 dark:text-gray-300">
                         {set.repetitions}x {set.hangTime}s
                       </span>
                     </div>
                     {set.additionalWeight > 0 && (
-                      <div className="text-sm text-blue-600 mt-1">
+                      <div className="text-sm text-blue-600 dark:text-blue-400 mt-1">
                         +{set.additionalWeight}kg
                       </div>
                     )}
@@ -115,24 +115,24 @@ const TrainingList: React.FC = () => {
                 ))}
               </div>
 
-              <div className="grid grid-cols-3 divide-x divide-gray-100 border-t border-gray-100">
+              <div className="grid grid-cols-3 divide-x divide-gray-100 dark:divide-gray-700 border-t border-gray-100 dark:border-gray-700">
                 <button
                   onClick={() => handleStartSession(session.id)}
-                  className="flex items-center justify-center py-4 text-green-600 hover:bg-green-50 transition-colors duration-200"
+                  className="flex items-center justify-center py-4 text-green-600 dark:text-green-400 hover:bg-green-50 dark:hover:bg-green-900 transition-colors duration-200"
                 >
                   <Play size={18} className="mr-2" />
                   Start
                 </button>
                 <button
                   onClick={() => handleEditSession(session.id)}
-                  className="flex items-center justify-center py-4 text-gray-600 hover:bg-gray-50 transition-colors duration-200"
+                  className="flex items-center justify-center py-4 text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors duration-200"
                 >
                   <Edit size={18} className="mr-2" />
                   Edit
                 </button>
                 <button
                   onClick={() => handleDeleteSession(session.id)}
-                  className="flex items-center justify-center py-4 text-red-600 hover:bg-red-50 transition-colors duration-200"
+                  className="flex items-center justify-center py-4 text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900 transition-colors duration-200"
                 >
                   <Trash size={18} className="mr-2" />
                   Delete
