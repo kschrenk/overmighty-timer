@@ -1,6 +1,7 @@
 # Overmighty Timer
 
-## Description
-Overmighty Timer is a simple timer application that allows you to set a timer for a specific duration. It provides a user-friendly interface and basic functionality to help you keep track of time.
+Overmighty Timer is a powerful timer application designed for hangboard workouts. It helps you stay on track with your training so you can get incredibly strong, send all your projects, and become a legend at the gym.
 
-![logo.jpeg](docs/assets/logo.jpeg)
+![logo.jpeg](public/icon-512.png)
+
+
