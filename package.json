@@ -1,5 +1,5 @@
 {
-  "name": "vite-react-typescript-starter",
+  "name": "overmighty-timer",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -11,12 +11,15 @@
     "lint:fix": "eslint . --fix",
     "format": "prettier . --write",
     "format:check": "prettier . --check",
-    "deploy": "firebase deploy"
+    "deploy": "firebase deploy",
+    "firebase:local": "firebase emulators:start"
   },
   "dependencies": {
+    "firebase": "^11.6.1",
     "lucide-react": "^0.344.0",
     "react": "^18.3.1",
-    "react-dom": "^18.3.1"
+    "react-dom": "^18.3.1",
+    "react-hook-form": "^7.56.2"
   },
   "devDependencies": {
     "@eslint/js": "^9.9.1",
