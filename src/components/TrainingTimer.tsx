@@ -16,7 +16,7 @@ const TrainingTimer: React.FC = () => {
   useEffect(() => {
     if (!currentSet) return;
 
-    let totalTime: number = 0;
+    let totalTime: number;
 
     switch (timerData.timerState) {
       case TimerState.HANGING:

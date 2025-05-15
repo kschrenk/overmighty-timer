@@ -42,9 +42,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       } as User);
       return;
     }
-    // Production: use Firebase auth
-    const unsubscribe = onAuthStateChanged(auth, setCurrentUser);
-    return unsubscribe;
+
+    return onAuthStateChanged(auth, setCurrentUser);
   }, []);
 
   const login = async (email: string, password: string) => {
