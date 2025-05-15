@@ -1,3 +1,10 @@
+## [1.0.1](https://github.com/kschrenk/overmighty-timer/compare/v1.0.0...v1.0.1) (2025-05-15)
+
+
+### Bug Fixes
+
+* semantic release ([#6](https://github.com/kschrenk/overmighty-timer/issues/6)) ([6becdf2](https://github.com/kschrenk/overmighty-timer/commit/6becdf2afaa5aed3b1011f6c07049c7c73c689f4))
+
 # 1.0.0 (2025-05-15)
 
 
