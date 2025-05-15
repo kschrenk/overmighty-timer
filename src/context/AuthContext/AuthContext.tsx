@@ -1,10 +1,4 @@
-import {
-  createContext,
-  useContext,
-  useEffect,
-  useState,
-  ReactNode,
-} from "react";
+import { createContext, useEffect, useState, ReactNode } from "react";
 import {
   onAuthStateChanged,
   signInWithEmailAndPassword,
@@ -12,7 +6,7 @@ import {
   signOut,
   User,
 } from "firebase/auth";
-import { auth } from "../firebase";
+import { auth } from "../../firebase";
 
 interface AuthContextType {
   currentUser: User | null;
@@ -21,28 +15,24 @@ interface AuthContextType {
   logout: () => Promise<void>;
 }
 
-const AuthContext = createContext<AuthContextType>({
+export const AuthContext = createContext<AuthContextType>({
   currentUser: null,
   login: async () => {},
   signup: async () => {},
   logout: async () => {},
 });
 
-export const useAuth = () => useContext(AuthContext);
-
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [currentUser, setCurrentUser] = useState<User | null>(null);
 
   useEffect(() => {
     if (import.meta.env.DEV) {
-      // Set dummy user in development mode
       setCurrentUser({
         uid: "dev-user",
         email: "dev@local.test",
       } as User);
       return;
     }
-
     return onAuthStateChanged(auth, setCurrentUser);
   }, []);
 
