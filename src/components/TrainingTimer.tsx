@@ -3,6 +3,7 @@ import { useTraining } from "../context/TrainingContext";
 import { TimerState } from "../types/training";
 import { formatTime, getStateDescription } from "../utils/timerUtils";
 import { Play, StopCircle, PauseCircle, PlayCircle } from "lucide-react";
+import Button from "./Button";
 
 const TrainingTimer: React.FC = () => {
   const { state, dispatch } = useTraining();
@@ -68,12 +69,12 @@ const TrainingTimer: React.FC = () => {
         <p className="text-gray-600 dark:text-gray-400 mb-4">
           No active training session
         </p>
-        <button
+        <Button
           onClick={() => dispatch({ type: "GO_TO_HOME" })}
           className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-200 shadow-sm"
         >
           Go to Home
-        </button>
+        </Button>
       </div>
     );
   }
@@ -155,44 +156,44 @@ const TrainingTimer: React.FC = () => {
       </div>
       <div className="flex justify-center items-center space-x-6 py-6 border-t border-gray-200 dark:border-gray-700">
         {isIdle && !isFinished && (
-          <button
+          <Button
             onClick={handleStart}
             className="p-5 rounded-full bg-green-600 text-white hover:bg-green-700 transition-all duration-200 shadow-md hover:shadow-lg flex items-center"
             aria-label="Start timer"
           >
             <Play size={36} className="mr-2" />
             Start
-          </button>
+          </Button>
         )}
         {isRunning && (
-          <button
+          <Button
             onClick={handlePause}
             className="p-5 rounded-full bg-yellow-500 text-white hover:bg-yellow-600 transition-all duration-200 shadow-md hover:shadow-lg flex items-center"
             aria-label="Pause timer"
           >
             <PauseCircle size={36} className="mr-2" />
             Pause
-          </button>
+          </Button>
         )}
         {isPaused && (
-          <button
+          <Button
             onClick={handleResume}
             className="p-5 rounded-full bg-green-500 text-white hover:bg-green-600 transition-all duration-200 shadow-md hover:shadow-lg flex items-center"
             aria-label="Resume timer"
           >
             <PlayCircle size={36} className="mr-2" />
             Resume
-          </button>
+          </Button>
         )}
         {!isIdle && !isFinished && (
-          <button
+          <Button
             onClick={handleStop}
             className="p-5 rounded-full bg-red-600 text-white hover:bg-red-700 transition-all duration-200 shadow-md hover:shadow-lg flex items-center"
             aria-label="Stop timer"
           >
             <StopCircle size={36} className="mr-2" />
             Stop
-          </button>
+          </Button>
         )}
       </div>
     </div>
