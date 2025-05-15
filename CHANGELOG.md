@@ -1,3 +1,10 @@
+# [1.1.0](https://github.com/kschrenk/overmighty-timer/compare/v1.0.1...v1.1.0) (2025-05-15)
+
+
+### Features
+
+* guest user and resume and stop btns ([#4](https://github.com/kschrenk/overmighty-timer/issues/4)) ([a02f8a1](https://github.com/kschrenk/overmighty-timer/commit/a02f8a1c3b3c0368e49135dca761d5fe9533d645))
+
 ## [1.0.1](https://github.com/kschrenk/overmighty-timer/compare/v1.0.0...v1.0.1) (2025-05-15)
 
 
