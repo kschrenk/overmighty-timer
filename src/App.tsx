@@ -16,6 +16,11 @@ const AppContent: React.FC = () => {
     <div className="flex flex-col min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors duration-200">
       <Header />
       <main className="flex-grow">
+        {currentUser?.uid === "test-user" && (
+          <div className="bg-yellow-100 text-yellow-800 p-2 text-center">
+            You are using the app as a Test User. Your data will not be saved.
+          </div>
+        )}
         {currentUser ? (
           <>
             {state.activeView === "list" && <TrainingList />}

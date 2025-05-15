@@ -10,7 +10,7 @@ type FormData = {
 };
 
 export default function AuthForm() {
-  const { login, signup } = useAuth();
+  const { login, signup, loginAsTestUser } = useAuth();
   const [isLogin] = useState(true);
   const [authError, setAuthError] = useState<string | null>(null);
 
@@ -36,17 +36,6 @@ export default function AuthForm() {
       } else {
         console.error("An unknown error occurred:", error);
       }
-      // if (error.code === "auth/email-already-in-use") {
-      //   setAuthError("Email is already in use.");
-      // } else if (error.code === "auth/invalid-email") {
-      //   setAuthError("Invalid email address.");
-      // } else if (error.code === "auth/wrong-password") {
-      //   setAuthError("Wrong password.");
-      // } else if (error.code === "auth/user-not-found") {
-      //   setAuthError("No user found with this email.");
-      // } else {
-      //   setAuthError("Authentication failed.");
-      // }
     }
   };
 
@@ -100,16 +89,13 @@ export default function AuthForm() {
           {isLogin ? "Login" : "Sign Up"}
         </button>
       </form>
-
-      {/*<p className="mt-4 text-center text-sm text-gray-700 dark:text-gray-300">*/}
-      {/*  {isLogin ? "Don't have an account?" : "Already have an account?"}{" "}*/}
-      {/*  <button*/}
-      {/*    className="text-blue-600 dark:text-blue-400 hover:underline"*/}
-      {/*    onClick={() => setIsLogin(!isLogin)}*/}
-      {/*  >*/}
-      {/*    {isLogin ? "Sign up here" : "Log in here"}*/}
-      {/*  </button>*/}
-      {/*</p>*/}
+      <button
+        type="button"
+        onClick={loginAsTestUser}
+        className="w-full mt-12 border border-gray-400 dark:border-gray-500 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200 py-2 rounded hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+      >
+        Continue as Test User
+      </button>
     </div>
   );
 }

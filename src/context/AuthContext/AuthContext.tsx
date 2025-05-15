@@ -13,6 +13,7 @@ interface AuthContextType {
   login: (email: string, password: string) => Promise<void>;
   signup: (email: string, password: string) => Promise<void>;
   logout: () => Promise<void>;
+  loginAsTestUser: () => void;
 }
 
 export const AuthContext = createContext<AuthContextType>({
@@ -20,6 +21,7 @@ export const AuthContext = createContext<AuthContextType>({
   login: async () => {},
   signup: async () => {},
   logout: async () => {},
+  loginAsTestUser: () => {},
 });
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
@@ -66,8 +68,17 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     await signOut(auth);
   };
 
+  const loginAsTestUser = () => {
+    setCurrentUser({
+      uid: "test-user",
+      email: "test@guest.local",
+    } as User);
+  };
+
   return (
-    <AuthContext.Provider value={{ currentUser, login, signup, logout }}>
+    <AuthContext.Provider
+      value={{ currentUser, login, signup, logout, loginAsTestUser }}
+    >
       {children}
     </AuthContext.Provider>
   );
