@@ -61,7 +61,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const logout = async () => {
-    if (import.meta.env.DEV) {
+    if (import.meta.env.DEV || currentUser?.uid === "test-user") {
       setCurrentUser(null);
       return;
     }
