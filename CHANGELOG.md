@@ -1,0 +1,14 @@
+# 1.0.0 (2025-05-15)
+
+
+### Bug Fixes
+
+* fix training status ([9dc6947](https://github.com/kschrenk/overmighty-timer/commit/9dc6947e00fad7c0aa07a4567e097a57f55a6144))
+
+
+### Features
+
+* add auth ([fc12bcd](https://github.com/kschrenk/overmighty-timer/commit/fc12bcd0054610283ed4520a37585149e089222a))
+* add auth setup ([29e97f0](https://github.com/kschrenk/overmighty-timer/commit/29e97f023b9cd6053079d9fd811083036c6828a6))
+* add semantic release ([#5](https://github.com/kschrenk/overmighty-timer/issues/5)) ([c25d619](https://github.com/kschrenk/overmighty-timer/commit/c25d61976c3d749745231add050e40207c81de6b))
+* pwa ([65b8bc5](https://github.com/kschrenk/overmighty-timer/commit/65b8bc5eb56462ed0af53b1fb67dd853d961aae3))
