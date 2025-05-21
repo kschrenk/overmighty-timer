@@ -2,9 +2,11 @@ export interface Set {
   id: string;
   gripType: string;
   hangTime: number; // in seconds
+  rest: number; // rest between reps, in seconds
   repetitions: number;
   restAfter: number; // in seconds
   additionalWeight: number; // in kg
+  setRepetitions?: number; // default to 1 if not set
 }
 
 export interface TrainingSession {
@@ -26,6 +28,8 @@ export interface TimerData {
   currentSession: TrainingSession | null;
   currentSetIndex: number;
   currentRepetition: number;
+  currentSetRepetition?: number; // new
   timerState: TimerState;
   secondsLeft: number;
+  previousTimerState?: TimerState;
 }

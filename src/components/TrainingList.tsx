@@ -49,7 +49,7 @@ const TrainingList: React.FC = () => {
       <div className="max-w-4xl mx-auto p-6">
         {currentUser ? (
           <div className="flex justify-between pb-12">
-            <p className="dark:text-white">Welcome {currentUser.email}!</p>
+            <p className="dark:text-white">Welcome {currentUser.email}</p>
             <button
               className="dark:text-gray-300 cursor-pointer"
               onClick={logout}
@@ -112,9 +112,16 @@ const TrainingList: React.FC = () => {
                       className="p-4 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors duration-200"
                     >
                       <div className="flex justify-between items-center">
-                        <span className="font-medium text-gray-700 dark:text-gray-200">
-                          Set {index + 1}: {set.gripType}
-                        </span>
+                        <div>
+                          <span className="font-medium text-gray-700 dark:text-gray-200">
+                            Set {index + 1}: {set.gripType}
+                          </span>
+                          {set.setRepetitions && set.setRepetitions > 1 && (
+                            <span className="ml-2 text-xs text-purple-600 dark:text-purple-400">
+                              ({set.setRepetitions}x)
+                            </span>
+                          )}
+                        </div>
                         <span className="text-gray-500 dark:text-gray-300">
                           {set.repetitions}x {set.hangTime}s
                         </span>

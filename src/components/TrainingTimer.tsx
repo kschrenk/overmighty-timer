@@ -9,38 +9,41 @@ const TrainingTimer: React.FC = () => {
   const { state, dispatch } = useTraining();
   const { timerData } = state;
 
+  const [currentTime, setCurrentTime] = useState<number | null>(null);
   const [progress, setProgress] = useState(100);
 
   const currentSession = timerData.currentSession;
   const currentSet = currentSession?.sets[timerData.currentSetIndex];
 
+  // Effect 1: Update totalTime when timer state or set changes
   useEffect(() => {
     if (!currentSet) return;
 
-    let totalTime: number;
-
     switch (timerData.timerState) {
       case TimerState.HANGING:
-        totalTime = currentSet.hangTime;
+        setCurrentTime(currentSet.hangTime);
         break;
       case TimerState.RESTING_BETWEEN_REPS:
-        totalTime = 5;
+        setCurrentTime(currentSet.rest);
         break;
       case TimerState.RESTING_AFTER_SET:
-        totalTime = currentSet.restAfter;
+        setCurrentTime(currentSet.restAfter);
         break;
+      // Do NOT set totalTime to null for other states (e.g., PAUSED)
       default:
-        totalTime = 0;
+        // Do nothing, keep previous totalTime
+        break;
     }
+  }, [timerData.timerState, currentSet]);
 
-    if (timerData.secondsLeft > 0 && totalTime > 0) {
-      setProgress(((totalTime - timerData.secondsLeft) * 100) / totalTime);
-    } else {
-      setProgress(100);
+  // Effect 2: Update progress only when secondsLeft changes
+  useEffect(() => {
+    if (currentTime && currentTime > 0) {
+      const rawProgress =
+        ((currentTime - timerData.secondsLeft) * 100) / currentTime;
+      setProgress(Math.max(0, Math.min(100, rawProgress)));
     }
-
-    return () => setProgress(0);
-  }, [timerData.secondsLeft, timerData.timerState, currentSet]);
+  }, [timerData.secondsLeft, currentTime]);
 
   const handleStart = () => {
     if (currentSession) {
@@ -56,7 +59,7 @@ const TrainingTimer: React.FC = () => {
   };
 
   const handlePause = () => {
-    dispatch({ type: "PAUSE_TIMER" });
+    dispatch({ type: "PAUSE_TIMER", payload: timerData.timerState });
   };
 
   const handleResume = () => {

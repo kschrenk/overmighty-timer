@@ -21,7 +21,7 @@ const Header: React.FC = () => {
   };
 
   return (
-    <header className="bg-gradient-to-r from-blue-600 to-blue-800 dark:from-blue-800 dark:to-blue-900 text-white p-4 shadow-md">
+    <header className="bg-gradient-to-r from-blue-600 to-blue-800 dark:from-gray-800 dark:to-gray-900 text-white p-4 shadow-md">
       <div className="max-w-5xl mx-auto flex items-center justify-between">
         <div className="flex items-center">
           {state.activeView !== "list" && (
