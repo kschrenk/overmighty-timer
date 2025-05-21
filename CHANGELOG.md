@@ -1,3 +1,10 @@
+# [1.2.0](https://github.com/kschrenk/overmighty-timer/compare/v1.1.0...v1.2.0) (2025-05-21)
+
+
+### Features
+
+* pause timer ([#7](https://github.com/kschrenk/overmighty-timer/issues/7)) ([33fd006](https://github.com/kschrenk/overmighty-timer/commit/33fd00623ec0666edaff897437b2ffb6fabf8d0b))
+
 # [1.1.0](https://github.com/kschrenk/overmighty-timer/compare/v1.0.1...v1.1.0) (2025-05-15)
 
 
