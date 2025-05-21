@@ -3,6 +3,7 @@ import { Copy, Plus, Save, Trash2 } from "lucide-react";
 import { useTraining } from "../context/TrainingContext";
 import { Set } from "../types/training";
 import { generateId } from "../utils/timerUtils";
+import { SetRepetitionsInput } from "./SetRepetitionsInput";
 
 const TrainingEditor: React.FC = () => {
   const { state, dispatch } = useTraining();
@@ -40,6 +41,7 @@ const TrainingEditor: React.FC = () => {
       id: generateId(),
       gripType: "New Grip",
       hangTime: 10,
+      rest: 3,
       repetitions: 3,
       restAfter: 60,
       additionalWeight: 0,
@@ -212,6 +214,24 @@ const TrainingEditor: React.FC = () => {
                     className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-800 dark:text-gray-100"
                   />
                 </div>
+                <div>
+                  <label
+                    htmlFor={`rest-${set.id}`}
+                    className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1"
+                  >
+                    Rest (seconds)
+                  </label>
+                  <input
+                    type="number"
+                    id={`rest-${set.id}`}
+                    value={set.rest}
+                    min="1"
+                    onChange={(e) =>
+                      handleSetChange(set.id, "rest", parseInt(e.target.value))
+                    }
+                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-800 dark:text-gray-100"
+                  />
+                </div>
 
                 <div>
                   <label
@@ -284,6 +304,15 @@ const TrainingEditor: React.FC = () => {
                     className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-800 dark:text-gray-100"
                   />
                 </div>
+                <SetRepetitionsInput
+                  value={set.setRepetitions ?? 1}
+                  min={1}
+                  max={10}
+                  id={`setRepetitions-${set.id}`}
+                  onChange={(val) =>
+                    handleSetChange(set.id, "setRepetitions", val)
+                  }
+                />
               </div>
             </div>
           ))}

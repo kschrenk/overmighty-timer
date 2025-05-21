@@ -9,8 +9,6 @@ import { Set, TrainingSession, TimerState, TimerData } from "../types/training";
 import { playStateChangeSound } from "../utils/soundUtils";
 import { generateId } from "../utils/timerUtils";
 
-const DEFAULT_REST_BETWEEN_REPS = 5;
-
 const DEFAULT_TRAINING_SESSIONS: TrainingSession[] = [
   {
     id: "1",
@@ -19,15 +17,17 @@ const DEFAULT_TRAINING_SESSIONS: TrainingSession[] = [
       {
         id: "1-1",
         gripType: "Jug",
-        hangTime: 10,
-        repetitions: 3,
-        restAfter: 60,
+        hangTime: 7,
+        rest: 3,
+        repetitions: 6,
+        restAfter: 180,
         additionalWeight: 0,
       },
       {
         id: "1-2",
         gripType: "Half Crimp",
-        hangTime: 7,
+        hangTime: 10,
+        rest: 3,
         repetitions: 3,
         restAfter: 60,
         additionalWeight: 0,
@@ -42,6 +42,7 @@ const DEFAULT_TRAINING_SESSIONS: TrainingSession[] = [
         id: "2-1",
         gripType: "Half Crimp",
         hangTime: 10,
+        rest: 3,
         repetitions: 5,
         restAfter: 90,
         additionalWeight: 5,
@@ -50,6 +51,7 @@ const DEFAULT_TRAINING_SESSIONS: TrainingSession[] = [
         id: "2-2",
         gripType: "Open Hand",
         hangTime: 7,
+        rest: 3,
         repetitions: 5,
         restAfter: 90,
         additionalWeight: 5,
@@ -58,6 +60,7 @@ const DEFAULT_TRAINING_SESSIONS: TrainingSession[] = [
         id: "2-3",
         gripType: "Three Finger Pocket",
         hangTime: 7,
+        rest: 3,
         repetitions: 4,
         restAfter: 90,
         additionalWeight: 0,
@@ -70,6 +73,7 @@ const initialTimerData: TimerData = {
   currentSession: null,
   currentSetIndex: 0,
   currentRepetition: 0,
+  currentSetRepetition: 0,
   timerState: TimerState.IDLE,
   secondsLeft: 0,
 };
@@ -91,7 +95,7 @@ const initialState: TrainingContextState = {
 type TrainingAction =
   | { type: "START_SESSION"; payload: TrainingSession }
   | { type: "TICK" }
-  | { type: "PAUSE_TIMER" }
+  | { type: "PAUSE_TIMER"; payload: TimerState }
   | { type: "RESUME_TIMER" }
   | { type: "RESET_TIMER" }
   | { type: "GO_TO_HOME" }
@@ -116,6 +120,7 @@ const trainingReducer = (
           currentSession: action.payload,
           currentSetIndex: 0,
           currentRepetition: 0,
+          currentSetRepetition: 0,
           timerState: TimerState.HANGING,
           secondsLeft: action.payload.sets[0].hangTime,
         },
@@ -123,6 +128,8 @@ const trainingReducer = (
       };
 
     case "TICK": {
+      console.log("🚀", { secondsLeft: state.timerData.secondsLeft });
+
       if (state.timerData.secondsLeft > 1) {
         return {
           ...state,
@@ -133,46 +140,75 @@ const trainingReducer = (
         };
       }
 
-      const { currentSession, currentSetIndex, currentRepetition, timerState } =
-        state.timerData;
+      console.log("🚀 go to next case");
 
+      const {
+        currentSession,
+        currentSetIndex,
+        currentRepetition,
+        currentSetRepetition = 0,
+        timerState,
+      } = state.timerData;
       if (!currentSession) return state;
 
       const currentSet = currentSession.sets[currentSetIndex];
+      const setRepetitions = currentSet.setRepetitions ?? 1;
 
       if (timerState === TimerState.HANGING) {
         if (currentRepetition < currentSet.repetitions - 1) {
+          // Next rep in this set repetition
           return {
             ...state,
             timerData: {
               ...state.timerData,
               currentRepetition: currentRepetition + 1,
               timerState: TimerState.RESTING_BETWEEN_REPS,
-              secondsLeft: DEFAULT_REST_BETWEEN_REPS,
+              secondsLeft: currentSet.rest,
             },
           };
-        } else {
-          if (currentSetIndex < currentSession.sets.length - 1) {
-            return {
-              ...state,
-              timerData: {
-                ...state.timerData,
-                timerState: TimerState.RESTING_AFTER_SET,
-                secondsLeft: currentSet.restAfter,
-              },
-            };
-          } else {
-            return {
-              ...state,
-              timerData: {
-                ...state.timerData,
-                timerState: TimerState.FINISHED,
-                secondsLeft: 0,
-              },
-            };
-          }
         }
-      } else if (timerState === TimerState.RESTING_BETWEEN_REPS) {
+        // Finished all reps in this set repetition
+        if (currentSetRepetition < setRepetitions - 1) {
+          // Repeat the set
+          return {
+            ...state,
+            timerData: {
+              ...state.timerData,
+              currentRepetition: 0,
+              currentSetRepetition: currentSetRepetition + 1,
+              timerState: TimerState.RESTING_AFTER_SET,
+              secondsLeft: currentSet.restAfter,
+            },
+          };
+        }
+
+        if (currentSetIndex < currentSession.sets.length - 1) {
+          // Move to next set
+          return {
+            ...state,
+            timerData: {
+              ...state.timerData,
+              currentSetIndex: currentSetIndex + 1,
+              currentRepetition: 0,
+              currentSetRepetition: 0,
+              timerState: TimerState.RESTING_AFTER_SET,
+              secondsLeft: currentSession.sets[currentSetIndex + 1].restAfter,
+            },
+          };
+        }
+
+        // Finished all sets
+        return {
+          ...state,
+          timerData: {
+            ...state.timerData,
+            timerState: TimerState.FINISHED,
+            secondsLeft: 0,
+          },
+        };
+      }
+
+      if (timerState === TimerState.RESTING_BETWEEN_REPS) {
         return {
           ...state,
           timerData: {
@@ -181,29 +217,46 @@ const trainingReducer = (
             secondsLeft: currentSet.hangTime,
           },
         };
-      } else if (timerState === TimerState.RESTING_AFTER_SET) {
-        const nextSetIndex = currentSetIndex + 1;
-        if (nextSetIndex < currentSession.sets.length) {
+      }
+
+      if (timerState === TimerState.RESTING_AFTER_SET) {
+        // After rest, either repeat set or move to next set
+        if (currentSetRepetition < setRepetitions && currentRepetition === 0) {
+          // Start next set repetition
           return {
             ...state,
             timerData: {
               ...state.timerData,
-              currentSetIndex: nextSetIndex,
-              currentRepetition: 0,
               timerState: TimerState.HANGING,
-              secondsLeft: currentSession.sets[nextSetIndex].hangTime,
-            },
-          };
-        } else {
-          return {
-            ...state,
-            timerData: {
-              ...state.timerData,
-              timerState: TimerState.FINISHED,
-              secondsLeft: 0,
+              secondsLeft: currentSet.hangTime,
             },
           };
         }
+
+        if (currentSetIndex < currentSession.sets.length - 1) {
+          // Move to next set
+          return {
+            ...state,
+            timerData: {
+              ...state.timerData,
+              currentSetIndex: currentSetIndex + 1,
+              currentRepetition: 0,
+              currentSetRepetition: 0,
+              timerState: TimerState.HANGING,
+              secondsLeft: currentSession.sets[currentSetIndex + 1].hangTime,
+            },
+          };
+        }
+
+        // Finished all sets
+        return {
+          ...state,
+          timerData: {
+            ...state.timerData,
+            timerState: TimerState.FINISHED,
+            secondsLeft: 0,
+          },
+        };
       }
 
       return state;
@@ -215,31 +268,18 @@ const trainingReducer = (
         timerData: {
           ...state.timerData,
           timerState: TimerState.PAUSED,
+          previousTimerState: action.payload,
         },
       };
 
     case "RESUME_TIMER": {
-      const previousState =
-        state.timerData.timerState === TimerState.PAUSED
-          ? state.timerData.currentRepetition === 0 &&
-            state.timerData.secondsLeft ===
-              state.timerData.currentSession?.sets[
-                state.timerData.currentSetIndex
-              ].hangTime
-            ? TimerState.HANGING
-            : state.timerData.currentRepetition <
-                (state.timerData.currentSession?.sets[
-                  state.timerData.currentSetIndex
-                ].repetitions || 0)
-              ? TimerState.RESTING_BETWEEN_REPS
-              : TimerState.RESTING_AFTER_SET
-          : state.timerData.timerState;
+      const previousState = state.timerData.previousTimerState;
 
       return {
         ...state,
         timerData: {
           ...state.timerData,
-          timerState: previousState,
+          timerState: previousState ?? state.timerData.timerState,
         },
       };
     }
@@ -267,6 +307,7 @@ const trainingReducer = (
             id: generateId(),
             gripType: "Jug",
             hangTime: 10,
+            rest: 3,
             repetitions: 3,
             restAfter: 60,
             additionalWeight: 0,
