@@ -64,7 +64,7 @@ const TrainingList: React.FC = () => {
           </h2>
           <button
             onClick={handleCreateSession}
-            className="flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 transition-all duration-200 shadow-sm hover:shadow"
+            className="flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 transition-all duration-200 shadow-xs hover:shadow-sm"
           >
             <PlusCircle size={20} className="mr-2" />
             Create New
@@ -77,7 +77,7 @@ const TrainingList: React.FC = () => {
             </p>
             <button
               onClick={handleCreateSession}
-              className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 transition-all duration-200 shadow-sm hover:shadow"
+              className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 transition-all duration-200 shadow-xs hover:shadow-sm"
             >
               Create Your First Session
             </button>
@@ -87,7 +87,7 @@ const TrainingList: React.FC = () => {
             {state.trainingSessions.map((session) => (
               <div
                 key={session.id}
-                className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 overflow-hidden shadow-sm hover:shadow-md transition-all duration-200"
+                className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 overflow-hidden shadow-xs hover:shadow-md transition-all duration-200"
               >
                 <div className="p-6 border-b border-gray-100 dark:border-gray-700">
                   <h3 className="text-xl font-semibold text-gray-800 dark:text-gray-100 mb-2">

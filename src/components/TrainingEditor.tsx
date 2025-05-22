@@ -108,7 +108,7 @@ const TrainingEditor: React.FC = () => {
           id="sessionName"
           value={sessionName}
           onChange={handleNameChange}
-          className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-900 dark:text-gray-100"
+          className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-xs focus:outline-hidden focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-900 dark:text-gray-100"
           placeholder="Enter session name"
         />
       </div>
@@ -118,7 +118,7 @@ const TrainingEditor: React.FC = () => {
           Sets
         </h3>
         <button
-          className="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+          className="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-hidden focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
           onClick={handleAddSet}
         >
           <Plus size={16} className="mr-1" />
@@ -143,7 +143,7 @@ const TrainingEditor: React.FC = () => {
           {editingSession.sets.map((set, index) => (
             <div
               key={set.id}
-              className="bg-white dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-700 p-4 shadow-sm"
+              className="bg-white dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-700 p-4 shadow-xs"
             >
               <div className="flex justify-between items-center mb-3">
                 <h4 className="font-medium text-gray-800 dark:text-gray-100">
@@ -187,7 +187,7 @@ const TrainingEditor: React.FC = () => {
                     onChange={(e) =>
                       handleSetChange(set.id, "gripType", e.target.value)
                     }
-                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-800 dark:text-gray-100"
+                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-xs focus:outline-hidden focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-800 dark:text-gray-100"
                   />
                 </div>
 
@@ -211,7 +211,7 @@ const TrainingEditor: React.FC = () => {
                         parseInt(e.target.value),
                       )
                     }
-                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-800 dark:text-gray-100"
+                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-xs focus:outline-hidden focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-800 dark:text-gray-100"
                   />
                 </div>
                 <div>
@@ -229,7 +229,7 @@ const TrainingEditor: React.FC = () => {
                     onChange={(e) =>
                       handleSetChange(set.id, "rest", parseInt(e.target.value))
                     }
-                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-800 dark:text-gray-100"
+                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-xs focus:outline-hidden focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-800 dark:text-gray-100"
                   />
                 </div>
 
@@ -253,7 +253,7 @@ const TrainingEditor: React.FC = () => {
                         parseInt(e.target.value),
                       )
                     }
-                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-800 dark:text-gray-100"
+                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-xs focus:outline-hidden focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-800 dark:text-gray-100"
                   />
                 </div>
 
@@ -277,7 +277,7 @@ const TrainingEditor: React.FC = () => {
                         parseInt(e.target.value),
                       )
                     }
-                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-800 dark:text-gray-100"
+                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-xs focus:outline-hidden focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-800 dark:text-gray-100"
                   />
                 </div>
 
@@ -301,7 +301,7 @@ const TrainingEditor: React.FC = () => {
                         parseInt(e.target.value),
                       )
                     }
-                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-800 dark:text-gray-100"
+                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-xs focus:outline-hidden focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-800 dark:text-gray-100"
                   />
                 </div>
                 <SetRepetitionsInput

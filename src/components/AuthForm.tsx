@@ -40,7 +40,7 @@ export default function AuthForm() {
   };
 
   return (
-    <div className="max-w-sm mx-auto mt-10 p-6 bg-white dark:bg-gray-800 rounded shadow">
+    <div className="max-w-sm mx-auto mt-10 p-6 bg-white dark:bg-gray-800 rounded-sm shadow-sm">
       <h2 className="text-2xl font-semibold mb-4 text-center text-gray-900 dark:text-gray-100">
         {isLogin ? "Login" : "Sign Up"}
       </h2>
@@ -52,7 +52,7 @@ export default function AuthForm() {
           <input
             type="email"
             {...register("email", { required: "Email is required" })}
-            className="w-full px-3 py-2 border rounded bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-600"
+            className="w-full px-3 py-2 border rounded-sm bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-600"
           />
           {errors.email && (
             <p className="text-red-500 text-sm">{errors.email.message}</p>
@@ -72,7 +72,7 @@ export default function AuthForm() {
                 message: "Password must be at least 6 characters",
               },
             })}
-            className="w-full px-3 py-2 border rounded bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-600"
+            className="w-full px-3 py-2 border rounded-sm bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-600"
           />
           {errors.password && (
             <p className="text-red-500 text-sm">{errors.password.message}</p>
@@ -84,7 +84,7 @@ export default function AuthForm() {
         <button
           type="submit"
           disabled={isSubmitting}
-          className="w-full bg-blue-600 dark:bg-blue-500 text-white py-2 rounded hover:bg-blue-700 dark:hover:bg-blue-600"
+          className="w-full bg-blue-600 dark:bg-blue-500 text-white py-2 rounded-sm hover:bg-blue-700 dark:hover:bg-blue-600"
         >
           {isLogin ? "Login" : "Sign Up"}
         </button>
@@ -92,7 +92,7 @@ export default function AuthForm() {
       <button
         type="button"
         onClick={loginAsTestUser}
-        className="w-full mt-12 border border-gray-400 dark:border-gray-500 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200 py-2 rounded hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+        className="w-full mt-12 border border-gray-400 dark:border-gray-500 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200 py-2 rounded-sm hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
       >
         Continue as Test User
       </button>

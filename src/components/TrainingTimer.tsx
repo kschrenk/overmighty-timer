@@ -74,7 +74,7 @@ const TrainingTimer: React.FC = () => {
         </p>
         <Button
           onClick={() => dispatch({ type: "GO_TO_HOME" })}
-          className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-200 shadow-sm"
+          className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-200 shadow-xs"
         >
           Go to Home
         </Button>
@@ -105,7 +105,7 @@ const TrainingTimer: React.FC = () => {
 
   return (
     <div className="max-w-md mx-auto p-4 flex flex-col min-h-[calc(100vh-4rem)]">
-      <div className="flex-grow flex flex-col items-center justify-center py-8">
+      <div className="grow flex flex-col items-center justify-center py-8">
         <div className="relative w-64 h-64 mb-6">
           <svg className="w-full h-full" viewBox="0 0 128 128">
             <circle
