@@ -1,6 +1,5 @@
 import React from "react";
 import { TrainingProvider, useTraining } from "./context/TrainingContext";
-import { ThemeProvider } from "./context/ThemeContext";
 import Header from "./components/Header";
 import TrainingList from "./components/TrainingList";
 import TrainingTimer from "./components/TrainingTimer";
@@ -39,13 +38,11 @@ const AppContent: React.FC = () => {
 
 function App() {
   return (
-    <ThemeProvider>
-      <AuthProvider>
-        <TrainingProvider>
-          <AppContent />
-        </TrainingProvider>
-      </AuthProvider>
-    </ThemeProvider>
+    <AuthProvider>
+      <TrainingProvider>
+        <AppContent />
+      </TrainingProvider>
+    </AuthProvider>
   );
 }
 
