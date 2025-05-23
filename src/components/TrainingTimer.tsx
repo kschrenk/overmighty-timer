@@ -1,49 +1,46 @@
 import React, { useEffect, useState } from "react";
-import { useTraining } from "../context/TrainingContext";
-import { TimerState } from "../types/training";
+import { useTraining } from "../context/TrainingContext/TrainingContext";
+import { TimerState, TimerViewEnum } from "../types/training";
 import { formatTime, getStateDescription } from "../utils/timerUtils";
-import { Play, StopCircle, PauseCircle, PlayCircle } from "lucide-react";
-import Button from "./Button";
+import { PauseCircle, Play, PlayCircle, StopCircle } from "lucide-react";
+import { toast } from "sonner";
+import { Button } from "@/components/ui/button";
+import { Progress } from "@/components/ui/progress";
+import { buildStyles, CircularProgressbar } from "react-circular-progressbar";
 
 const TrainingTimer: React.FC = () => {
   const { state, dispatch } = useTraining();
   const { timerData } = state;
 
-  const [currentTime, setCurrentTime] = useState<number | null>(null);
   const [progress, setProgress] = useState(100);
 
   const currentSession = timerData.currentSession;
   const currentSet = currentSession?.sets[timerData.currentSetIndex];
 
-  // Effect 1: Update totalTime when timer state or set changes
   useEffect(() => {
-    if (!currentSet) return;
+    const { timerState } = timerData;
+    const currentTime =
+      timerState === TimerState.HANGING
+        ? currentSet?.hangTime
+        : timerState === TimerState.RESTING_BETWEEN_REPS
+          ? currentSet?.rest
+          : timerState === TimerState.RESTING_AFTER_SET
+            ? currentSet?.restAfter
+            : null;
 
-    switch (timerData.timerState) {
-      case TimerState.HANGING:
-        setCurrentTime(currentSet.hangTime);
-        break;
-      case TimerState.RESTING_BETWEEN_REPS:
-        setCurrentTime(currentSet.rest);
-        break;
-      case TimerState.RESTING_AFTER_SET:
-        setCurrentTime(currentSet.restAfter);
-        break;
-      // Do NOT set totalTime to null for other states (e.g., PAUSED)
-      default:
-        // Do nothing, keep previous totalTime
-        break;
-    }
-  }, [timerData.timerState, currentSet]);
+    if (!currentTime) return;
 
-  // Effect 2: Update progress only when secondsLeft changes
-  useEffect(() => {
-    if (currentTime && currentTime > 0) {
-      const rawProgress =
-        ((currentTime - timerData.secondsLeft) * 100) / currentTime;
-      setProgress(Math.max(0, Math.min(100, rawProgress)));
-    }
-  }, [timerData.secondsLeft, currentTime]);
+    const rawProgress =
+      ((currentTime - timerData.secondsLeft) * 100) / currentTime;
+
+    setProgress(Math.max(0, Math.min(100, rawProgress)));
+  }, [
+    currentSet?.hangTime,
+    currentSet?.rest,
+    currentSet?.restAfter,
+    state.timerData.timerState,
+    timerData,
+  ]);
 
   const handleStart = () => {
     if (currentSession) {
@@ -52,10 +49,16 @@ const TrainingTimer: React.FC = () => {
   };
 
   const handleStop = () => {
-    if (window.confirm("Are you sure you want to stop the timer?")) {
-      dispatch({ type: "RESET_TIMER" });
-      dispatch({ type: "GO_TO_HOME" });
-    }
+    toast("Are you sure you want to stop the timer?", {
+      position: "top-center",
+      action: {
+        label: "OK",
+        onClick: () => {
+          dispatch({ type: "RESET_TIMER" });
+          dispatch({ type: "GO_TO_HOME" });
+        },
+      },
+    });
   };
 
   const handlePause = () => {
@@ -74,7 +77,7 @@ const TrainingTimer: React.FC = () => {
         </p>
         <Button
           onClick={() => dispatch({ type: "GO_TO_HOME" })}
-          className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-200 shadow-sm"
+          className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-200 shadow-xs"
         >
           Go to Home
         </Button>
@@ -82,19 +85,21 @@ const TrainingTimer: React.FC = () => {
     );
   }
 
-  const radius = 56;
-  const circumference = 2 * Math.PI * radius;
-  const strokeDashoffset = circumference - (progress / 100) * circumference;
-
-  const getProgressColor = () => {
+  const getProgressColor = (timerView: TimerViewEnum) => {
     switch (timerData.timerState) {
       case TimerState.HANGING:
-        return "stroke-green-600";
+        return timerView === TimerViewEnum.BAR
+          ? "bg-green-600"
+          : "var(--color-green-600)";
       case TimerState.RESTING_BETWEEN_REPS:
       case TimerState.RESTING_AFTER_SET:
-        return "stroke-red-600";
+        return timerView === TimerViewEnum.BAR
+          ? "bg-red-600"
+          : "var(--color-red-600)";
       default:
-        return "stroke-gray-300";
+        return timerView === TimerViewEnum.BAR
+          ? "bg-gray-300"
+          : "var(--color-gray-300)";
     }
   };
 
@@ -105,42 +110,48 @@ const TrainingTimer: React.FC = () => {
 
   return (
     <div className="max-w-md mx-auto p-4 flex flex-col min-h-[calc(100vh-4rem)]">
-      <div className="flex-grow flex flex-col items-center justify-center py-8">
-        <div className="relative w-64 h-64 mb-6">
-          <svg className="w-full h-full" viewBox="0 0 128 128">
-            <circle
-              cx={64}
-              cy={64}
-              r={radius}
-              strokeWidth={10}
-              className="stroke-gray-300 dark:stroke-gray-700"
-              fill="transparent"
+      <div className="grow flex flex-col items-center justify-center py-8 relative">
+        {currentSession.timerView === TimerViewEnum.BAR ? (
+          <>
+            <Progress
+              value={progress}
+              classNameIndicator={getProgressColor(currentSession.timerView)}
+              className={"absolute inset-0 h-full rounded-none"}
             />
-            <circle
-              cx={64}
-              cy={64}
-              r={radius}
-              strokeWidth={10}
-              fill="transparent"
-              strokeDasharray={`${circumference}`}
-              strokeDashoffset={strokeDashoffset}
-              className={`transition-all duration-200 ${getProgressColor()}`}
-              style={{
-                transform: "rotate(-90deg) scale(1, -1)",
-                transformOrigin: "center",
-              }}
-            />
-          </svg>
-          <div className="absolute inset-0 flex flex-col items-center justify-center">
-            <div className="text-5xl font-bold mb-2 text-gray-800 dark:text-gray-100">
-              {formatTime(timerData.secondsLeft)}
+            <div className="relative w-64 h-64 mb-6 z-50">
+              <div className="absolute inset-0 flex flex-col items-center justify-center">
+                <div className="text-7xl font-bold mb-2 text-gray-800 dark:text-gray-100">
+                  {formatTime(timerData.secondsLeft)}
+                </div>
+                <div className="text-sm uppercase font-medium tracking-wider text-gray-600 dark:text-gray-400">
+                  {getStateDescription(timerData.timerState)}
+                </div>
+              </div>
             </div>
-            <div className="text-sm uppercase font-medium tracking-wider text-gray-600 dark:text-gray-400">
+          </>
+        ) : currentSession.timerView === TimerViewEnum.CIRCLE ? (
+          <>
+            <CircularProgressbar
+              className={"mb-4"}
+              maxValue={100}
+              minValue={0}
+              value={progress}
+              text={formatTime(timerData.secondsLeft)}
+              styles={buildStyles({
+                trailColor: "var(--color-gray-600)",
+                pathColor: getProgressColor(currentSession.timerView),
+                textColor: "var(--color-foreground)",
+                pathTransition:
+                  progress === 0 ? "none" : "stroke-dashoffset 0.5s ease 0s",
+              })}
+              counterClockwise
+            />
+            <div className="text-base uppercase font-medium tracking-wider text-gray-600 dark:text-gray-400">
               {getStateDescription(timerData.timerState)}
             </div>
-          </div>
-        </div>
-        <div className="text-center mb-8">
+          </>
+        ) : null}
+        <div className="text-center mb-8 z-50">
           <h3 className="text-2xl font-semibold mb-2 text-gray-800 dark:text-gray-100">
             {currentSet.gripType}
           </h3>
@@ -171,27 +182,28 @@ const TrainingTimer: React.FC = () => {
         {isRunning && (
           <Button
             onClick={handlePause}
-            className="p-5 rounded-full bg-yellow-500 text-white hover:bg-yellow-600 transition-all duration-200 shadow-md hover:shadow-lg flex items-center"
             aria-label="Pause timer"
+            variant={"default"}
           >
-            <PauseCircle size={36} className="mr-2" />
+            <PauseCircle size={36} />
             Pause
           </Button>
         )}
         {isPaused && (
           <Button
             onClick={handleResume}
-            className="p-5 rounded-full bg-green-500 text-white hover:bg-green-600 transition-all duration-200 shadow-md hover:shadow-lg flex items-center"
             aria-label="Resume timer"
+            variant={"default"}
+            className={"dark:bg-yellow-500 dark:text-white"}
           >
-            <PlayCircle size={36} className="mr-2" />
+            <PlayCircle size={36} />
             Resume
           </Button>
         )}
         {!isIdle && !isFinished && (
           <Button
+            variant={"destructive"}
             onClick={handleStop}
-            className="p-5 rounded-full bg-red-600 text-white hover:bg-red-700 transition-all duration-200 shadow-md hover:shadow-lg flex items-center"
             aria-label="Stop timer"
           >
             <StopCircle size={36} className="mr-2" />

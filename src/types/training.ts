@@ -9,10 +9,16 @@ export interface Set {
   setRepetitions?: number; // default to 1 if not set
 }
 
+export enum TimerViewEnum {
+  CIRCLE = "circle",
+  BAR = "bar",
+}
+
 export interface TrainingSession {
   id: string;
   name: string;
   sets: Set[];
+  timerView?: TimerViewEnum;
 }
 
 export enum TimerState {

@@ -5,10 +5,13 @@ import React, {
   useEffect,
   useState,
 } from "react";
-import { TrainingSession, TimerState, TimerData } from "../types/training";
-import { playStateChangeSound } from "../utils/soundUtils";
-import { DEFAULT_TRAINING_SESSIONS } from "../data/defaultTrainingSessions";
-import { TrainingAction, trainingReducer } from "../reducers/trainingReducer";
+import { TrainingSession, TimerState, TimerData } from "@/types/training";
+import { playStateChangeSound } from "@/utils/soundUtils";
+import { TrainingAction, trainingReducer } from "@/reducers/trainingReducer";
+import { useAuth } from "@/context/AuthContext";
+
+import { DEFAULT_TRAINING_SESSIONS } from "@/data/defaultTrainingSessions";
+import { fetchTrainingSessions } from "@/lib/firestoreUtils";
 
 export const initialTimerData: TimerData = {
   currentSession: null,
@@ -27,7 +30,7 @@ export interface TrainingContextState {
 }
 
 const initialState: TrainingContextState = {
-  trainingSessions: DEFAULT_TRAINING_SESSIONS,
+  trainingSessions: [],
   timerData: initialTimerData,
   activeView: "list",
   editingSession: null,
@@ -36,17 +39,55 @@ const initialState: TrainingContextState = {
 export const TrainingContext = createContext<{
   state: TrainingContextState;
   dispatch: React.Dispatch<TrainingAction>;
+  loading: boolean;
 }>({
   state: initialState,
   dispatch: () => null,
+  loading: false,
 });
 
 export const TrainingProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
+  const { currentUser } = useAuth();
+
   const [state, dispatch] = useReducer(trainingReducer, initialState);
   const [timerId, setTimerId] = useState<number | null>(null);
 
+  const [loading, setLoading] = useState<boolean>(true);
+
+  // load training sessions from firestore
+  useEffect(() => {
+    if (!currentUser) return;
+
+    const loadTrainingSessions = async () => {
+      try {
+        setLoading(true);
+        const sessions = await fetchTrainingSessions(currentUser.uid);
+        if (sessions) {
+          dispatch({ type: "SET_SESSIONS", payload: sessions });
+        }
+      } catch (error: unknown) {
+        if (error instanceof Error) {
+          console.error(error);
+        }
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    if (currentUser.uid === "test-user") {
+      dispatch({
+        type: "SET_SESSIONS",
+        payload: DEFAULT_TRAINING_SESSIONS,
+      });
+      return;
+    }
+
+    loadTrainingSessions();
+  }, [currentUser]);
+
+  // set interval for timer
   useEffect(() => {
     if (timerId !== null) {
       window.clearInterval(timerId);
@@ -72,15 +113,24 @@ export const TrainingProvider: React.FC<{ children: React.ReactNode }> = ({
     };
   }, [state.timerData.timerState]);
 
+  // play sound
   useEffect(() => {
     playStateChangeSound(state.timerData.timerState);
   }, [state.timerData.timerState]);
 
   return (
-    <TrainingContext.Provider value={{ state, dispatch }}>
+    <TrainingContext.Provider value={{ state, dispatch, loading }}>
       {children}
     </TrainingContext.Provider>
   );
 };
 
-export const useTraining = () => useContext(TrainingContext);
+export const useTraining = () => {
+  const context = useContext(TrainingContext);
+
+  if (!context) {
+    throw new Error(`useTraining() must be used within the context`);
+  }
+
+  return context;
+};

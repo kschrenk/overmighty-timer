@@ -1,11 +1,22 @@
 import React from "react";
 import { Clock, Edit, Play, PlusCircle, Trash } from "lucide-react";
-import { useTraining } from "../context/TrainingContext";
+import { useTraining } from "../context/TrainingContext/TrainingContext";
 import { formatTime } from "../utils/timerUtils";
 import { useAuth } from "../context/AuthContext";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
+import { Card } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Skeleton } from "@/components/ui/skeleton";
+import { toast } from "sonner";
+import { removeTrainingSession } from "@/lib/firestoreUtils";
 
 const TrainingList: React.FC = () => {
-  const { state, dispatch } = useTraining();
+  const { state, dispatch, loading } = useTraining();
   const { currentUser, logout } = useAuth();
 
   const handleStartSession = (sessionId: string) => {
@@ -23,9 +34,19 @@ const TrainingList: React.FC = () => {
   };
 
   const handleDeleteSession = (sessionId: string) => {
-    if (confirm("Are you sure you want to delete this training session?")) {
-      dispatch({ type: "DELETE_SESSION", payload: sessionId });
-    }
+    toast("Are you sure you want to delete this training session?", {
+      closeButton: true,
+      duration: 5000,
+      action: {
+        label: "OK",
+        onClick: () => {
+          if (!currentUser) return;
+          removeTrainingSession(currentUser.uid, sessionId).then(() => {
+            dispatch({ type: "DELETE_SESSION", payload: sessionId });
+          });
+        },
+      },
+    });
   };
 
   const handleCreateSession = () => {
@@ -38,7 +59,7 @@ const TrainingList: React.FC = () => {
 
     return session.sets.reduce((total, set) => {
       const hangTime = set.hangTime * set.repetitions;
-      const restBetweenReps = 5 * (set.repetitions - 1);
+      const restBetweenReps = set.rest * (set.repetitions - 1);
       const restAfterSet = set.restAfter;
       return total + hangTime + restBetweenReps + restAfterSet;
     }, 0);
@@ -62,103 +83,122 @@ const TrainingList: React.FC = () => {
           <h2 className="text-2xl font-bold text-gray-800 dark:text-gray-100">
             Sessions
           </h2>
-          <button
-            onClick={handleCreateSession}
-            className="flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 transition-all duration-200 shadow-sm hover:shadow"
-          >
+          <Button variant="outline" onClick={handleCreateSession}>
             <PlusCircle size={20} className="mr-2" />
             Create New
-          </button>
+          </Button>
         </div>
-        {state.trainingSessions.length === 0 ? (
+        {loading ? (
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {[...Array(3)].map((_, index) => (
+              <Card
+                key={index}
+                className="dark:bg-gray-800 border dark:border-gray-700 p-4 animate-pulse"
+              >
+                <Skeleton className="h-8 w-3/4 mb-2" />
+                <Skeleton className="h-4 w-1/2 mb-4" />
+                <div className="space-y-2">
+                  <Skeleton className="h-4" />
+                  <Skeleton className="h-4" />
+                  <Skeleton className="h-4" />
+                </div>
+              </Card>
+            ))}
+          </div>
+        ) : state.trainingSessions.length === 0 ? (
           <div className="text-center py-16 bg-gray-50 dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-600">
             <p className="text-gray-600 dark:text-gray-200 mb-6">
               No training sessions available
             </p>
-            <button
-              onClick={handleCreateSession}
-              className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 transition-all duration-200 shadow-sm hover:shadow"
-            >
+            <Button variant="default" onClick={handleCreateSession}>
               Create Your First Session
-            </button>
+            </Button>
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {state.trainingSessions.map((session) => (
-              <div
-                key={session.id}
-                className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 overflow-hidden shadow-sm hover:shadow-md transition-all duration-200"
-              >
-                <div className="p-6 border-b border-gray-100 dark:border-gray-700">
-                  <h3 className="text-xl font-semibold text-gray-800 dark:text-gray-100 mb-2">
-                    {session.name}
-                  </h3>
-                  <div className="flex items-center text-gray-500 dark:text-gray-300">
-                    <Clock size={16} className="mr-1" />
-                    <span className="text-sm font-medium">
-                      {formatTime(calculateSessionDuration(session.id))}
-                    </span>
-                    <span className="mx-2">•</span>
-                    <span className="text-sm font-medium">
-                      {session.sets.length} sets
-                    </span>
-                  </div>
-                </div>
-
-                <div className="divide-y divide-gray-100 dark:divide-gray-700">
-                  {session.sets.map((set, index) => (
-                    <div
-                      key={set.id}
-                      className="p-4 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors duration-200"
-                    >
-                      <div className="flex justify-between items-center">
-                        <div>
-                          <span className="font-medium text-gray-700 dark:text-gray-200">
-                            Set {index + 1}: {set.gripType}
+            {state.trainingSessions.map((session, index) => (
+              <Accordion key={session.id} type={"multiple"}>
+                <AccordionItem value={`session-${index}`}>
+                  <Card className="dark:bg-gray-800 border dark:border-gray-700 p-4">
+                    <AccordionTrigger className="py-0">
+                      <div>
+                        <h3 className="text-xl font-semibold text-gray-800 dark:text-gray-100 mb-2">
+                          {session.name}
+                        </h3>
+                        <div className="flex items-center text-gray-500 dark:text-gray-300">
+                          <Clock size={16} className="mr-1" />
+                          <span className="text-sm font-medium">
+                            {formatTime(calculateSessionDuration(session.id))}
                           </span>
-                          {set.setRepetitions && set.setRepetitions > 1 && (
-                            <span className="ml-2 text-xs text-purple-600 dark:text-purple-400">
-                              ({set.setRepetitions}x)
-                            </span>
-                          )}
+                          <span className="mx-2">•</span>
+                          <span className="text-sm font-medium">
+                            {`${session.sets.length} set${session.sets.length > 1 ? "s" : ""}`}
+                          </span>
+                          <span className="mx-2">•</span>
+                          <span className="text-sm font-medium text-chart-2">
+                            {session.timerView}
+                          </span>
                         </div>
-                        <span className="text-gray-500 dark:text-gray-300">
-                          {set.repetitions}x {set.hangTime}s
-                        </span>
                       </div>
-                      {set.additionalWeight > 0 && (
-                        <div className="text-sm text-blue-600 dark:text-blue-400 mt-1">
-                          +{set.additionalWeight}kg
-                        </div>
-                      )}
-                    </div>
-                  ))}
-                </div>
-
-                <div className="grid grid-cols-3 divide-x divide-gray-100 dark:divide-gray-700 border-t border-gray-100 dark:border-gray-700">
-                  <button
-                    onClick={() => handleStartSession(session.id)}
-                    className="flex items-center justify-center py-4 text-green-600 dark:text-green-400 hover:bg-green-50 dark:hover:bg-green-900 transition-colors duration-200"
-                  >
-                    <Play size={18} className="mr-2" />
-                    Start
-                  </button>
-                  <button
-                    onClick={() => handleEditSession(session.id)}
-                    className="flex items-center justify-center py-4 text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors duration-200"
-                  >
-                    <Edit size={18} className="mr-2" />
-                    Edit
-                  </button>
-                  <button
-                    onClick={() => handleDeleteSession(session.id)}
-                    className="flex items-center justify-center py-4 text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900 transition-colors duration-200"
-                  >
-                    <Trash size={18} className="mr-2" />
-                    Delete
-                  </button>
-                </div>
-              </div>
+                    </AccordionTrigger>
+                    <AccordionContent className="pb-0">
+                      <div className="divide-y divide-gray-100 dark:divide-gray-700">
+                        {session.sets.map((set, index) => (
+                          <div
+                            key={set.id}
+                            className="py-4 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors duration-200"
+                          >
+                            <div className="flex justify-between items-center">
+                              <div>
+                                <span className="font-medium text-gray-700 dark:text-gray-200">
+                                  Set {index + 1}: {set.gripType}
+                                </span>
+                                {set.setRepetitions &&
+                                  set.setRepetitions > 1 && (
+                                    <span className="ml-2 text-xs text-purple-600 dark:text-purple-400">
+                                      ({set.setRepetitions}x)
+                                    </span>
+                                  )}
+                              </div>
+                              <span className="text-gray-500 dark:text-gray-300">
+                                {set.repetitions}x {set.hangTime}s
+                              </span>
+                            </div>
+                            {set.additionalWeight > 0 && (
+                              <div className="text-sm text-blue-600 dark:text-blue-400 mt-1">
+                                +{set.additionalWeight}kg
+                              </div>
+                            )}
+                          </div>
+                        ))}
+                      </div>
+                      <div className="grid grid-cols-3 divide-x divide-gray-100 dark:divide-gray-700 border-t border-gray-100 dark:border-gray-700">
+                        <button
+                          onClick={() => handleStartSession(session.id)}
+                          className="flex items-center justify-center py-4 text-green-600 dark:text-green-400 hover:bg-green-50 dark:hover:bg-green-900 transition-colors duration-200"
+                        >
+                          <Play size={18} className="mr-2" />
+                          Start
+                        </button>
+                        <button
+                          onClick={() => handleEditSession(session.id)}
+                          className="flex items-center justify-center py-4 text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors duration-200"
+                        >
+                          <Edit size={18} className="mr-2" />
+                          Edit
+                        </button>
+                        <button
+                          onClick={() => handleDeleteSession(session.id)}
+                          className="flex items-center justify-center py-4 text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900 transition-colors duration-200"
+                        >
+                          <Trash size={18} className="mr-2" />
+                          Delete
+                        </button>
+                      </div>
+                    </AccordionContent>
+                  </Card>
+                </AccordionItem>
+              </Accordion>
             ))}
           </div>
         )}

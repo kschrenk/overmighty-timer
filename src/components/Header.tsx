@@ -1,11 +1,9 @@
 import React from "react";
-import { ArrowLeft, Moon, Sun } from "lucide-react";
-import { useTraining } from "../context/TrainingContext";
-import { useTheme } from "../context/ThemeContext";
+import { ArrowLeft } from "lucide-react";
+import { useTraining } from "../context/TrainingContext/TrainingContext";
 
 const Header: React.FC = () => {
   const { state, dispatch } = useTraining();
-  const { theme, toggleTheme } = useTheme();
 
   const getTitle = () => {
     switch (state.activeView) {
@@ -21,7 +19,7 @@ const Header: React.FC = () => {
   };
 
   return (
-    <header className="bg-gradient-to-r from-blue-600 to-blue-800 dark:from-gray-800 dark:to-gray-900 text-white p-4 shadow-md">
+    <header className="bg-linear-to-r from-blue-600 to-blue-800 dark:from-gray-900 dark:to-gray-800 text-white p-4 shadow-md">
       <div className="max-w-5xl mx-auto flex items-center justify-between">
         <div className="flex items-center">
           {state.activeView !== "list" && (
@@ -35,15 +33,6 @@ const Header: React.FC = () => {
           )}
           <h1 className="text-2xl font-bold tracking-tight">{getTitle()}</h1>
         </div>
-        <button
-          onClick={toggleTheme}
-          className="p-2 rounded-full hover:bg-blue-700 dark:hover:bg-blue-800 transition-colors duration-200"
-          aria-label={
-            theme === "light" ? "Switch to dark mode" : "Switch to light mode"
-          }
-        >
-          {theme === "light" ? <Moon size={20} /> : <Sun size={20} />}
-        </button>
       </div>
     </header>
   );
