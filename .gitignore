@@ -20,3 +20,4 @@ dist-ssr
 *.sw?
 .firebase
 .env*
+emulator-data

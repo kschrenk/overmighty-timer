@@ -12,6 +12,8 @@ import {
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
+import { toast } from "sonner";
+import { removeTrainingSession } from "@/lib/firestoreUtils";
 
 const TrainingList: React.FC = () => {
   const { state, dispatch, loading } = useTraining();
@@ -32,9 +34,19 @@ const TrainingList: React.FC = () => {
   };
 
   const handleDeleteSession = (sessionId: string) => {
-    if (confirm("Are you sure you want to delete this training session?")) {
-      dispatch({ type: "DELETE_SESSION", payload: sessionId });
-    }
+    toast("Are you sure you want to delete this training session?", {
+      closeButton: true,
+      duration: 5000,
+      action: {
+        label: "OK",
+        onClick: () => {
+          if (!currentUser) return;
+          removeTrainingSession(currentUser.uid, sessionId).then(() => {
+            dispatch({ type: "DELETE_SESSION", payload: sessionId });
+          });
+        },
+      },
+    });
   };
 
   const handleCreateSession = () => {
@@ -120,7 +132,11 @@ const TrainingList: React.FC = () => {
                           </span>
                           <span className="mx-2">•</span>
                           <span className="text-sm font-medium">
-                            {session.sets.length} sets
+                            {`${session.sets.length} set${session.sets.length > 1 ? "s" : ""}`}
+                          </span>
+                          <span className="mx-2">•</span>
+                          <span className="text-sm font-medium text-chart-2">
+                            {session.timerView}
                           </span>
                         </div>
                       </div>
@@ -130,7 +146,7 @@ const TrainingList: React.FC = () => {
                         {session.sets.map((set, index) => (
                           <div
                             key={set.id}
-                            className="p-4 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors duration-200"
+                            className="py-4 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors duration-200"
                           >
                             <div className="flex justify-between items-center">
                               <div>

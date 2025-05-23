@@ -1,7 +1,30 @@
 // firebase/firestoreUtils.ts
-import { collection, doc, getDocs, setDoc } from "firebase/firestore";
+import {
+  collection,
+  doc,
+  getDocs,
+  setDoc,
+  deleteDoc,
+} from "firebase/firestore";
 import { db } from "@/firebase";
 import { TrainingSession } from "@/types/training";
+
+export async function removeTrainingSession(userId: string, sessionId: string) {
+  try {
+    const sessionDocRef = doc(
+      db,
+      "users",
+      userId,
+      "trainingSessions",
+      sessionId,
+    );
+    await deleteDoc(sessionDocRef);
+    console.log(`Training session with ID ${sessionId} deleted successfully.`);
+  } catch (error) {
+    console.error("Error deleting training session:", error);
+    throw error; // Re-throw the error to be handled by the caller
+  }
+}
 
 export async function fetchTrainingSessions(
   userId: string,

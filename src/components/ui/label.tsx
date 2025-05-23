@@ -19,4 +19,16 @@ function Label({
   );
 }
 
-export { Label };
+function LabelWrapper({
+  className,
+  children,
+  ...props
+}: React.ComponentProps<"div">) {
+  return (
+    <div className={cn("grid gap-1.5", className)} {...props}>
+      {children}
+    </div>
+  );
+}
+
+export { Label, LabelWrapper };

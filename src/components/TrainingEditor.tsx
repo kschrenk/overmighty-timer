@@ -1,13 +1,22 @@
 import React, { useState } from "react";
 import { Copy, Plus, Save, Trash2 } from "lucide-react";
 import { useTraining } from "../context/TrainingContext/TrainingContext";
-import { Set } from "../types/training";
+import { Set, TimerViewEnum } from "../types/training";
 import { generateId } from "../utils/timerUtils";
 import { SetRepetitionsInput } from "./SetRepetitionsInput";
 import { useAuth } from "@/context/AuthContext";
 import { updateTrainingSession } from "@/lib/firestoreUtils";
-import { Label } from "./ui/label";
+import { Label, LabelWrapper } from "./ui/label";
 import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { toast } from "sonner";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 const TrainingEditor: React.FC = () => {
   const { currentUser } = useAuth();
@@ -15,6 +24,9 @@ const TrainingEditor: React.FC = () => {
   const { editingSession } = state;
 
   const [sessionName, setSessionName] = useState(editingSession?.name || "");
+  const [timerView, setTimerView] = useState<TimerViewEnum>(
+    editingSession?.timerView ?? TimerViewEnum.CIRCLE,
+  );
 
   const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSessionName(e.target.value);
@@ -36,6 +48,7 @@ const TrainingEditor: React.FC = () => {
     const updatedSession = {
       ...editingSession,
       name: sessionName,
+      timerView,
     };
 
     updateTrainingSession({
@@ -66,9 +79,13 @@ const TrainingEditor: React.FC = () => {
   };
 
   const handleCancel = () => {
-    if (confirm("Discard changes?")) {
-      dispatch({ type: "GO_TO_HOME" });
-    }
+    toast("Discard changes?", {
+      closeButton: true,
+      action: {
+        label: "OK",
+        onClick: () => dispatch({ type: "GO_TO_HOME" }),
+      },
+    });
   };
 
   const handleSetChange = (
@@ -111,7 +128,7 @@ const TrainingEditor: React.FC = () => {
 
   return (
     <div className="mx-auto px-4 py-6 max-w-lg">
-      <div className="grid items-center gap-1.5 mb-6">
+      <LabelWrapper className={"pb-6"}>
         <Label htmlFor="sessionName">Session Name</Label>
         <Input
           type="text"
@@ -120,21 +137,24 @@ const TrainingEditor: React.FC = () => {
           onChange={handleNameChange}
           placeholder="Enter session name"
         />
+      </LabelWrapper>
+      <div className={"mb-6"}>
+        <LabelWrapper>
+          <Label>Timer View</Label>
+          <Select
+            defaultValue={timerView}
+            onValueChange={(value) => setTimerView(value as TimerViewEnum)}
+          >
+            <SelectTrigger className="w-full">
+              <SelectValue placeholder="Timer View" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value={TimerViewEnum.CIRCLE}>Circle</SelectItem>
+              <SelectItem value={TimerViewEnum.BAR}>Bar</SelectItem>
+            </SelectContent>
+          </Select>
+        </LabelWrapper>
       </div>
-
-      <div className="mb-4 flex justify-between items-center">
-        <h3 className="text-lg font-medium text-gray-800 dark:text-gray-200">
-          Sets
-        </h3>
-        <button
-          className="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-hidden focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
-          onClick={handleAddSet}
-        >
-          <Plus size={16} className="mr-1" />
-          Add Set
-        </button>
-      </div>
-
       {editingSession.sets.length === 0 ? (
         <div className="text-center py-8 bg-gray-50 dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-700">
           <p className="text-gray-600 dark:text-gray-300 mb-4">
@@ -327,21 +347,20 @@ const TrainingEditor: React.FC = () => {
           ))}
         </div>
       )}
-
-      <div className="mt-6 flex space-x-3">
-        <button
-          className="flex-1 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors duration-200 flex items-center justify-center"
-          onClick={handleSave}
-        >
+      <div className={"py-4 flex justify-center"}>
+        <Button onClick={handleAddSet} variant={"secondary"}>
+          <Plus size={16} />
+          Add Set
+        </Button>
+      </div>
+      <div className="mt-12 flex space-x-3 justify-end">
+        <Button variant={"destructive"} onClick={handleCancel}>
+          Cancel
+        </Button>
+        <Button onClick={handleSave}>
           <Save size={18} className="mr-2" />
           Save Session
-        </button>
-        <button
-          className="flex-1 bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-100 px-4 py-2 rounded-lg hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors duration-200"
-          onClick={handleCancel}
-        >
-          Cancel
-        </button>
+        </Button>
       </div>
     </div>
   );

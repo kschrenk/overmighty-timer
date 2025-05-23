@@ -42,7 +42,7 @@ export const trainingReducer = (
       };
 
     case "TICK": {
-      if (state.timerData.secondsLeft > 1) {
+      if (state.timerData.secondsLeft > 0) {
         return {
           ...state,
           timerData: {
@@ -268,7 +268,7 @@ export const trainingReducer = (
       }
     }
 
-    case "DELETE_SESSION":
+    case "DELETE_SESSION": {
       return {
         ...state,
         trainingSessions: state.trainingSessions.filter(
@@ -277,6 +277,7 @@ export const trainingReducer = (
         activeView: "list",
         editingSession: null,
       };
+    }
 
     case "ADD_SET":
       if (!state.editingSession) return state;
