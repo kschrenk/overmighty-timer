@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useTraining } from "../context/TrainingContext";
+import { useTraining } from "../context/TrainingContext/TrainingContext";
 import { TimerState } from "../types/training";
 import { formatTime, getStateDescription } from "../utils/timerUtils";
 import { Play, StopCircle, PauseCircle, PlayCircle } from "lucide-react";

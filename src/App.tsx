@@ -1,11 +1,15 @@
 import React from "react";
-import { TrainingProvider, useTraining } from "./context/TrainingContext";
+import {
+  TrainingProvider,
+  useTraining,
+} from "./context/TrainingContext/TrainingContext";
 import Header from "./components/Header";
 import TrainingList from "./components/TrainingList";
 import TrainingTimer from "./components/TrainingTimer";
 import TrainingEditor from "./components/TrainingEditor";
 import { AuthProvider, useAuth } from "./context/AuthContext";
 import AuthForm from "./components/AuthForm";
+import { ThemeProvider } from "./context/ThemeProvider/ThemeProvider";
 
 const AppContent: React.FC = () => {
   const { state } = useTraining();
@@ -40,7 +44,9 @@ function App() {
   return (
     <AuthProvider>
       <TrainingProvider>
-        <AppContent />
+        <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
+          <AppContent />
+        </ThemeProvider>
       </TrainingProvider>
     </AuthProvider>
   );

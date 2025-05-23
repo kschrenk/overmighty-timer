@@ -26,37 +26,17 @@ export const AuthContext = createContext<AuthContextType>({
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [currentUser, setCurrentUser] = useState<User | null>(null);
+  console.log("🚀", { currentUser });
 
   useEffect(() => {
-    if (import.meta.env.DEV) {
-      setCurrentUser({
-        uid: "dev-user",
-        email: "dev@local.test",
-      } as User);
-      return;
-    }
     return onAuthStateChanged(auth, setCurrentUser);
   }, []);
 
   const login = async (email: string, password: string) => {
-    if (import.meta.env.DEV) {
-      setCurrentUser({
-        uid: "dev-user",
-        email: "dev@local.test",
-      } as User);
-      return;
-    }
     await signInWithEmailAndPassword(auth, email, password);
   };
 
   const signup = async (email: string, password: string) => {
-    if (import.meta.env.DEV) {
-      setCurrentUser({
-        uid: "dev-user",
-        email: "dev@local.test",
-      } as User);
-      return;
-    }
     await createUserWithEmailAndPassword(auth, email, password);
   };
 

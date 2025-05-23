@@ -24,6 +24,7 @@ export default function AuthForm() {
     setAuthError(null);
     try {
       if (isLogin) {
+        console.log("🚀 onSubmit:", { data });
         await login(data.email, data.password);
       } else {
         await signup(data.email, data.password);

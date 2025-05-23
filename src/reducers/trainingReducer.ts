@@ -1,7 +1,7 @@
 import {
   initialTimerData,
   TrainingContextState,
-} from "../context/TrainingContext";
+} from "../context/TrainingContext/TrainingContext";
 import { Set, TimerState, TrainingSession } from "../types/training";
 import { generateId } from "../utils/timerUtils";
 
@@ -13,6 +13,7 @@ export type TrainingAction =
   | { type: "RESET_TIMER" }
   | { type: "GO_TO_HOME" }
   | { type: "CREATE_SESSION" }
+  | { type: "SET_SESSIONS"; payload: TrainingSession[] }
   | { type: "EDIT_SESSION"; payload: TrainingSession }
   | { type: "SAVE_SESSION"; payload: TrainingSession }
   | { type: "DELETE_SESSION"; payload: string }
@@ -206,6 +207,10 @@ export const trainingReducer = (
         timerData: initialTimerData,
         editingSession: null,
       };
+
+    case "SET_SESSIONS": {
+      return { ...state, trainingSessions: action.payload };
+    }
 
     case "CREATE_SESSION": {
       const newSession: TrainingSession = {

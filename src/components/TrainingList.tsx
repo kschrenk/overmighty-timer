@@ -1,6 +1,6 @@
 import React from "react";
 import { Clock, Edit, Play, PlusCircle, Trash } from "lucide-react";
-import { useTraining } from "../context/TrainingContext";
+import { useTraining } from "../context/TrainingContext/TrainingContext";
 import { formatTime } from "../utils/timerUtils";
 import { useAuth } from "../context/AuthContext";
 import {
@@ -10,9 +10,11 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { Card } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Skeleton } from "@/components/ui/skeleton";
 
 const TrainingList: React.FC = () => {
-  const { state, dispatch } = useTraining();
+  const { state, dispatch, loading } = useTraining();
   const { currentUser, logout } = useAuth();
 
   const handleStartSession = (sessionId: string) => {
@@ -45,7 +47,7 @@ const TrainingList: React.FC = () => {
 
     return session.sets.reduce((total, set) => {
       const hangTime = set.hangTime * set.repetitions;
-      const restBetweenReps = 5 * (set.repetitions - 1);
+      const restBetweenReps = set.rest * (set.repetitions - 1);
       const restAfterSet = set.restAfter;
       return total + hangTime + restBetweenReps + restAfterSet;
     }, 0);
@@ -69,25 +71,36 @@ const TrainingList: React.FC = () => {
           <h2 className="text-2xl font-bold text-gray-800 dark:text-gray-100">
             Sessions
           </h2>
-          <button
-            onClick={handleCreateSession}
-            className="flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 transition-all duration-200 shadow-xs hover:shadow-sm"
-          >
+          <Button variant="outline" onClick={handleCreateSession}>
             <PlusCircle size={20} className="mr-2" />
             Create New
-          </button>
+          </Button>
         </div>
-        {state.trainingSessions.length === 0 ? (
+        {loading ? (
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {[...Array(3)].map((_, index) => (
+              <Card
+                key={index}
+                className="dark:bg-gray-800 border dark:border-gray-700 p-4 animate-pulse"
+              >
+                <Skeleton className="h-8 w-3/4 mb-2" />
+                <Skeleton className="h-4 w-1/2 mb-4" />
+                <div className="space-y-2">
+                  <Skeleton className="h-4" />
+                  <Skeleton className="h-4" />
+                  <Skeleton className="h-4" />
+                </div>
+              </Card>
+            ))}
+          </div>
+        ) : state.trainingSessions.length === 0 ? (
           <div className="text-center py-16 bg-gray-50 dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-600">
             <p className="text-gray-600 dark:text-gray-200 mb-6">
               No training sessions available
             </p>
-            <button
-              onClick={handleCreateSession}
-              className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 transition-all duration-200 shadow-xs hover:shadow-sm"
-            >
+            <Button variant="default" onClick={handleCreateSession}>
               Create Your First Session
-            </button>
+            </Button>
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">

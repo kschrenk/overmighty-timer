@@ -4,4 +4,7 @@ Overmighty Timer is a powerful timer application designed for hangboard workouts
 
 ![logo.jpeg](public/icon-512.png)
 
+## TODOS
+
+- [ ] Learn firebase emulators: https://firebase.google.com/docs/emulator-suite?hl=de&authuser=0
 

@@ -1,6 +1,6 @@
 import React from "react";
 import { ArrowLeft } from "lucide-react";
-import { useTraining } from "../context/TrainingContext";
+import { useTraining } from "../context/TrainingContext/TrainingContext";
 
 const Header: React.FC = () => {
   const { state, dispatch } = useTraining();

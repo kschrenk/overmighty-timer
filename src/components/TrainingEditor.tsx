@@ -1,11 +1,16 @@
 import React, { useState } from "react";
 import { Copy, Plus, Save, Trash2 } from "lucide-react";
-import { useTraining } from "../context/TrainingContext";
+import { useTraining } from "../context/TrainingContext/TrainingContext";
 import { Set } from "../types/training";
 import { generateId } from "../utils/timerUtils";
 import { SetRepetitionsInput } from "./SetRepetitionsInput";
+import { useAuth } from "@/context/AuthContext";
+import { updateTrainingSession } from "@/lib/firestoreUtils";
+import { Label } from "./ui/label";
+import { Input } from "@/components/ui/input";
 
 const TrainingEditor: React.FC = () => {
+  const { currentUser } = useAuth();
   const { state, dispatch } = useTraining();
   const { editingSession } = state;
 
@@ -33,7 +38,17 @@ const TrainingEditor: React.FC = () => {
       name: sessionName,
     };
 
-    dispatch({ type: "SAVE_SESSION", payload: updatedSession });
+    updateTrainingSession({
+      userId: currentUser?.uid,
+      session: updatedSession,
+    })
+      .then(() => {
+        console.log("Session saved");
+        dispatch({ type: "SAVE_SESSION", payload: updatedSession });
+      })
+      .catch((err) => {
+        console.error(err);
+      });
   };
 
   const handleAddSet = () => {
@@ -95,20 +110,14 @@ const TrainingEditor: React.FC = () => {
   }
 
   return (
-    <div className="max-w-3xl mx-auto p-6 bg-white dark:bg-gray-800 rounded-lg shadow-md border border-gray-200 dark:border-gray-700">
-      <div className="mb-6">
-        <label
-          htmlFor="sessionName"
-          className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1"
-        >
-          Session Name
-        </label>
-        <input
+    <div className="mx-auto px-4 py-6 max-w-lg">
+      <div className="grid items-center gap-1.5 mb-6">
+        <Label htmlFor="sessionName">Session Name</Label>
+        <Input
           type="text"
           id="sessionName"
           value={sessionName}
           onChange={handleNameChange}
-          className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-xs focus:outline-hidden focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-900 dark:text-gray-100"
           placeholder="Enter session name"
         />
       </div>
