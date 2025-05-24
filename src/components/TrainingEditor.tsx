@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Copy, Plus, Save, Trash2 } from "lucide-react";
+import { Copy, Eye, Plus, Save, Trash2 } from "lucide-react";
 import { useTraining } from "../context/TrainingContext/TrainingContext";
 import { Set, TimerViewEnum } from "../types/training";
 import { generateId } from "../utils/timerUtils";
@@ -17,6 +17,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { isUidTestUser } from "@/lib/testUser";
+import { Card } from "@/components/ui/card";
 
 const TrainingEditor: React.FC = () => {
   const { currentUser } = useAuth();
@@ -50,6 +52,11 @@ const TrainingEditor: React.FC = () => {
       name: sessionName,
       timerView,
     };
+
+    if (isUidTestUser(currentUser?.uid)) {
+      dispatch({ type: "SAVE_SESSION", payload: updatedSession });
+      return;
+    }
 
     updateTrainingSession({
       userId: currentUser?.uid,
@@ -138,23 +145,26 @@ const TrainingEditor: React.FC = () => {
           placeholder="Enter session name"
         />
       </LabelWrapper>
-      <div className={"mb-6"}>
-        <LabelWrapper>
-          <Label>Timer View</Label>
-          <Select
-            defaultValue={timerView}
-            onValueChange={(value) => setTimerView(value as TimerViewEnum)}
-          >
-            <SelectTrigger className="w-full">
-              <SelectValue placeholder="Timer View" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value={TimerViewEnum.CIRCLE}>Circle</SelectItem>
-              <SelectItem value={TimerViewEnum.BAR}>Bar</SelectItem>
-            </SelectContent>
-          </Select>
-        </LabelWrapper>
-      </div>
+
+      <Card className={"gap-3 px-4 mb-4"}>
+        <Label>
+          <Eye size={16} />
+          <span className={"text-nowrap"}>Timer View</span>
+        </Label>
+        <Select
+          defaultValue={timerView}
+          onValueChange={(value) => setTimerView(value as TimerViewEnum)}
+        >
+          <SelectTrigger className="w-full">
+            <SelectValue placeholder="Timer View" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value={TimerViewEnum.CIRCLE}>Circle</SelectItem>
+            <SelectItem value={TimerViewEnum.BAR}>Bar</SelectItem>
+          </SelectContent>
+        </Select>
+      </Card>
+
       {editingSession.sets.length === 0 ? (
         <div className="text-center py-8 bg-gray-50 dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-700">
           <p className="text-gray-600 dark:text-gray-300 mb-4">
@@ -169,12 +179,13 @@ const TrainingEditor: React.FC = () => {
         </div>
       ) : (
         <div className="space-y-4">
+          <h3>Sets</h3>
           {editingSession.sets.map((set, index) => (
             <div
               key={set.id}
               className="bg-white dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-700 p-4 shadow-xs"
             >
-              <div className="flex justify-between items-center mb-3">
+              <div className="flex justify-between items-center mb-4">
                 <h4 className="font-medium text-gray-800 dark:text-gray-100">
                   Set {index + 1}
                 </h4>
@@ -345,14 +356,15 @@ const TrainingEditor: React.FC = () => {
               </div>
             </div>
           ))}
+          <div className={"flex justify-center"}>
+            <Button onClick={handleAddSet} variant={"secondary"}>
+              <Plus size={16} />
+              Add Set
+            </Button>
+          </div>
         </div>
       )}
-      <div className={"py-4 flex justify-center"}>
-        <Button onClick={handleAddSet} variant={"secondary"}>
-          <Plus size={16} />
-          Add Set
-        </Button>
-      </div>
+
       <div className="mt-12 flex space-x-3 justify-end">
         <Button variant={"destructive"} onClick={handleCancel}>
           Cancel
