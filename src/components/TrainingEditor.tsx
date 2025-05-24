@@ -1,12 +1,12 @@
 import React, { useState } from "react";
 import { Copy, Eye, Plus, Save, Trash2 } from "lucide-react";
-import { useTraining } from "../context/TrainingContext/TrainingContext";
-import { Set, TimerViewEnum } from "../types/training";
-import { generateId } from "../utils/timerUtils";
+import { useTraining } from "@/context/TrainingContext/TrainingContext";
+import { Set, TimerViewEnum } from "@/types/training";
+import { generateId } from "@/utils/timerUtils";
 import { SetRepetitionsInput } from "./SetRepetitionsInput";
 import { useAuth } from "@/context/AuthContext";
 import { updateTrainingSession } from "@/lib/firestoreUtils";
-import { Label, LabelWrapper } from "./ui/label";
+import { Label } from "./ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
@@ -19,6 +19,7 @@ import {
 } from "@/components/ui/select";
 import { isUidTestUser } from "@/lib/testUser";
 import { Card } from "@/components/ui/card";
+import { LabelWrapper } from "@/components/LabelWrapper";
 
 const TrainingEditor: React.FC = () => {
   const { currentUser } = useAuth();

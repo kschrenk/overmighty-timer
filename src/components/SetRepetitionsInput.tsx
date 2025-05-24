@@ -1,6 +1,7 @@
 import type { FC } from "react";
 import { Button } from "@/components/ui/button";
-import { Label, LabelWrapper } from "@/components/ui/label";
+import { Label } from "@/components/ui/label";
+import { LabelWrapper } from "@/components/LabelWrapper";
 
 interface SetRepetitionsInputProps {
   value: number;
