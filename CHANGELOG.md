@@ -1,3 +1,10 @@
+## [1.2.1](https://github.com/kschrenk/overmighty-timer/compare/v1.2.0...v1.2.1) (2025-05-24)
+
+
+### Bug Fixes
+
+* **core-functionality:** smaller fixes of audio and ui ([c7efb69](https://github.com/kschrenk/overmighty-timer/commit/c7efb69de2ccc1f14f9c6755365719d7083b5e0c))
+
 # [1.2.0](https://github.com/kschrenk/overmighty-timer/compare/v1.1.0...v1.2.0) (2025-05-21)
 
 
