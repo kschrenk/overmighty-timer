@@ -1,3 +1,10 @@
+## [1.2.2](https://github.com/kschrenk/overmighty-timer/compare/v1.2.1...v1.2.2) (2025-05-24)
+
+
+### Bug Fixes
+
+* **login:** fix login form ([#10](https://github.com/kschrenk/overmighty-timer/issues/10)) ([7c48a09](https://github.com/kschrenk/overmighty-timer/commit/7c48a094c7cb18891166baba7d48037740bfefd5))
+
 ## [1.2.1](https://github.com/kschrenk/overmighty-timer/compare/v1.2.0...v1.2.1) (2025-05-24)
 
 
