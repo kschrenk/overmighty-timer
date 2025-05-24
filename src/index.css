@@ -115,4 +115,7 @@
   body {
     @apply bg-background text-foreground;
   }
+  [data-sonner-toast][data-styled=true] [data-title] {
+    @apply text-base;
+  }
 }

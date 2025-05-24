@@ -1,5 +1,13 @@
 import React from "react";
-import { Clock, Edit, Play, PlusCircle, Trash } from "lucide-react";
+import {
+  Activity,
+  Clock,
+  Edit,
+  Eye,
+  Play,
+  PlusCircle,
+  Trash,
+} from "lucide-react";
 import { useTraining } from "../context/TrainingContext/TrainingContext";
 import { formatTime } from "../utils/timerUtils";
 import { useAuth } from "../context/AuthContext";
@@ -14,6 +22,7 @@ import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { toast } from "sonner";
 import { removeTrainingSession } from "@/lib/firestoreUtils";
+import { isUidTestUser } from "@/lib/testUser";
 
 const TrainingList: React.FC = () => {
   const { state, dispatch, loading } = useTraining();
@@ -36,11 +45,18 @@ const TrainingList: React.FC = () => {
   const handleDeleteSession = (sessionId: string) => {
     toast("Are you sure you want to delete this training session?", {
       closeButton: true,
+      position: "top-right",
       duration: 5000,
       action: {
         label: "OK",
         onClick: () => {
           if (!currentUser) return;
+
+          if (isUidTestUser(currentUser.uid)) {
+            dispatch({ type: "DELETE_SESSION", payload: sessionId });
+            return;
+          }
+
           removeTrainingSession(currentUser.uid, sessionId).then(() => {
             dispatch({ type: "DELETE_SESSION", payload: sessionId });
           });
@@ -122,21 +138,21 @@ const TrainingList: React.FC = () => {
                   <Card className="dark:bg-gray-800 border dark:border-gray-700 p-4">
                     <AccordionTrigger className="py-0">
                       <div>
-                        <h3 className="text-xl font-semibold text-gray-800 dark:text-gray-100 mb-2">
+                        <h3 className="text-xl font-semibold text-gray-800 dark:text-gray-100 mb-3">
                           {session.name}
                         </h3>
                         <div className="flex items-center text-gray-500 dark:text-gray-300">
                           <Clock size={16} className="mr-1" />
-                          <span className="text-sm font-medium">
+                          <span className="text-sm font-medium mr-3">
                             {formatTime(calculateSessionDuration(session.id))}
                           </span>
-                          <span className="mx-2">•</span>
-                          <span className="text-sm font-medium">
+                          <Activity size={16} className="mr-1" />
+                          <span className="text-sm font-medium mr-3">
                             {`${session.sets.length} set${session.sets.length > 1 ? "s" : ""}`}
                           </span>
-                          <span className="mx-2">•</span>
-                          <span className="text-sm font-medium text-chart-2">
-                            {session.timerView}
+                          <Eye size={16} className="mr-1" />
+                          <span className="text-sm font-medium">
+                            {`${session.timerView}`}
                           </span>
                         </div>
                       </div>

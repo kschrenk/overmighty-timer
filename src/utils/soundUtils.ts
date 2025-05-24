@@ -1,5 +1,48 @@
+import { toast } from "sonner";
+
 type WindowWithWebkit = Window & {
   webkitAudioContext: typeof AudioContext;
+};
+
+let audioContext: AudioContext | null = null;
+
+const getAudioContext = (): AudioContext | null => {
+  if (audioContext) {
+    return audioContext;
+  }
+
+  const AudioContextClass =
+    window.AudioContext ||
+    ("webkitAudioContext" in window
+      ? (window as WindowWithWebkit).webkitAudioContext
+      : null);
+
+  if (!AudioContextClass) {
+    toast("Audio not supported", {
+      description:
+        "The browser does not support the Web Audio API, which is required to play sounds in this application.",
+    });
+    console.error("AudioContext not supported");
+    return null;
+  }
+
+  audioContext = new AudioContextClass();
+
+  // Resume the audio context on the first user interaction
+  const resumeContext = () => {
+    if (audioContext?.state === "suspended") {
+      audioContext.resume().catch((error) => {
+        console.error("Error resuming audio context:", error);
+      });
+    }
+    document.removeEventListener("touchstart", resumeContext);
+    document.removeEventListener("mousedown", resumeContext);
+  };
+
+  document.addEventListener("touchstart", resumeContext);
+  document.addEventListener("mousedown", resumeContext);
+
+  return audioContext;
 };
 
 // Sound frequencies for different states
@@ -14,17 +57,11 @@ const FREQUENCIES = {
 // Play a tone with given frequency
 export const playTone = (frequency: number, duration: number = 200): void => {
   try {
-    const AudioContextClass =
-      window.AudioContext ||
-      ("webkitAudioContext" in window
-        ? (window as WindowWithWebkit).webkitAudioContext
-        : null);
+    const audioContext = getAudioContext();
 
-    if (!AudioContextClass) {
-      throw new Error("AudioContext not supported");
+    if (!audioContext) {
+      return;
     }
-
-    const audioContext = new AudioContextClass();
 
     const oscillator = audioContext.createOscillator();
     const gainNode = audioContext.createGain();
@@ -48,7 +85,8 @@ export const playTone = (frequency: number, duration: number = 200): void => {
 
     // Clean up
     setTimeout(() => {
-      audioContext.close();
+      oscillator.disconnect();
+      gainNode.disconnect();
     }, duration + 100);
   } catch (error) {
     console.error("Error playing sound:", error);
