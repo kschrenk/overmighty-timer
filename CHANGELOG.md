@@ -1,3 +1,10 @@
+# [1.3.0](https://github.com/kschrenk/overmighty-timer/compare/v1.2.2...v1.3.0) (2025-05-24)
+
+
+### Features
+
+* **editor:** display message when successfully edited or deleted session ([#11](https://github.com/kschrenk/overmighty-timer/issues/11)) ([8de0645](https://github.com/kschrenk/overmighty-timer/commit/8de0645153fa5a5cb9f2e56160cf4e835ffbe88f))
+
 ## [1.2.2](https://github.com/kschrenk/overmighty-timer/compare/v1.2.1...v1.2.2) (2025-05-24)
 
 
