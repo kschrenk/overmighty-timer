@@ -15,6 +15,7 @@ import { Toaster } from "@/components/ui/sonner";
 const AppContent: React.FC = () => {
   const { state } = useTraining();
   const { currentUser } = useAuth();
+
   return (
     <div className="flex flex-col min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors duration-200">
       <Header />

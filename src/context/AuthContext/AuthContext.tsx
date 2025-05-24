@@ -26,13 +26,16 @@ export const AuthContext = createContext<AuthContextType>({
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [currentUser, setCurrentUser] = useState<User | null>(null);
+  console.log("🚀 AuthProvider:", { currentUser });
 
   useEffect(() => {
     return onAuthStateChanged(auth, setCurrentUser);
   }, []);
 
   const login = async (email: string, password: string) => {
-    await signInWithEmailAndPassword(auth, email, password);
+    const res = await signInWithEmailAndPassword(auth, email, password);
+
+    console.log("🚀", { res });
   };
 
   const signup = async (email: string, password: string) => {

@@ -1,6 +1,7 @@
 import React from "react";
 import { ArrowLeft } from "lucide-react";
-import { useTraining } from "../context/TrainingContext/TrainingContext";
+import { useTraining } from "@/context/TrainingContext/TrainingContext";
+import { UserDrawer } from "@/components/UserDrawer";
 
 const Header: React.FC = () => {
   const { state, dispatch } = useTraining();
@@ -33,6 +34,7 @@ const Header: React.FC = () => {
           )}
           <h1 className="text-2xl font-bold tracking-tight">{getTitle()}</h1>
         </div>
+        {state.activeView === "list" ? <UserDrawer /> : null}
       </div>
     </header>
   );

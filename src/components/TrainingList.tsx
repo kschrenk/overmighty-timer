@@ -26,7 +26,7 @@ import { isUidTestUser } from "@/lib/testUser";
 
 const TrainingList: React.FC = () => {
   const { state, dispatch, loading, getSessionById } = useTraining();
-  const { currentUser, logout } = useAuth();
+  const { currentUser } = useAuth();
 
   const handleStartSession = (sessionId: string) => {
     const session = getSessionById?.(sessionId);
@@ -93,17 +93,6 @@ const TrainingList: React.FC = () => {
   return (
     <>
       <div className="max-w-4xl mx-auto p-6">
-        {currentUser ? (
-          <div className="flex justify-between pb-12">
-            <p className="dark:text-white">Welcome {currentUser.email}</p>
-            <button
-              className="dark:text-gray-300 cursor-pointer"
-              onClick={logout}
-            >
-              Logout
-            </button>
-          </div>
-        ) : null}
         <div className="flex justify-between items-center mb-8">
           <h2 className="text-2xl font-bold text-gray-800 dark:text-gray-100">
             Sessions
