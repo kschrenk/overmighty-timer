@@ -25,18 +25,18 @@ import { removeTrainingSession } from "@/lib/firestoreUtils";
 import { isUidTestUser } from "@/lib/testUser";
 
 const TrainingList: React.FC = () => {
-  const { state, dispatch, loading } = useTraining();
+  const { state, dispatch, loading, getSessionById } = useTraining();
   const { currentUser, logout } = useAuth();
 
   const handleStartSession = (sessionId: string) => {
-    const session = state.trainingSessions.find((s) => s.id === sessionId);
+    const session = getSessionById?.(sessionId);
     if (session) {
       dispatch({ type: "START_SESSION", payload: session });
     }
   };
 
   const handleEditSession = (sessionId: string) => {
-    const session = state.trainingSessions.find((s) => s.id === sessionId);
+    const session = getSessionById?.(sessionId);
     if (session) {
       dispatch({ type: "EDIT_SESSION", payload: session });
     }
@@ -57,9 +57,18 @@ const TrainingList: React.FC = () => {
             return;
           }
 
-          removeTrainingSession(currentUser.uid, sessionId).then(() => {
-            dispatch({ type: "DELETE_SESSION", payload: sessionId });
-          });
+          removeTrainingSession(currentUser.uid, sessionId)
+            .then(() => {
+              dispatch({ type: "DELETE_SESSION", payload: sessionId });
+            })
+            .finally(() => {
+              toast(
+                `Session "${getSessionById?.(sessionId)?.name}" successfully deleted.`,
+                {
+                  position: "top-center",
+                },
+              );
+            });
         },
       },
     });

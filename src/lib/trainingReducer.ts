@@ -1,9 +1,7 @@
-import {
-  initialTimerData,
-  TrainingContextState,
-} from "../context/TrainingContext/TrainingContext";
-import { Set, TimerState, TrainingSession } from "../types/training";
-import { generateId } from "../utils/timerUtils";
+import { TrainingContextState } from "@/context/TrainingContext/TrainingContext";
+import { Set, TimerState, TrainingSession } from "@/types/training";
+import { generateId } from "@/utils/timerUtils";
+import { initialTimerData } from "@/data/defaultData";
 
 export type TrainingAction =
   | { type: "START_SESSION"; payload: TrainingSession }
@@ -236,12 +234,13 @@ export const trainingReducer = (
       };
     }
 
-    case "EDIT_SESSION":
+    case "EDIT_SESSION": {
       return {
         ...state,
         editingSession: action.payload,
         activeView: "editor",
       };
+    }
 
     case "SAVE_SESSION": {
       const existingIndex = state.trainingSessions.findIndex(

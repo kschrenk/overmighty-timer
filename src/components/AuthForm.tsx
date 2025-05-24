@@ -26,7 +26,6 @@ export default function AuthForm() {
   const { login, loginAsTestUser } = useAuth();
   const [authError, setAuthError] = useState<string | null>(null);
   const [showPassword, setShowPassword] = useState(false);
-
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {

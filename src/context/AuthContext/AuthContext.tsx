@@ -6,7 +6,7 @@ import {
   signOut,
   User,
 } from "firebase/auth";
-import { auth } from "../../firebase";
+import { auth } from "@/firebase";
 
 interface AuthContextType {
   currentUser: User | null;
@@ -26,7 +26,6 @@ export const AuthContext = createContext<AuthContextType>({
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [currentUser, setCurrentUser] = useState<User | null>(null);
-  console.log("🚀", { currentUser });
 
   useEffect(() => {
     return onAuthStateChanged(auth, setCurrentUser);

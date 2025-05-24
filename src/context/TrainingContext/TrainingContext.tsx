@@ -7,21 +7,15 @@ import React, {
 } from "react";
 import { TrainingSession, TimerState, TimerData } from "@/types/training";
 import { playStateChangeSound } from "@/utils/soundUtils";
-import { TrainingAction, trainingReducer } from "@/reducers/trainingReducer";
+import { TrainingAction, trainingReducer } from "@/lib/trainingReducer";
 import { useAuth } from "@/context/AuthContext";
 
-import { DEFAULT_TRAINING_SESSIONS } from "@/data/defaultTrainingSessions";
 import { fetchTrainingSessions } from "@/lib/firestoreUtils";
 import { isUidTestUser } from "@/lib/testUser";
-
-export const initialTimerData: TimerData = {
-  currentSession: null,
-  currentSetIndex: 0,
-  currentRepetition: 0,
-  currentSetRepetition: 0,
-  timerState: TimerState.IDLE,
-  secondsLeft: 0,
-};
+import {
+  DEFAULT_TRAINING_SESSIONS,
+  initialTimerData,
+} from "@/data/defaultData";
 
 export interface TrainingContextState {
   trainingSessions: TrainingSession[];
@@ -41,6 +35,7 @@ export const TrainingContext = createContext<{
   state: TrainingContextState;
   dispatch: React.Dispatch<TrainingAction>;
   loading: boolean;
+  getSessionById?: (sessionId: string) => TrainingSession | undefined;
 }>({
   state: initialState,
   dispatch: () => null,
@@ -54,7 +49,6 @@ export const TrainingProvider: React.FC<{ children: React.ReactNode }> = ({
 
   const [state, dispatch] = useReducer(trainingReducer, initialState);
   const [timerId, setTimerId] = useState<number | null>(null);
-
   const [loading, setLoading] = useState<boolean>(false);
 
   // load training sessions from firestore
@@ -119,8 +113,15 @@ export const TrainingProvider: React.FC<{ children: React.ReactNode }> = ({
     playStateChangeSound(state.timerData.timerState);
   }, [state.timerData.timerState]);
 
+  // helper
+  function getSessionById(sessionId: string) {
+    return state.trainingSessions.find((s) => s.id === sessionId);
+  }
+
   return (
-    <TrainingContext.Provider value={{ state, dispatch, loading }}>
+    <TrainingContext.Provider
+      value={{ state, dispatch, loading, getSessionById }}
+    >
       {children}
     </TrainingContext.Provider>
   );

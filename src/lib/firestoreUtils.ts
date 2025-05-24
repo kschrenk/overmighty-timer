@@ -1,4 +1,3 @@
-// firebase/firestoreUtils.ts
 import {
   collection,
   doc,
@@ -19,7 +18,6 @@ export async function removeTrainingSession(userId: string, sessionId: string) {
       sessionId,
     );
     await deleteDoc(sessionDocRef);
-    console.log(`Training session with ID ${sessionId} deleted successfully.`);
   } catch (error) {
     console.error("Error deleting training session:", error);
     throw error; // Re-throw the error to be handled by the caller
@@ -60,7 +58,6 @@ export const updateTrainingSession = async ({
 
   try {
     await setDoc(sessionDocRef, session, { merge: true });
-    console.log("Training session updated successfully in Firebase!");
   } catch (error) {
     console.error("Error updating training session in Firebase:", error);
   }
