@@ -1,9 +1,10 @@
-import { TrainingSession } from "../types/training";
+import { TimerViewEnum, TrainingSession } from "@/types/training";
 
 export const DEFAULT_TRAINING_SESSIONS: TrainingSession[] = [
   {
     id: "1",
     name: "Beginner Hangboard",
+    timerView: TimerViewEnum.CIRCLE,
     sets: [
       {
         id: "1-1",
@@ -28,6 +29,7 @@ export const DEFAULT_TRAINING_SESSIONS: TrainingSession[] = [
   {
     id: "2",
     name: "Intermediate Training",
+    timerView: TimerViewEnum.BAR,
     sets: [
       {
         id: "2-1",

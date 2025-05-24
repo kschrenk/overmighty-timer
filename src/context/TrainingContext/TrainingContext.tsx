@@ -12,6 +12,7 @@ import { useAuth } from "@/context/AuthContext";
 
 import { DEFAULT_TRAINING_SESSIONS } from "@/data/defaultTrainingSessions";
 import { fetchTrainingSessions } from "@/lib/firestoreUtils";
+import { isUidTestUser } from "@/lib/testUser";
 
 export const initialTimerData: TimerData = {
   currentSession: null,
@@ -54,7 +55,7 @@ export const TrainingProvider: React.FC<{ children: React.ReactNode }> = ({
   const [state, dispatch] = useReducer(trainingReducer, initialState);
   const [timerId, setTimerId] = useState<number | null>(null);
 
-  const [loading, setLoading] = useState<boolean>(true);
+  const [loading, setLoading] = useState<boolean>(false);
 
   // load training sessions from firestore
   useEffect(() => {
@@ -76,7 +77,7 @@ export const TrainingProvider: React.FC<{ children: React.ReactNode }> = ({
       }
     };
 
-    if (currentUser.uid === "test-user") {
+    if (isUidTestUser(currentUser.uid)) {
       dispatch({
         type: "SET_SESSIONS",
         payload: DEFAULT_TRAINING_SESSIONS,
