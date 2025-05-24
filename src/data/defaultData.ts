@@ -1,4 +1,18 @@
-import { TimerViewEnum, TrainingSession } from "@/types/training";
+import {
+  TimerData,
+  TimerState,
+  TimerViewEnum,
+  TrainingSession,
+} from "@/types/training";
+
+export const initialTimerData: TimerData = {
+  currentSession: null,
+  currentSetIndex: 0,
+  currentRepetition: 0,
+  currentSetRepetition: 0,
+  timerState: TimerState.IDLE,
+  secondsLeft: 0,
+};
 
 export const DEFAULT_TRAINING_SESSIONS: TrainingSession[] = [
   {

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Copy, Eye, Plus, Save, Trash2 } from "lucide-react";
+import { Copy, Eye, FolderPen, Plus, Save, Trash2 } from "lucide-react";
 import { useTraining } from "@/context/TrainingContext/TrainingContext";
 import { Set, TimerViewEnum } from "@/types/training";
 import { generateId } from "@/utils/timerUtils";
@@ -64,11 +64,15 @@ const TrainingEditor: React.FC = () => {
       session: updatedSession,
     })
       .then(() => {
-        console.log("Session saved");
         dispatch({ type: "SAVE_SESSION", payload: updatedSession });
       })
       .catch((err) => {
         console.error(err);
+      })
+      .finally(() => {
+        toast(`Session "${updatedSession.name}" saved successfully!`, {
+          position: "top-center",
+        });
       });
   };
 
@@ -136,18 +140,20 @@ const TrainingEditor: React.FC = () => {
 
   return (
     <div className="mx-auto px-4 py-6 max-w-lg">
-      <LabelWrapper className={"pb-6"}>
-        <Label htmlFor="sessionName">Session Name</Label>
-        <Input
-          type="text"
-          id="sessionName"
-          value={sessionName}
-          onChange={handleNameChange}
-          placeholder="Enter session name"
-        />
-      </LabelWrapper>
-
       <Card className={"gap-3 px-4 mb-4"}>
+        <LabelWrapper className={"gap-3 pb-6"}>
+          <Label htmlFor="sessionName">
+            <FolderPen size={16} />
+            Name
+          </Label>
+          <Input
+            type="text"
+            id="sessionName"
+            value={sessionName}
+            onChange={handleNameChange}
+            placeholder="Enter session name"
+          />
+        </LabelWrapper>
         <Label>
           <Eye size={16} />
           <span className={"text-nowrap"}>Timer View</span>
