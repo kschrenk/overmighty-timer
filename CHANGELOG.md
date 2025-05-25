@@ -1,3 +1,10 @@
+# [1.5.0](https://github.com/kschrenk/overmighty-timer/compare/v1.4.0...v1.5.0) (2025-05-25)
+
+
+### Features
+
+* **user:** improve register process ([086f65e](https://github.com/kschrenk/overmighty-timer/commit/086f65ed1f58b1eb81cf6b76e02cf572c7b39e3d))
+
 # [1.4.0](https://github.com/kschrenk/overmighty-timer/compare/v1.3.0...v1.4.0) (2025-05-25)
 
 
