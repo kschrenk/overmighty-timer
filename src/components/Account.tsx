@@ -17,6 +17,8 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Input } from "@/components/ui/input";
 import { createInvite } from "@/lib/firestoreUtils";
+import { Loader2 } from "lucide-react";
+import { useState } from "react";
 
 const formSchema = z.object({
   email: z.string().email({ message: "Invalid email address" }),
@@ -25,6 +27,8 @@ const formSchema = z.object({
 export const Account: FC = () => {
   const { currentUser, logout } = useAuth();
   const { dispatch } = useTraining();
+  const [isInviteLoading, setIsInviteLoading] = useState(false);
+  const [isLogoutLoading, setIsLogoutLoading] = useState(false);
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -33,11 +37,13 @@ export const Account: FC = () => {
   });
 
   const handleLogout = async () => {
+    setIsLogoutLoading(true);
     logout()
       .catch((error) => {
         if (error instanceof FirebaseError) {
           toast(`Error ${error.code}: ${error.message}`);
         }
+        setIsLogoutLoading(false);
       })
       .then(() => {
         dispatch({ type: "GO_TO_HOME" });
@@ -55,6 +61,7 @@ export const Account: FC = () => {
       return;
     }
 
+    setIsInviteLoading(true);
     createInvite(currentUser, email)
       .then(() => {
         toast.success(`Invite sent to ${email}`, { position: "top-center" });
@@ -65,6 +72,7 @@ export const Account: FC = () => {
             position: "top-center",
           });
         }
+        setIsInviteLoading(false);
       })
       .finally(() => {
         dispatch({ type: "GO_TO_HOME" });
@@ -90,8 +98,19 @@ export const Account: FC = () => {
             </p>
           </div>
           <div className={"flex gap-4 justify-end"}>
-            <Button variant={"destructive"} onClick={handleLogout}>
-              Logout
+            <Button
+              variant={"destructive"}
+              onClick={handleLogout}
+              disabled={isLogoutLoading}
+            >
+              {isLogoutLoading ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  Logging out
+                </>
+              ) : (
+                "Logout"
+              )}
             </Button>
           </div>
         </div>
@@ -121,7 +140,16 @@ export const Account: FC = () => {
               )}
             />
             <div className={"flex justify-end"}>
-              <Button type="submit">Submit</Button>
+              <Button type="submit" disabled={isInviteLoading}>
+                {isInviteLoading ? (
+                  <>
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    Inviting...
+                  </>
+                ) : (
+                  "Submit"
+                )}
+              </Button>
             </div>
           </form>
         </Form>
