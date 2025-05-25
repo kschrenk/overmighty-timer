@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Copy, Eye, FolderPen, Plus, Save, Trash2 } from "lucide-react";
 import { useTraining } from "@/context/TrainingContext/TrainingContext";
-import type { Set} from "@/types/training";
+import type { Set } from "@/types/training";
 import { TimerViewEnum } from "@/types/training";
 import { generateId } from "@/utils/timerUtils";
 import { SetRepetitionsInput } from "./SetRepetitionsInput";
@@ -71,7 +71,7 @@ const TrainingEditor: React.FC = () => {
         console.error(err);
       })
       .finally(() => {
-        toast(`Session "${updatedSession.name}" saved successfully!`, {
+        toast.success(`Session "${updatedSession.name}" saved successfully!`, {
           position: "top-center",
         });
       });

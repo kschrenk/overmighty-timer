@@ -8,7 +8,6 @@ import {
   signOut,
   updateProfile,
   fetchSignInMethodsForEmail,
-  sendEmailVerification,
 } from "firebase/auth";
 import { auth } from "@/firebase";
 
@@ -62,10 +61,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         await updateProfile(userCredential.user, {
           displayName: name,
         });
-
-        // Send email verification
-        await sendEmailVerification(userCredential.user);
-
         setCurrentUser(userCredential.user);
       }
     } catch (error) {
