@@ -7,6 +7,8 @@ import {
   createUserWithEmailAndPassword,
   signOut,
   updateProfile,
+  fetchSignInMethodsForEmail,
+  sendEmailVerification,
 } from "firebase/auth";
 import { auth } from "@/firebase";
 
@@ -45,6 +47,11 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   const signup = async ({ name, email, password }: SignupArguments) => {
     try {
+      const methods = await fetchSignInMethodsForEmail(auth, email);
+      if (methods.length > 0) {
+        throw new Error("Email already in use.");
+      }
+
       const userCredential = await createUserWithEmailAndPassword(
         auth,
         email,
@@ -55,6 +62,10 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         await updateProfile(userCredential.user, {
           displayName: name,
         });
+
+        // Send email verification
+        await sendEmailVerification(userCredential.user);
+
         setCurrentUser(userCredential.user);
       }
     } catch (error) {
