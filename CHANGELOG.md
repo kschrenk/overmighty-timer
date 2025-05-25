@@ -1,3 +1,10 @@
+# [1.4.0](https://github.com/kschrenk/overmighty-timer/compare/v1.3.0...v1.4.0) (2025-05-25)
+
+
+### Features
+
+* **login:** enable user to invite and register ([#12](https://github.com/kschrenk/overmighty-timer/issues/12)) ([6089baa](https://github.com/kschrenk/overmighty-timer/commit/6089baa3074aa68cbbde7cb92989b4daffc22751))
+
 # [1.3.0](https://github.com/kschrenk/overmighty-timer/compare/v1.2.2...v1.3.0) (2025-05-24)
 
 
