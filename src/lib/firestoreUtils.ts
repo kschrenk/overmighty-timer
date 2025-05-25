@@ -78,7 +78,7 @@ export async function createInvite(invitedBy: User, invitedEmail: string) {
             <p>You have been invited${
               displayName ? " by your overmighty friend " + displayName : ""
             } to join Overmighty Timer.</p>
-            <p>Click the following link to register: <a href="${inviteLink}">${inviteLink}</a> and hang like you never hung before.</p>
+            <p>Click the following link to register: <a href="${inviteLink}">${inviteLink}</a> and hang like you never hang before.</p>
             <p>Best regards,</p>
             <p>Your Overmighty Team</p>
           `,

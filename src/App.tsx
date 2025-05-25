@@ -34,8 +34,9 @@ const AppContent: React.FC = () => {
             {state.activeView === "timer" && <TrainingTimer />}
             {state.activeView === "editor" && <TrainingEditor />}
             {state.activeView === "account" && <Account />}
-            {state.activeView === "register" && <RegisterForm />}
           </>
+        ) : state.activeView === "register" ? (
+          <RegisterForm />
         ) : (
           <AuthForm />
         )}
