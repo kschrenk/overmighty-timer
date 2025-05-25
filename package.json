@@ -12,7 +12,8 @@
     "format": "prettier . --write",
     "format:check": "prettier . --check",
     "deploy": "firebase deploy",
-    "firebase:local": "firebase emulators:start --import=./emulator-data --export-on-exit"
+    "firebase:local": "firebase emulators:start --import=./emulator-data --export-on-exit",
+    "prepare": "husky install"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.0.1",
@@ -52,6 +53,8 @@
     "eslint-plugin-react-hooks": "^5.1.0-rc.0",
     "eslint-plugin-react-refresh": "^0.4.11",
     "globals": "^15.9.0",
+    "husky": "^9.1.7",
+    "lint-staged": "^16.0.0",
     "postcss": "^8.4.35",
     "prettier": "3.5.3",
     "semantic-release": "^24.2.3",

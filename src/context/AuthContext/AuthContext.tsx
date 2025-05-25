@@ -1,17 +1,27 @@
-import { createContext, useEffect, useState, ReactNode } from "react";
+import type { ReactNode } from "react";
+import { createContext, useEffect, useState } from "react";
+import type { User } from "firebase/auth";
 import {
   onAuthStateChanged,
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
   signOut,
-  User,
+  updateProfile,
+  fetchSignInMethodsForEmail,
+  sendEmailVerification,
 } from "firebase/auth";
 import { auth } from "@/firebase";
+
+interface SignupArguments {
+  email: string;
+  password: string;
+  name: string;
+}
 
 interface AuthContextType {
   currentUser: User | null;
   login: (email: string, password: string) => Promise<void>;
-  signup: (email: string, password: string) => Promise<void>;
+  signup: (signupArgs: SignupArguments) => Promise<void>;
   logout: () => Promise<void>;
   loginAsTestUser: () => void;
 }
@@ -35,8 +45,33 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     await signInWithEmailAndPassword(auth, email, password);
   };
 
-  const signup = async (email: string, password: string) => {
-    await createUserWithEmailAndPassword(auth, email, password);
+  const signup = async ({ name, email, password }: SignupArguments) => {
+    try {
+      const methods = await fetchSignInMethodsForEmail(auth, email);
+      if (methods.length > 0) {
+        throw new Error("Email already in use.");
+      }
+
+      const userCredential = await createUserWithEmailAndPassword(
+        auth,
+        email,
+        password,
+      );
+
+      if (userCredential.user) {
+        await updateProfile(userCredential.user, {
+          displayName: name,
+        });
+
+        // Send email verification
+        await sendEmailVerification(userCredential.user);
+
+        setCurrentUser(userCredential.user);
+      }
+    } catch (error) {
+      console.error("Error during signup:", error);
+      throw error; // Re-throw the error to be caught by the component
+    }
   };
 
   const logout = async () => {

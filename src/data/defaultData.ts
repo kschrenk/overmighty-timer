@@ -1,8 +1,9 @@
-import {
+import type {
   TimerData,
+  TrainingSession} from "@/types/training";
+import {
   TimerState,
-  TimerViewEnum,
-  TrainingSession,
+  TimerViewEnum
 } from "@/types/training";
 
 export const initialTimerData: TimerData = {
