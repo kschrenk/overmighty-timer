@@ -1,3 +1,10 @@
+# [1.6.0](https://github.com/kschrenk/overmighty-timer/compare/v1.5.0...v1.6.0) (2025-05-25)
+
+
+### Features
+
+* **user:** add loading indicators to register process ([6322172](https://github.com/kschrenk/overmighty-timer/commit/632217255e7a8ee36c1f317cfd79199fffc71a30))
+
 # [1.5.0](https://github.com/kschrenk/overmighty-timer/compare/v1.4.0...v1.5.0) (2025-05-25)
 
 
