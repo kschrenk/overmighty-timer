@@ -10,6 +10,7 @@ export type TrainingAction =
   | { type: "RESUME_TIMER" }
   | { type: "RESET_TIMER" }
   | { type: "GO_TO_HOME" }
+  | { type: "GO_TO_ACCOUNT" }
   | { type: "CREATE_SESSION" }
   | { type: "SET_SESSIONS"; payload: TrainingSession[] }
   | { type: "EDIT_SESSION"; payload: TrainingSession }
@@ -202,6 +203,14 @@ export const trainingReducer = (
       return {
         ...state,
         activeView: "list",
+        timerData: initialTimerData,
+        editingSession: null,
+      };
+
+    case "GO_TO_ACCOUNT":
+      return {
+        ...state,
+        activeView: "account",
         timerData: initialTimerData,
         editingSession: null,
       };

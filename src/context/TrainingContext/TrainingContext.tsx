@@ -20,7 +20,7 @@ import {
 export interface TrainingContextState {
   trainingSessions: TrainingSession[];
   timerData: TimerData;
-  activeView: "list" | "timer" | "editor";
+  activeView: "list" | "timer" | "editor" | "account";
   editingSession: TrainingSession | null;
 }
 

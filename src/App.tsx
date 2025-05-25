@@ -11,6 +11,7 @@ import { AuthProvider, useAuth } from "./context/AuthContext";
 import AuthForm from "./components/AuthForm";
 import { ThemeProvider } from "./context/ThemeProvider/ThemeProvider";
 import { Toaster } from "@/components/ui/sonner";
+import { Account } from "@/components/Account";
 
 const AppContent: React.FC = () => {
   const { state } = useTraining();
@@ -30,6 +31,7 @@ const AppContent: React.FC = () => {
             {state.activeView === "list" && <TrainingList />}
             {state.activeView === "timer" && <TrainingTimer />}
             {state.activeView === "editor" && <TrainingEditor />}
+            {state.activeView === "account" && <Account />}
           </>
         ) : (
           <AuthForm />

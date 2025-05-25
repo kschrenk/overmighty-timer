@@ -1,9 +1,8 @@
-import React from "react";
-import { ArrowLeft } from "lucide-react";
+import type { FC } from "react";
+import { ArrowLeft, CircleUser } from "lucide-react";
 import { useTraining } from "@/context/TrainingContext/TrainingContext";
-import { UserDrawer } from "@/components/UserDrawer";
 
-const Header: React.FC = () => {
+const Header: FC = () => {
   const { state, dispatch } = useTraining();
 
   const getTitle = () => {
@@ -14,6 +13,8 @@ const Header: React.FC = () => {
         return state.editingSession?.id
           ? `Edit: ${state.editingSession.name}`
           : "Create New Training";
+      case "account":
+        return "My Account";
       default:
         return "Overmighty Timer";
     }
@@ -34,7 +35,16 @@ const Header: React.FC = () => {
           )}
           <h1 className="text-2xl font-bold tracking-tight">{getTitle()}</h1>
         </div>
-        {state.activeView === "list" ? <UserDrawer /> : null}
+        {["list", "account"].includes(state.activeView) ? (
+          <CircleUser
+            onClick={() => dispatch({ type: "GO_TO_ACCOUNT" })}
+            color={
+              state.activeView === "account"
+                ? "var(--color-blue-500)"
+                : "var(--color-gray-300)"
+            }
+          />
+        ) : null}
       </div>
     </header>
   );
