@@ -1,6 +1,7 @@
 import type { FC } from "react";
 import { ArrowLeft, CircleUser } from "lucide-react";
 import { useTraining } from "@/context/TrainingContext/TrainingContext";
+import { removeSearchParameters } from "@/lib/removeSearchParameters";
 
 const Header: FC = () => {
   const { state, dispatch } = useTraining();
@@ -24,7 +25,7 @@ const Header: FC = () => {
   const handleGoBack = () => {
     if (activeView === "register") {
       // Remove all search parameters from the URL
-      window.history.replaceState({}, document.title, window.location.pathname);
+      removeSearchParameters();
     }
     dispatch({ type: "GO_TO_HOME" });
   };
