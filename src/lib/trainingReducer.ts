@@ -1,5 +1,6 @@
-import { TrainingContextState } from "@/context/TrainingContext/TrainingContext";
-import { Set, TimerState, TrainingSession } from "@/types/training";
+import type { TrainingContextState } from "@/context/TrainingContext/TrainingContext";
+import type { Set, TrainingSession } from "@/types/training";
+import { TimerState } from "@/types/training";
 import { generateId } from "@/utils/timerUtils";
 import { initialTimerData } from "@/data/defaultData";
 
@@ -11,6 +12,7 @@ export type TrainingAction =
   | { type: "RESET_TIMER" }
   | { type: "GO_TO_HOME" }
   | { type: "GO_TO_ACCOUNT" }
+  | { type: "GO_TO_REGISTER" }
   | { type: "CREATE_SESSION" }
   | { type: "SET_SESSIONS"; payload: TrainingSession[] }
   | { type: "EDIT_SESSION"; payload: TrainingSession }
@@ -211,6 +213,14 @@ export const trainingReducer = (
       return {
         ...state,
         activeView: "account",
+        timerData: initialTimerData,
+        editingSession: null,
+      };
+
+    case "GO_TO_REGISTER":
+      return {
+        ...state,
+        activeView: "register",
         timerData: initialTimerData,
         editingSession: null,
       };

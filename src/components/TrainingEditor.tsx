@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import { Copy, Eye, FolderPen, Plus, Save, Trash2 } from "lucide-react";
 import { useTraining } from "@/context/TrainingContext/TrainingContext";
-import { Set, TimerViewEnum } from "@/types/training";
+import type { Set} from "@/types/training";
+import { TimerViewEnum } from "@/types/training";
 import { generateId } from "@/utils/timerUtils";
 import { SetRepetitionsInput } from "./SetRepetitionsInput";
 import { useAuth } from "@/context/AuthContext";

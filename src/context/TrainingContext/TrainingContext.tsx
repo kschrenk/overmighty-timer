@@ -5,9 +5,11 @@ import React, {
   useEffect,
   useState,
 } from "react";
-import { TrainingSession, TimerState, TimerData } from "@/types/training";
+import type { TrainingSession, TimerData } from "@/types/training";
+import { TimerState } from "@/types/training";
 import { playStateChangeSound } from "@/utils/soundUtils";
-import { TrainingAction, trainingReducer } from "@/lib/trainingReducer";
+import type { TrainingAction } from "@/lib/trainingReducer";
+import { trainingReducer } from "@/lib/trainingReducer";
 import { useAuth } from "@/context/AuthContext";
 
 import { fetchTrainingSessions } from "@/lib/firestoreUtils";
@@ -20,7 +22,7 @@ import {
 export interface TrainingContextState {
   trainingSessions: TrainingSession[];
   timerData: TimerData;
-  activeView: "list" | "timer" | "editor" | "account";
+  activeView: "list" | "timer" | "editor" | "account" | "register";
   editingSession: TrainingSession | null;
 }
 

@@ -16,6 +16,7 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Input } from "@/components/ui/input";
+import { createInvite } from "@/lib/firestoreUtils";
 
 const formSchema = z.object({
   email: z.string().email({ message: "Invalid email address" }),
@@ -49,7 +50,25 @@ export const Account: FC = () => {
   };
 
   const handleInvite = async ({ email }: z.infer<typeof formSchema>) => {
-    console.log(`Inviting ${email}...`);
+    if (!currentUser) {
+      toast.error("You must be logged in to invite friends.");
+      return;
+    }
+
+    createInvite(currentUser, email)
+      .then(() => {
+        toast.success(`Invite sent to ${email}`, { position: "top-center" });
+      })
+      .catch((error) => {
+        if (error instanceof Error) {
+          toast.error(`Failed to send invite: ${error.message}`, {
+            position: "top-center",
+          });
+        }
+      })
+      .finally(() => {
+        dispatch({ type: "GO_TO_HOME" });
+      });
   };
 
   return (
@@ -70,7 +89,7 @@ export const Account: FC = () => {
               <strong>User ID:</strong> {currentUser.uid}
             </p>
           </div>
-          <div className={"flex gap-4"}>
+          <div className={"flex gap-4 justify-end"}>
             <Button variant={"destructive"} onClick={handleLogout}>
               Logout
             </Button>
@@ -101,9 +120,9 @@ export const Account: FC = () => {
                 </FormItem>
               )}
             />
-            <Button className={"w-full"} type="submit">
-              Submit
-            </Button>
+            <div className={"flex justify-end"}>
+              <Button type="submit">Submit</Button>
+            </div>
           </form>
         </Form>
       </div>

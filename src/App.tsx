@@ -12,6 +12,8 @@ import AuthForm from "./components/AuthForm";
 import { ThemeProvider } from "./context/ThemeProvider/ThemeProvider";
 import { Toaster } from "@/components/ui/sonner";
 import { Account } from "@/components/Account";
+import { RegisterUser } from "@/components/RegisterUser";
+import { RegisterUserListener } from "@/components/RegisterUserListener";
 
 const AppContent: React.FC = () => {
   const { state } = useTraining();
@@ -32,11 +34,13 @@ const AppContent: React.FC = () => {
             {state.activeView === "timer" && <TrainingTimer />}
             {state.activeView === "editor" && <TrainingEditor />}
             {state.activeView === "account" && <Account />}
+            {state.activeView === "register" && <RegisterUser />}
           </>
         ) : (
           <AuthForm />
         )}
       </main>
+      <RegisterUserListener />
       <Toaster />
       <footer className="py-3 px-4 text-center text-sm text-gray-500 dark:text-gray-400 border-t border-gray-200 dark:border-gray-800">
         <p>Overmighty Timer &copy; {new Date().getFullYear()}</p>
