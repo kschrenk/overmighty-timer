@@ -1,3 +1,10 @@
+## [1.6.1](https://github.com/kschrenk/overmighty-timer/compare/v1.6.0...v1.6.1) (2025-05-25)
+
+
+### Bug Fixes
+
+* **user:** fix register form ([#15](https://github.com/kschrenk/overmighty-timer/issues/15)) ([436bbd9](https://github.com/kschrenk/overmighty-timer/commit/436bbd9a6ddb7750548b42bc66a09c3ac1836584))
+
 # [1.6.0](https://github.com/kschrenk/overmighty-timer/compare/v1.5.0...v1.6.0) (2025-05-25)
 
 
