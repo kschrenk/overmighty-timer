@@ -20,6 +20,7 @@ import { toast } from "sonner";
 import useSearchParams from "@/hooks/useSearchParams";
 import { useTraining } from "@/context/TrainingContext/TrainingContext";
 import { removeSearchParameters } from "@/lib/removeSearchParameters";
+import { Loader2 } from "lucide-react";
 
 const formSchema = z
   .object({
@@ -50,11 +51,12 @@ const formSchema = z
     path: ["confirmPassword"],
   });
 
-export const RegisterUser: FC = () => {
+export const RegisterForm: FC = () => {
   const { signup } = useAuth();
   const { getParam } = useSearchParams();
   const [showPassword, setShowPassword] = useState(false);
   const { dispatch } = useTraining();
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -70,6 +72,7 @@ export const RegisterUser: FC = () => {
     email,
     password,
   }: z.infer<typeof formSchema>) => {
+    setIsSubmitting(true);
     signup({ name, email, password })
       .then(() => {
         dispatch({ type: "GO_TO_HOME" });
@@ -80,11 +83,13 @@ export const RegisterUser: FC = () => {
           `Welcome ${name}. Enjoy your overmighty hangboard sessions!`,
           { position: "top-center" },
         );
+        setIsSubmitting(false);
       })
       .catch((error) => {
         if (error instanceof Error) {
           toast.error(error.message);
         }
+        setIsSubmitting(false);
       });
   };
 
@@ -179,8 +184,15 @@ export const RegisterUser: FC = () => {
               </FormItem>
             )}
           />
-          <Button className={"w-full"} type="submit">
-            Submit
+          <Button className={"w-full"} type="submit" disabled={isSubmitting}>
+            {isSubmitting ? (
+              <>
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                Please wait
+              </>
+            ) : (
+              "Submit"
+            )}
           </Button>
         </form>
       </Form>

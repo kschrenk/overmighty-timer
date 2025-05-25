@@ -8,11 +8,11 @@ import TrainingList from "./components/TrainingList";
 import TrainingTimer from "./components/TrainingTimer";
 import TrainingEditor from "./components/TrainingEditor";
 import { AuthProvider, useAuth } from "./context/AuthContext";
-import AuthForm from "./components/AuthForm";
+import AuthForm from "./components/form/AuthForm";
 import { ThemeProvider } from "./context/ThemeProvider/ThemeProvider";
 import { Toaster } from "@/components/ui/sonner";
 import { Account } from "@/components/Account";
-import { RegisterUser } from "@/components/RegisterUser";
+import { RegisterForm } from "@/components/form/RegisterForm";
 import { RegisterUserListener } from "@/components/RegisterUserListener";
 
 const AppContent: React.FC = () => {
@@ -34,7 +34,7 @@ const AppContent: React.FC = () => {
             {state.activeView === "timer" && <TrainingTimer />}
             {state.activeView === "editor" && <TrainingEditor />}
             {state.activeView === "account" && <Account />}
-            {state.activeView === "register" && <RegisterUser />}
+            {state.activeView === "register" && <RegisterForm />}
           </>
         ) : (
           <AuthForm />
