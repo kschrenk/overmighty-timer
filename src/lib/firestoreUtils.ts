@@ -68,6 +68,10 @@ export async function createInvite(invitedBy: User, invitedEmail: string) {
     await addDoc(mailRef, {
       to: invitedEmail,
       message: {
+        from: {
+          email: "account@overmighty.de",
+          name: "Team Overmighty",
+        },
         subject: "Invitation to join Overmighty Timer!",
         html: `
             <p>Hello!</p>
@@ -76,7 +80,7 @@ export async function createInvite(invitedBy: User, invitedEmail: string) {
             } to join Overmighty Timer.</p>
             <p>Click the following link to register: <a href="${inviteLink}">${inviteLink}</a> and hang like you never hung before.</p>
             <p>Best regards,</p>
-            <p>The Overmighty Timer Team</p>
+            <p>Your Overmighty Team</p>
           `,
       },
     });

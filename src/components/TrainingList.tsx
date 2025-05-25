@@ -45,7 +45,7 @@ const TrainingList: React.FC = () => {
   const handleDeleteSession = (sessionId: string) => {
     toast("Are you sure you want to delete this training session?", {
       closeButton: true,
-      position: "top-right",
+      position: "top-center",
       duration: 5000,
       action: {
         label: "OK",
@@ -62,7 +62,7 @@ const TrainingList: React.FC = () => {
               dispatch({ type: "DELETE_SESSION", payload: sessionId });
             })
             .finally(() => {
-              toast(
+              toast.info(
                 `Session "${getSessionById?.(sessionId)?.name}" successfully deleted.`,
                 {
                   position: "top-center",
