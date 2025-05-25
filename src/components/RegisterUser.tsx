@@ -70,7 +70,6 @@ export const RegisterUser: FC = () => {
     email,
     password,
   }: z.infer<typeof formSchema>) => {
-    console.log("🚀", { name, email, password });
     signup({ name, email, password })
       .then(() => {
         dispatch({ type: "GO_TO_HOME" });
