@@ -47,7 +47,9 @@ const Header: FC = () => {
           )}
           <h1 className="text-2xl font-bold tracking-tight">{getTitle()}</h1>
         </div>
-        {currentUser && ["list", "account"].includes(activeView) ? (
+        {currentUser &&
+        currentUser.uid !== "test-user" &&
+        ["list", "account"].includes(activeView) ? (
           <CircleUser
             onClick={() => dispatch({ type: "GO_TO_ACCOUNT" })}
             color={
