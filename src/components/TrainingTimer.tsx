@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
-import { useTraining } from "../context/TrainingContext/TrainingContext";
-import { TimerState, TimerViewEnum } from "../types/training";
-import { formatTime, getStateDescription } from "../utils/timerUtils";
+import { useTraining } from "@/context/TrainingContext/TrainingContext";
+import { TimerState, TimerViewEnum } from "@/types/training";
+import { formatTime, getStateDescription } from "@/utils/timerUtils";
 import { PauseCircle, Play, PlayCircle, StopCircle } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
@@ -19,27 +19,39 @@ const TrainingTimer: React.FC = () => {
 
   useEffect(() => {
     const { timerState } = timerData;
-    const currentTime =
-      timerState === TimerState.HANGING
-        ? currentSet?.hangTime
-        : timerState === TimerState.RESTING_BETWEEN_REPS
-          ? currentSet?.rest
-          : timerState === TimerState.RESTING_AFTER_SET
-            ? currentSet?.restAfter
-            : null;
+    let currentTime = 0;
+
+    switch (timerState) {
+      case TimerState.HANGING:
+        currentTime = currentSet?.hangTime ?? 0;
+        break;
+      case TimerState.RESTING_BETWEEN_REPS:
+        currentTime = currentSet?.rest ?? 0;
+        break;
+      case TimerState.RESTING_AFTER_SET:
+        currentTime = currentSet?.restAfter ?? 0;
+        break;
+      case TimerState.PREPARATION:
+        currentTime = currentSession?.preparationTime ?? 0;
+        break;
+      default:
+        currentTime = 0;
+        break;
+    }
 
     if (!currentTime) return;
 
     const rawProgress =
       ((currentTime - timerData.secondsLeft) * 100) / currentTime;
-
     setProgress(Math.max(0, Math.min(100, rawProgress)));
   }, [
     currentSet?.hangTime,
     currentSet?.rest,
     currentSet?.restAfter,
-    state.timerData.timerState,
+    currentSession?.preparationTime,
     timerData,
+    timerData.secondsLeft,
+    timerData.timerState,
   ]);
 
   const handleStart = () => {
@@ -96,6 +108,10 @@ const TrainingTimer: React.FC = () => {
         return timerView === TimerViewEnum.BAR
           ? "bg-red-600"
           : "var(--color-red-600)";
+      case TimerState.PREPARATION:
+        return timerView === TimerViewEnum.BAR
+          ? "bg-yellow-600"
+          : "var(--color-yellow-600)";
       default:
         return timerView === TimerViewEnum.BAR
           ? "bg-gray-300"
@@ -107,6 +123,7 @@ const TrainingTimer: React.FC = () => {
   const isFinished = timerData.timerState === TimerState.FINISHED;
   const isPaused = timerData.timerState === TimerState.PAUSED;
   const isRunning = !isIdle && !isFinished && !isPaused;
+  const isPreparation = timerData.timerState === TimerState.PREPARATION;
 
   return (
     <div className="max-w-md mx-auto p-4 flex flex-col min-h-[calc(100vh-4rem)]">
@@ -152,20 +169,25 @@ const TrainingTimer: React.FC = () => {
           </>
         ) : null}
         <div className="text-center mb-8 z-50">
-          <h3 className="text-2xl font-semibold mb-2 text-gray-800 dark:text-gray-100">
-            {currentSet.gripType}
-          </h3>
-          <p className="text-lg text-gray-600 dark:text-gray-300">
-            Rep {timerData.currentRepetition + 1} / {currentSet.repetitions}
-            {currentSet.additionalWeight > 0 && (
-              <span className="ml-2 text-blue-600 dark:text-blue-400">
-                +{currentSet.additionalWeight}kg
-              </span>
-            )}
-          </p>
-          <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
-            Set {timerData.currentSetIndex + 1} of {currentSession.sets.length}
-          </p>
+          {!isPreparation && (
+            <>
+              <h3 className="text-2xl font-semibold mb-2 text-gray-800 dark:text-gray-100">
+                {currentSet.gripType}
+              </h3>
+              <p className="text-lg text-gray-600 dark:text-gray-300">
+                Rep {timerData.currentRepetition + 1} / {currentSet.repetitions}
+                {currentSet.additionalWeight > 0 && (
+                  <span className="ml-2 text-blue-600 dark:text-blue-400">
+                    +{currentSet.additionalWeight}kg
+                  </span>
+                )}
+              </p>
+              <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
+                Set {timerData.currentSetIndex + 1} of{" "}
+                {currentSession.sets.length}
+              </p>
+            </>
+          )}
         </div>
       </div>
       <div className="flex justify-center items-center space-x-6 py-6 border-t border-gray-200 dark:border-gray-700">

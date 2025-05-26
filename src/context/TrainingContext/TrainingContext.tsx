@@ -94,7 +94,8 @@ export const TrainingProvider: React.FC<{ children: React.ReactNode }> = ({
     if (
       state.timerData.timerState === TimerState.HANGING ||
       state.timerData.timerState === TimerState.RESTING_BETWEEN_REPS ||
-      state.timerData.timerState === TimerState.RESTING_AFTER_SET
+      state.timerData.timerState === TimerState.RESTING_AFTER_SET ||
+      state.timerData.timerState === TimerState.PREPARATION
     ) {
       const id = window.setInterval(() => {
         dispatch({ type: "TICK" });

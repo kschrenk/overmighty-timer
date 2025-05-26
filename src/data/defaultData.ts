@@ -1,10 +1,5 @@
-import type {
-  TimerData,
-  TrainingSession} from "@/types/training";
-import {
-  TimerState,
-  TimerViewEnum
-} from "@/types/training";
+import type { TimerData, TrainingSession } from "@/types/training";
+import { TimerState, TimerViewEnum } from "@/types/training";
 
 export const initialTimerData: TimerData = {
   currentSession: null,
@@ -20,6 +15,7 @@ export const DEFAULT_TRAINING_SESSIONS: TrainingSession[] = [
     id: "1",
     name: "Beginner Hangboard",
     timerView: TimerViewEnum.CIRCLE,
+    preparationTime: 10,
     sets: [
       {
         id: "1-1",
@@ -45,6 +41,7 @@ export const DEFAULT_TRAINING_SESSIONS: TrainingSession[] = [
     id: "2",
     name: "Intermediate Training",
     timerView: TimerViewEnum.BAR,
+    preparationTime: 10,
     sets: [
       {
         id: "2-1",

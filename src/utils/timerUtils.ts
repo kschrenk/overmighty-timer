@@ -35,6 +35,8 @@ export const getStateDescription = (state: TimerState): string => {
       return "PAUSED";
     case TimerState.FINISHED:
       return "FINISHED";
+    case TimerState.PREPARATION:
+      return "PREPARATION";
     default:
       return "READY";
   }
