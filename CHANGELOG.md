@@ -1,3 +1,10 @@
+# [1.7.0](https://github.com/kschrenk/overmighty-timer/compare/v1.6.1...v1.7.0) (2025-05-26)
+
+
+### Features
+
+* **timer:** add preparation time ([#16](https://github.com/kschrenk/overmighty-timer/issues/16)) ([bc211aa](https://github.com/kschrenk/overmighty-timer/commit/bc211aaaddcc87865c7e97b50f05ff7e7caa67cf))
+
 ## [1.6.1](https://github.com/kschrenk/overmighty-timer/compare/v1.6.0...v1.6.1) (2025-05-25)
 
 
