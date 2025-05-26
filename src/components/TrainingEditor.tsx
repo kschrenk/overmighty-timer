@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Copy, Eye, FolderPen, Plus, Save, Trash2 } from "lucide-react";
+import { Bath, Copy, Eye, FolderPen, Plus, Save, Trash2 } from "lucide-react";
 import { useTraining } from "@/context/TrainingContext/TrainingContext";
 import type { Set } from "@/types/training";
 import { TimerViewEnum } from "@/types/training";
@@ -31,9 +31,18 @@ const TrainingEditor: React.FC = () => {
   const [timerView, setTimerView] = useState<TimerViewEnum>(
     editingSession?.timerView ?? TimerViewEnum.CIRCLE,
   );
+  const [preparationTime, setPreparationTime] = useState<number>(
+    editingSession?.preparationTime ?? 0,
+  );
 
   const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSessionName(e.target.value);
+  };
+
+  const handlePreparationTimeChange = (
+    e: React.ChangeEvent<HTMLInputElement>,
+  ) => {
+    setPreparationTime(parseInt(e.target.value));
   };
 
   const handleSave = () => {
@@ -53,6 +62,7 @@ const TrainingEditor: React.FC = () => {
       ...editingSession,
       name: sessionName,
       timerView,
+      preparationTime,
     };
 
     if (isUidTestUser(currentUser?.uid)) {
@@ -153,6 +163,19 @@ const TrainingEditor: React.FC = () => {
             value={sessionName}
             onChange={handleNameChange}
             placeholder="Enter session name"
+          />
+        </LabelWrapper>
+        <LabelWrapper className={"gap-3 pb-6"}>
+          <Label htmlFor="preparationTime">
+            <Bath size={16} />
+            Preparation Time (seconds)
+          </Label>
+          <Input
+            min={0}
+            type="number"
+            id="preparationTime"
+            value={preparationTime}
+            onChange={handlePreparationTimeChange}
           />
         </LabelWrapper>
         <Label>

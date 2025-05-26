@@ -54,7 +54,6 @@ export const trainingReducer = (
     }
 
     case "TICK": {
-      console.log("🚀", { state });
       if (state.timerData.secondsLeft > 0) {
         return {
           ...state,
@@ -214,6 +213,7 @@ export const trainingReducer = (
         timerData: {
           ...state.timerData,
           timerState: previousState ?? state.timerData.timerState,
+          previousTimerState: undefined,
         },
       };
     }

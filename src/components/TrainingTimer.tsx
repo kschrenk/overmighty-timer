@@ -123,7 +123,9 @@ const TrainingTimer: React.FC = () => {
   const isFinished = timerData.timerState === TimerState.FINISHED;
   const isPaused = timerData.timerState === TimerState.PAUSED;
   const isRunning = !isIdle && !isFinished && !isPaused;
-  const isPreparation = timerData.timerState === TimerState.PREPARATION;
+  const isPreparation =
+    timerData.timerState === TimerState.PREPARATION ||
+    timerData.previousTimerState === TimerState.PREPARATION;
 
   return (
     <div className="max-w-md mx-auto p-4 flex flex-col min-h-[calc(100vh-4rem)]">
@@ -163,19 +165,42 @@ const TrainingTimer: React.FC = () => {
               })}
               counterClockwise
             />
-            <div className="text-base uppercase font-medium tracking-wider text-gray-600 dark:text-gray-400">
+            <div className="text-lg uppercase font-medium mb-1 tracking-wider text-gray-600 dark:text-gray-400">
               {getStateDescription(timerData.timerState)}
             </div>
           </>
         ) : null}
-        <div className="text-center mb-8 z-50">
-          {!isPreparation && (
+        <div className="text-center mb-4 z-50">
+          {!isPreparation ? (
             <>
-              <h3 className="text-2xl font-semibold mb-2 text-gray-800 dark:text-gray-100">
+              <h3 className="text-4xl font-semibold mb-2 text-gray-800 dark:text-gray-100">
                 {currentSet.gripType}
               </h3>
               <p className="text-lg text-gray-600 dark:text-gray-300">
                 Rep {timerData.currentRepetition + 1} / {currentSet.repetitions}
+                {currentSet.additionalWeight > 0 && (
+                  <span className="ml-2 text-blue-600 dark:text-blue-400">
+                    +{currentSet.additionalWeight}kg
+                  </span>
+                )}
+              </p>
+              <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
+                Set {timerData.currentSetIndex + 1} of{" "}
+                {currentSession.sets.length}
+              </p>
+            </>
+          ) : (
+            <>
+              <h3 className="text-4xl font-semibold mb-2 text-gray-800 dark:text-gray-100">
+                GET READY
+              </h3>
+              <p className="text-lg text-gray-600 dark:text-gray-300">
+                Grip Type{" "}
+                <span className={"dark:text-blue-400"}>
+                  {currentSet.gripType}
+                </span>{" "}
+                / {currentSet.repetitions} Rep
+                {currentSet.repetitions > 1 ? "s" : ""}
                 {currentSet.additionalWeight > 0 && (
                   <span className="ml-2 text-blue-600 dark:text-blue-400">
                     +{currentSet.additionalWeight}kg
