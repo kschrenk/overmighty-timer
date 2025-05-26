@@ -10,6 +10,7 @@ import {
   fetchSignInMethodsForEmail,
 } from "firebase/auth";
 import { auth } from "@/firebase";
+import { isUidTestUser, TEST_USER } from "@/lib/testUser";
 
 interface SignupArguments {
   email: string;
@@ -70,7 +71,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const logout = async () => {
-    if (import.meta.env.DEV || currentUser?.uid === "test-user") {
+    if (import.meta.env.DEV || isUidTestUser(currentUser?.uid)) {
       setCurrentUser(null);
       return;
     }
@@ -79,7 +80,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   const loginAsTestUser = () => {
     setCurrentUser({
-      uid: "test-user",
+      uid: TEST_USER,
       email: "test@guest.local",
     } as User);
   };
