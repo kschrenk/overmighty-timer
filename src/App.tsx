@@ -14,6 +14,7 @@ import { Toaster } from "@/components/ui/sonner";
 import { Account } from "@/components/Account";
 import { RegisterForm } from "@/components/form/RegisterForm";
 import { RegisterUserListener } from "@/components/RegisterUserListener";
+import { isUidTestUser } from "@/lib/testUser";
 
 const AppContent: React.FC = () => {
   const { state } = useTraining();
@@ -23,7 +24,7 @@ const AppContent: React.FC = () => {
     <div className="flex flex-col min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors duration-200">
       <Header />
       <main className="grow">
-        {currentUser?.uid === "test-user" && (
+        {isUidTestUser(currentUser?.uid) && (
           <div className="bg-yellow-100 text-yellow-800 p-2 text-center">
             You are using the app as a Test User. Your data will not be saved.
           </div>

@@ -52,6 +52,7 @@ const FREQUENCIES = {
   startRest: 440, // A4
   endSet: 220, // A3
   endTraining: [440, 660, 880], // A4, E5, A5 chord
+  preparation: 1100, // C6
 };
 
 // Play a tone with given frequency
@@ -128,6 +129,11 @@ export const playEndTrainingSound = (): void => {
   playToneSequence(FREQUENCIES.endTraining, 300);
 };
 
+// Sound for preparing a training session
+export const playPreparationSound = (): void => {
+  playTone(FREQUENCIES.preparation, 300);
+};
+
 // General state change notification
 export const playStateChangeSound = (state: string): void => {
   switch (state) {
@@ -143,6 +149,10 @@ export const playStateChangeSound = (state: string): void => {
     case "finished":
       playEndTrainingSound();
       break;
+    case "preparation": {
+      playPreparationSound();
+      break;
+    }
     default:
       break;
   }

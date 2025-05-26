@@ -2,9 +2,12 @@ import type { FC } from "react";
 import { ArrowLeft, CircleUser } from "lucide-react";
 import { useTraining } from "@/context/TrainingContext/TrainingContext";
 import { removeSearchParameters } from "@/lib/removeSearchParameters";
+import { useAuth } from "@/context/AuthContext";
+import { isUidTestUser } from "@/lib/testUser";
 
 const Header: FC = () => {
   const { state, dispatch } = useTraining();
+  const { currentUser } = useAuth();
   const { activeView } = state;
 
   const getTitle = () => {
@@ -45,7 +48,9 @@ const Header: FC = () => {
           )}
           <h1 className="text-2xl font-bold tracking-tight">{getTitle()}</h1>
         </div>
-        {["list", "account"].includes(activeView) ? (
+        {currentUser &&
+        !isUidTestUser(currentUser.uid) &&
+        ["list", "account"].includes(activeView) ? (
           <CircleUser
             onClick={() => dispatch({ type: "GO_TO_ACCOUNT" })}
             color={

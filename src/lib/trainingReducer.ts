@@ -28,7 +28,17 @@ export const trainingReducer = (
   action: TrainingAction,
 ): TrainingContextState => {
   switch (action.type) {
-    case "START_SESSION":
+    case "START_SESSION": {
+      const { payload } = action;
+      const timerState =
+        payload.preparationTime && payload.preparationTime > 0
+          ? TimerState.PREPARATION
+          : TimerState.HANGING;
+      const secondsLeft =
+        (timerState === TimerState.PREPARATION
+          ? payload.preparationTime
+          : payload.sets[0].hangTime) ?? 0;
+
       return {
         ...state,
         timerData: {
@@ -36,11 +46,12 @@ export const trainingReducer = (
           currentSetIndex: 0,
           currentRepetition: 0,
           currentSetRepetition: 0,
-          timerState: TimerState.HANGING,
-          secondsLeft: action.payload.sets[0].hangTime,
+          timerState,
+          secondsLeft,
         },
         activeView: "timer",
       };
+    }
 
     case "TICK": {
       if (state.timerData.secondsLeft > 0) {
@@ -64,6 +75,17 @@ export const trainingReducer = (
 
       const currentSet = currentSession.sets[currentSetIndex];
       const setRepetitions = currentSet.setRepetitions ?? 1;
+
+      if (timerState === TimerState.PREPARATION) {
+        return {
+          ...state,
+          timerData: {
+            ...state.timerData,
+            timerState: TimerState.HANGING,
+            secondsLeft: currentSet.hangTime,
+          },
+        };
+      }
 
       if (timerState === TimerState.HANGING) {
         if (currentRepetition < currentSet.repetitions - 1) {
@@ -191,6 +213,7 @@ export const trainingReducer = (
         timerData: {
           ...state.timerData,
           timerState: previousState ?? state.timerData.timerState,
+          previousTimerState: undefined,
         },
       };
     }

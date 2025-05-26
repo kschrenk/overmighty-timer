@@ -19,6 +19,7 @@ export interface TrainingSession {
   name: string;
   sets: Set[];
   timerView?: TimerViewEnum;
+  preparationTime?: number; // in seconds
 }
 
 export enum TimerState {
@@ -28,6 +29,7 @@ export enum TimerState {
   RESTING_AFTER_SET = "restingAfterSet",
   PAUSED = "paused",
   FINISHED = "finished",
+  PREPARATION = "preparation",
 }
 
 export interface TimerData {
