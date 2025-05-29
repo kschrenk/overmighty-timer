@@ -99,7 +99,7 @@ const TrainingTimer: React.FC = () => {
     );
   }
 
-  const getProgressColor = (timerView: TimerViewEnum) => {
+  const getProgressColor = (timerView?: TimerViewEnum) => {
     switch (timerData.timerState) {
       case TimerState.HANGING:
         return timerView === TimerViewEnum.BAR
@@ -128,13 +128,14 @@ const TrainingTimer: React.FC = () => {
   const isPreparation =
     timerData.timerState === TimerState.PREPARATION ||
     timerData.previousTimerState === TimerState.PREPARATION;
+  const isTimerViewBar = currentSession.timerView === TimerViewEnum.BAR;
 
   return (
     <div
-      className={`max-w-md mx-auto py-4 flex flex-col min-h-[calc(100vh-4rem)] ${currentSession.timerView === TimerViewEnum.CIRCLE ? "px-6" : "px-0"}`}
+      className={`max-w-md mx-auto py-4 flex flex-col min-h-[calc(100vh-4rem)] ${!isTimerViewBar ? "px-6" : "px-0"}`}
     >
       <div className="grow flex flex-col items-center justify-center py-8 relative">
-        {currentSession.timerView === TimerViewEnum.BAR ? (
+        {isTimerViewBar ? (
           <>
             <Progress
               value={progress}
@@ -143,7 +144,7 @@ const TrainingTimer: React.FC = () => {
             />
             <div className="relative w-64 h-64 mb-6 z-50">
               <div className="absolute inset-0 flex flex-col items-center justify-center">
-                <div className="text-7xl font-bold mb-2 text-gray-800 dark:text-gray-100">
+                <div className="text-8xl font-bold mb-2 text-gray-800 dark:text-gray-100">
                   {formatTime(timerData.secondsLeft)}
                 </div>
                 <div className="text-sm uppercase font-medium tracking-wider text-gray-600 dark:text-gray-400">
@@ -152,7 +153,7 @@ const TrainingTimer: React.FC = () => {
               </div>
             </div>
           </>
-        ) : currentSession.timerView === TimerViewEnum.CIRCLE ? (
+        ) : (
           <>
             <CircularProgressbar
               className={"pb-6"}
@@ -175,8 +176,10 @@ const TrainingTimer: React.FC = () => {
               </span>
             </div>
           </>
-        ) : null}
-        <Card className="z-50 text-center min-h-[142px] w-full dark:bg-gray-800 justify-center py-4">
+        )}
+        <Card
+          className={`z-50 text-center min-h-[142px]  justify-center py-4 ${isTimerViewBar ? "max-w-sm min-w-64" : "w-full dark:bg-gray-800"}`}
+        >
           <CardContent>
             <div className={"grid gap-2"}>
               {!isPreparation ? (
