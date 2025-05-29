@@ -1,3 +1,10 @@
+## [1.7.1](https://github.com/kschrenk/overmighty-timer/compare/v1.7.0...v1.7.1) (2025-05-29)
+
+
+### Bug Fixes
+
+* **reducer:** remove set repetitions ([#17](https://github.com/kschrenk/overmighty-timer/issues/17)) ([0c0dffc](https://github.com/kschrenk/overmighty-timer/commit/0c0dffc5f103389b07ed2f2fda1342e6ea989fcc))
+
 # [1.7.0](https://github.com/kschrenk/overmighty-timer/compare/v1.6.1...v1.7.0) (2025-05-26)
 
 
