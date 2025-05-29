@@ -4,7 +4,6 @@ import { useTraining } from "@/context/TrainingContext/TrainingContext";
 import type { Set } from "@/types/training";
 import { TimerViewEnum } from "@/types/training";
 import { generateId } from "@/utils/timerUtils";
-import { SetRepetitionsInput } from "./SetRepetitionsInput";
 import { useAuth } from "@/context/AuthContext";
 import { updateTrainingSession } from "@/lib/firestoreUtils";
 import { Label } from "./ui/label";
@@ -255,6 +254,7 @@ const TrainingEditor: React.FC = () => {
                     type="text"
                     id={`gripType-${set.id}`}
                     value={set.gripType}
+                    maxLength={39}
                     onChange={(e) =>
                       handleSetChange(set.id, "gripType", e.target.value)
                     }
@@ -375,15 +375,6 @@ const TrainingEditor: React.FC = () => {
                     className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-xs focus:outline-hidden focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-800 dark:text-gray-100"
                   />
                 </div>
-                <SetRepetitionsInput
-                  value={set.setRepetitions ?? 1}
-                  min={1}
-                  max={10}
-                  id={`setRepetitions-${set.id}`}
-                  onChange={(val) =>
-                    handleSetChange(set.id, "setRepetitions", val)
-                  }
-                />
               </div>
             </div>
           ))}

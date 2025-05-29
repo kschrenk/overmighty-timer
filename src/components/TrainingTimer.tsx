@@ -7,12 +7,14 @@ import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { buildStyles, CircularProgressbar } from "react-circular-progressbar";
+import { Card, CardContent } from "@/components/ui/card";
 
 const TrainingTimer: React.FC = () => {
   const { state, dispatch } = useTraining();
   const { timerData } = state;
 
   const [progress, setProgress] = useState(100);
+  console.log("🚀", { progress });
 
   const currentSession = timerData.currentSession;
   const currentSet = currentSession?.sets[timerData.currentSetIndex];
@@ -43,6 +45,7 @@ const TrainingTimer: React.FC = () => {
 
     const rawProgress =
       ((currentTime - timerData.secondsLeft) * 100) / currentTime;
+
     setProgress(Math.max(0, Math.min(100, rawProgress)));
   }, [
     currentSet?.hangTime,
@@ -128,7 +131,9 @@ const TrainingTimer: React.FC = () => {
     timerData.previousTimerState === TimerState.PREPARATION;
 
   return (
-    <div className="max-w-md mx-auto p-4 flex flex-col min-h-[calc(100vh-4rem)]">
+    <div
+      className={`max-w-md mx-auto py-4 flex flex-col min-h-[calc(100vh-4rem)] ${currentSession.timerView === TimerViewEnum.CIRCLE ? "px-6" : "px-0"}`}
+    >
       <div className="grow flex flex-col items-center justify-center py-8 relative">
         {currentSession.timerView === TimerViewEnum.BAR ? (
           <>
@@ -151,7 +156,7 @@ const TrainingTimer: React.FC = () => {
         ) : currentSession.timerView === TimerViewEnum.CIRCLE ? (
           <>
             <CircularProgressbar
-              className={"mb-4"}
+              className={"pb-6"}
               maxValue={100}
               minValue={0}
               value={progress}
@@ -165,55 +170,58 @@ const TrainingTimer: React.FC = () => {
               })}
               counterClockwise
             />
-            <div className="text-lg uppercase font-medium mb-1 tracking-wider text-gray-600 dark:text-gray-400">
-              {getStateDescription(timerData.timerState)}
+            <div className={"inline-flex pb-6"}>
+              <span className="text-xl uppercase font-extrabold tracking-wider text-gray-600 dark:text-gray-400">
+                {getStateDescription(timerData.timerState)}
+              </span>
             </div>
           </>
         ) : null}
-        <div className="text-center mb-4 z-50">
-          {!isPreparation ? (
-            <>
-              <h3 className="text-4xl font-semibold mb-2 text-gray-800 dark:text-gray-100">
-                {currentSet.gripType}
-              </h3>
-              <p className="text-lg text-gray-600 dark:text-gray-300">
-                Rep {timerData.currentRepetition + 1} / {currentSet.repetitions}
-                {currentSet.additionalWeight > 0 && (
-                  <span className="ml-2 text-blue-600 dark:text-blue-400">
-                    +{currentSet.additionalWeight}kg
-                  </span>
-                )}
-              </p>
-              <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
-                Set {timerData.currentSetIndex + 1} of{" "}
-                {currentSession.sets.length}
-              </p>
-            </>
-          ) : (
-            <>
-              <h3 className="text-4xl font-semibold mb-2 text-gray-800 dark:text-gray-100">
-                GET READY
-              </h3>
-              <p className="text-lg text-gray-600 dark:text-gray-300">
-                Grip Type{" "}
-                <span className={"dark:text-blue-400"}>
-                  {currentSet.gripType}
-                </span>{" "}
-                / {currentSet.repetitions} Rep
-                {currentSet.repetitions > 1 ? "s" : ""}
-                {currentSet.additionalWeight > 0 && (
-                  <span className="ml-2 text-blue-600 dark:text-blue-400">
-                    +{currentSet.additionalWeight}kg
-                  </span>
-                )}
-              </p>
-              <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
-                Set {timerData.currentSetIndex + 1} of{" "}
-                {currentSession.sets.length}
-              </p>
-            </>
-          )}
-        </div>
+        <Card className="z-50 text-center min-h-[142px] w-full dark:bg-gray-800 justify-center py-4">
+          <CardContent>
+            <div className={"grid gap-2"}>
+              {!isPreparation ? (
+                <>
+                  <h3 className="text-3xl font-semibold text-gray-800 dark:text-gray-100 truncate">
+                    {currentSet.gripType}
+                  </h3>
+                  <p className="text-xl text-gray-600 dark:text-gray-300">
+                    Rep {timerData.currentRepetition + 1} /{" "}
+                    {currentSet.repetitions}
+                    {currentSet.additionalWeight > 0 && (
+                      <span className="ml-2 text-blue-600 dark:text-blue-400">
+                        +{currentSet.additionalWeight}kg
+                      </span>
+                    )}
+                  </p>
+                  <p className="text-lg text-gray-500 dark:text-gray-400">
+                    Set {timerData.currentSetIndex + 1} of{" "}
+                    {currentSession.sets.length}
+                  </p>
+                </>
+              ) : (
+                <>
+                  <h3 className="text-xl font-semibold text-gray-800 dark:text-gray-100">
+                    🚀 Get Ready!
+                  </h3>
+                  <p className="text-2xl text-gray-600 dark:text-gray-300 truncate">
+                    {currentSet.gripType} / {currentSet.repetitions} Rep
+                    {currentSet.repetitions > 1 ? "s" : ""}
+                    {currentSet.additionalWeight > 0 && (
+                      <span className="ml-2 text-blue-600 dark:text-blue-400">
+                        +{currentSet.additionalWeight}kg
+                      </span>
+                    )}
+                  </p>
+                  <p className="text-xl text-gray-500 dark:text-gray-400">
+                    Set {timerData.currentSetIndex + 1} of{" "}
+                    {currentSession.sets.length}
+                  </p>
+                </>
+              )}
+            </div>
+          </CardContent>
+        </Card>
       </div>
       <div className="flex justify-center items-center space-x-6 py-6 border-t border-gray-200 dark:border-gray-700">
         {isIdle && !isFinished && (
