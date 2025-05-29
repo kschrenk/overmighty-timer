@@ -183,7 +183,7 @@ export const trainingReducer = (
       };
     }
 
-    case "PAUSE_TIMER":
+    case "PAUSE_TIMER": {
       return {
         ...state,
         timerData: {
@@ -192,6 +192,7 @@ export const trainingReducer = (
           previousTimerState: action.payload,
         },
       };
+    }
 
     case "RESUME_TIMER": {
       const previousState = state.timerData.previousTimerState;

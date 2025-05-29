@@ -8,15 +8,18 @@ import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { buildStyles, CircularProgressbar } from "react-circular-progressbar";
 import { Card, CardContent } from "@/components/ui/card";
+import { getNextSet } from "@/lib/trainingReducer.helper";
+import { TrainingTimerInfo } from "@/components/TrainingTimerInfo";
 
 const TrainingTimer: React.FC = () => {
   const { state, dispatch } = useTraining();
-  const { timerData } = state;
-
   const [progress, setProgress] = useState(100);
 
-  const currentSession = timerData.currentSession;
-  const currentSet = currentSession?.sets[timerData.currentSetIndex];
+  const { timerData } = state;
+  const { currentSession, currentSetIndex, timerState } = timerData;
+  const currentSet = currentSession?.sets[currentSetIndex] ?? null;
+  const nextSet = getNextSet(currentSession, currentSetIndex);
+  const nextSetIndex = currentSetIndex + 1;
 
   useEffect(() => {
     const { timerState } = timerData;
@@ -53,7 +56,7 @@ const TrainingTimer: React.FC = () => {
     currentSession?.preparationTime,
     timerData,
     timerData.secondsLeft,
-    timerData.timerState,
+    timerState,
   ]);
 
   const handleStart = () => {
@@ -76,7 +79,7 @@ const TrainingTimer: React.FC = () => {
   };
 
   const handlePause = () => {
-    dispatch({ type: "PAUSE_TIMER", payload: timerData.timerState });
+    dispatch({ type: "PAUSE_TIMER", payload: timerState });
   };
 
   const handleResume = () => {
@@ -100,7 +103,7 @@ const TrainingTimer: React.FC = () => {
   }
 
   const getProgressColor = (timerView?: TimerViewEnum) => {
-    switch (timerData.timerState) {
+    switch (timerState) {
       case TimerState.HANGING:
         return timerView === TimerViewEnum.BAR
           ? "bg-green-600"
@@ -121,14 +124,16 @@ const TrainingTimer: React.FC = () => {
     }
   };
 
-  const isIdle = timerData.timerState === TimerState.IDLE;
-  const isFinished = timerData.timerState === TimerState.FINISHED;
-  const isPaused = timerData.timerState === TimerState.PAUSED;
+  const isIdle = timerState === TimerState.IDLE;
+  const isFinished = timerState === TimerState.FINISHED;
+  const isPaused = timerState === TimerState.PAUSED;
   const isRunning = !isIdle && !isFinished && !isPaused;
   const isPreparation =
-    timerData.timerState === TimerState.PREPARATION ||
+    timerState === TimerState.PREPARATION ||
     timerData.previousTimerState === TimerState.PREPARATION;
   const isTimerViewBar = currentSession.timerView === TimerViewEnum.BAR;
+  const isDisplayNextSetInformation =
+    timerState === TimerState.RESTING_AFTER_SET && nextSet;
 
   return (
     <div
@@ -148,7 +153,7 @@ const TrainingTimer: React.FC = () => {
                   {formatTime(timerData.secondsLeft)}
                 </div>
                 <div className="text-sm uppercase font-medium tracking-wider text-gray-600 dark:text-gray-400">
-                  {getStateDescription(timerData.timerState)}
+                  {getStateDescription(timerState)}
                 </div>
               </div>
             </div>
@@ -172,58 +177,70 @@ const TrainingTimer: React.FC = () => {
             />
             <div className={"inline-flex pb-6"}>
               <span className="text-xl uppercase font-extrabold tracking-wider text-gray-600 dark:text-gray-400">
-                {getStateDescription(timerData.timerState)}
+                {getStateDescription(timerState)}
               </span>
             </div>
           </>
         )}
-        <Card
-          className={`z-50 text-center min-h-[142px]  justify-center py-4 ${isTimerViewBar ? "max-w-sm min-w-64" : "w-full dark:bg-gray-800"}`}
-        >
-          <CardContent>
-            <div className={"grid gap-2"}>
-              {!isPreparation ? (
-                <>
-                  <h3 className="text-3xl font-semibold text-gray-800 dark:text-gray-100 truncate">
-                    {currentSet.gripType}
-                  </h3>
-                  <p className="text-xl text-gray-600 dark:text-gray-300">
-                    Rep {timerData.currentRepetition + 1} /{" "}
-                    {currentSet.repetitions}
-                    {currentSet.additionalWeight > 0 && (
-                      <span className="ml-2 text-blue-600 dark:text-blue-400">
-                        +{currentSet.additionalWeight}kg
-                      </span>
-                    )}
-                  </p>
-                  <p className="text-lg text-gray-500 dark:text-gray-400">
-                    Set {timerData.currentSetIndex + 1} of{" "}
-                    {currentSession.sets.length}
-                  </p>
-                </>
-              ) : (
-                <>
-                  <h3 className="text-xl font-semibold text-gray-800 dark:text-gray-100">
-                    🚀 Get Ready!
-                  </h3>
-                  <p className="text-2xl text-gray-600 dark:text-gray-300 truncate">
-                    {currentSet.gripType} / {currentSet.repetitions} Rep
-                    {currentSet.repetitions > 1 ? "s" : ""}
-                    {currentSet.additionalWeight > 0 && (
-                      <span className="ml-2 text-blue-600 dark:text-blue-400">
-                        +{currentSet.additionalWeight}kg
-                      </span>
-                    )}
-                  </p>
-                  <p className="text-xl text-gray-500 dark:text-gray-400">
-                    Set {timerData.currentSetIndex + 1} of{" "}
-                    {currentSession.sets.length}
-                  </p>
-                </>
-              )}
-            </div>
-          </CardContent>
-        </Card>
+        {!isFinished && (
+          <Card
+            className={`z-50 text-center min-h-[142px]  justify-center py-4 ${isTimerViewBar ? "max-w-sm min-w-64" : "w-full "} ${isDisplayNextSetInformation ? "dark:bg-green-900/[30%]" : "dark:bg-gray-900"}`}
+          >
+            <CardContent className={"px-4 relative"}>
+              <div className={"grid gap-2"}>
+                {!isPreparation ? (
+                  <TrainingTimerInfo
+                    gripType={
+                      isDisplayNextSetInformation
+                        ? nextSet?.gripType
+                        : currentSet.gripType
+                    }
+                    currentRepetition={
+                      isDisplayNextSetInformation
+                        ? 0
+                        : timerData.currentRepetition
+                    }
+                    currentSetIndex={
+                      isDisplayNextSetInformation
+                        ? nextSetIndex
+                        : currentSetIndex
+                    }
+                    repetitions={
+                      isDisplayNextSetInformation
+                        ? nextSet?.repetitions
+                        : currentSet.repetitions
+                    }
+                    additionalWeight={
+                      isDisplayNextSetInformation
+                        ? nextSet?.additionalWeight
+                        : currentSet.additionalWeight
+                    }
+                    setLength={currentSession.sets.length}
+                    infoText={isDisplayNextSetInformation ? "next" : "none"}
+                  />
+                ) : (
+                  <>
+                    <h3 className="text-xl font-semibold text-gray-800 dark:text-gray-100">
+                      🚀 Get Ready!
+                    </h3>
+                    <p className="text-2xl text-gray-600 dark:text-gray-300 truncate">
+                      {currentSet.gripType} / {currentSet.repetitions} Rep
+                      {currentSet.repetitions > 1 ? "s" : ""}
+                      {currentSet.additionalWeight > 0 && (
+                        <span className="ml-2 text-blue-600 dark:text-blue-400">
+                          +{currentSet.additionalWeight}kg
+                        </span>
+                      )}
+                    </p>
+                    <p className="text-xl text-gray-500 dark:text-gray-400">
+                      Set {nextSetIndex} of {currentSession.sets.length}
+                    </p>
+                  </>
+                )}
+              </div>
+            </CardContent>
+          </Card>
+        )}
       </div>
       <div className="flex justify-center items-center space-x-6 py-6 border-t border-gray-200 dark:border-gray-700">
         {isIdle && !isFinished && (
