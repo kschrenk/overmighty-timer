@@ -6,7 +6,6 @@ export interface Set {
   repetitions: number;
   restAfter: number; // in seconds
   additionalWeight: number; // in kg
-  setRepetitions?: number; // default to 1 if not set
 }
 
 export enum TimerViewEnum {
@@ -36,7 +35,6 @@ export interface TimerData {
   currentSession: TrainingSession | null;
   currentSetIndex: number;
   currentRepetition: number;
-  currentSetRepetition?: number; // new
   timerState: TimerState;
   secondsLeft: number;
   previousTimerState?: TimerState;

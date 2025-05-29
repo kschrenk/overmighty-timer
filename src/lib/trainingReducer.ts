@@ -3,6 +3,12 @@ import type { Set, TrainingSession } from "@/types/training";
 import { TimerState } from "@/types/training";
 import { generateId } from "@/utils/timerUtils";
 import { initialTimerData } from "@/data/defaultData";
+import {
+  getHangTimeFromNextSet,
+  hasNextRepetition,
+  hasNextSet,
+  hasRestAfterSet,
+} from "@/lib/trainingReducer.helper";
 
 export type TrainingAction =
   | { type: "START_SESSION"; payload: TrainingSession }
@@ -45,7 +51,6 @@ export const trainingReducer = (
           currentSession: action.payload,
           currentSetIndex: 0,
           currentRepetition: 0,
-          currentSetRepetition: 0,
           timerState,
           secondsLeft,
         },
@@ -64,17 +69,12 @@ export const trainingReducer = (
         };
       }
 
-      const {
-        currentSession,
-        currentSetIndex,
-        currentRepetition,
-        currentSetRepetition = 0,
-        timerState,
-      } = state.timerData;
+      const { currentSession, currentSetIndex, currentRepetition, timerState } =
+        state.timerData;
+
       if (!currentSession) return state;
 
       const currentSet = currentSession.sets[currentSetIndex];
-      const setRepetitions = currentSet.setRepetitions ?? 1;
 
       if (timerState === TimerState.PREPARATION) {
         return {
@@ -88,44 +88,43 @@ export const trainingReducer = (
       }
 
       if (timerState === TimerState.HANGING) {
-        if (currentRepetition < currentSet.repetitions - 1) {
+        if (hasNextRepetition(currentRepetition, currentSet)) {
           // Next rep in this set repetition
           return {
             ...state,
             timerData: {
               ...state.timerData,
-              currentRepetition: currentRepetition + 1,
               timerState: TimerState.RESTING_BETWEEN_REPS,
               secondsLeft: currentSet.rest,
             },
           };
         }
-        // Finished all reps in this set repetition
-        if (currentSetRepetition < setRepetitions - 1) {
-          // Repeat the set
+
+        if (hasRestAfterSet(currentSession, currentSetIndex)) {
+          // Move to next set with rest after
           return {
             ...state,
             timerData: {
               ...state.timerData,
-              currentRepetition: 0,
-              currentSetRepetition: currentSetRepetition + 1,
+              currentSetIndex: currentSetIndex,
               timerState: TimerState.RESTING_AFTER_SET,
-              secondsLeft: currentSet.restAfter,
+              secondsLeft: currentSession.sets[currentSetIndex].restAfter,
             },
           };
         }
 
-        if (currentSetIndex < currentSession.sets.length - 1) {
+        if (hasNextSet(currentSetIndex, currentSession)) {
           // Move to next set
+          const nextSetIndex = currentSetIndex + 1;
+
           return {
             ...state,
             timerData: {
               ...state.timerData,
-              currentSetIndex: currentSetIndex + 1,
+              currentSetIndex: nextSetIndex,
               currentRepetition: 0,
-              currentSetRepetition: 0,
-              timerState: TimerState.RESTING_AFTER_SET,
-              secondsLeft: currentSession.sets[currentSetIndex + 1].restAfter,
+              timerState: TimerState.HANGING,
+              secondsLeft: currentSession.sets[nextSetIndex].hangTime,
             },
           };
         }
@@ -146,53 +145,42 @@ export const trainingReducer = (
           ...state,
           timerData: {
             ...state.timerData,
+            currentRepetition: currentRepetition + 1,
             timerState: TimerState.HANGING,
             secondsLeft: currentSet.hangTime,
           },
         };
       }
 
-      if (timerState === TimerState.RESTING_AFTER_SET) {
-        // After rest, either repeat set or move to next set
-        if (currentSetRepetition < setRepetitions && currentRepetition === 0) {
-          // Start next set repetition
-          return {
-            ...state,
-            timerData: {
-              ...state.timerData,
-              timerState: TimerState.HANGING,
-              secondsLeft: currentSet.hangTime,
-            },
-          };
-        }
-
-        if (currentSetIndex < currentSession.sets.length - 1) {
-          // Move to next set
-          return {
-            ...state,
-            timerData: {
-              ...state.timerData,
-              currentSetIndex: currentSetIndex + 1,
-              currentRepetition: 0,
-              currentSetRepetition: 0,
-              timerState: TimerState.HANGING,
-              secondsLeft: currentSession.sets[currentSetIndex + 1].hangTime,
-            },
-          };
-        }
-
-        // Finished all sets
+      if (
+        timerState === TimerState.RESTING_AFTER_SET &&
+        hasNextSet(currentSetIndex, currentSession)
+      ) {
+        // After rest move to next set
         return {
           ...state,
           timerData: {
             ...state.timerData,
-            timerState: TimerState.FINISHED,
-            secondsLeft: 0,
+            currentSetIndex: currentSetIndex + 1,
+            currentRepetition: 0,
+            timerState: TimerState.HANGING,
+            secondsLeft: getHangTimeFromNextSet(
+              currentSession,
+              currentSetIndex,
+            ),
           },
         };
       }
 
-      return state;
+      // Finished all sets
+      return {
+        ...state,
+        timerData: {
+          ...state.timerData,
+          timerState: TimerState.FINISHED,
+          secondsLeft: 0,
+        },
+      };
     }
 
     case "PAUSE_TIMER":

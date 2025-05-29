@@ -7,6 +7,7 @@ import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { buildStyles, CircularProgressbar } from "react-circular-progressbar";
+import { Card, CardContent } from "@/components/ui/card";
 
 const TrainingTimer: React.FC = () => {
   const { state, dispatch } = useTraining();
@@ -43,6 +44,7 @@ const TrainingTimer: React.FC = () => {
 
     const rawProgress =
       ((currentTime - timerData.secondsLeft) * 100) / currentTime;
+
     setProgress(Math.max(0, Math.min(100, rawProgress)));
   }, [
     currentSet?.hangTime,
@@ -97,7 +99,7 @@ const TrainingTimer: React.FC = () => {
     );
   }
 
-  const getProgressColor = (timerView: TimerViewEnum) => {
+  const getProgressColor = (timerView?: TimerViewEnum) => {
     switch (timerData.timerState) {
       case TimerState.HANGING:
         return timerView === TimerViewEnum.BAR
@@ -126,11 +128,14 @@ const TrainingTimer: React.FC = () => {
   const isPreparation =
     timerData.timerState === TimerState.PREPARATION ||
     timerData.previousTimerState === TimerState.PREPARATION;
+  const isTimerViewBar = currentSession.timerView === TimerViewEnum.BAR;
 
   return (
-    <div className="max-w-md mx-auto p-4 flex flex-col min-h-[calc(100vh-4rem)]">
+    <div
+      className={`max-w-md mx-auto py-4 flex flex-col min-h-[calc(100vh-4rem)] ${!isTimerViewBar ? "px-6" : "px-0"}`}
+    >
       <div className="grow flex flex-col items-center justify-center py-8 relative">
-        {currentSession.timerView === TimerViewEnum.BAR ? (
+        {isTimerViewBar ? (
           <>
             <Progress
               value={progress}
@@ -139,7 +144,7 @@ const TrainingTimer: React.FC = () => {
             />
             <div className="relative w-64 h-64 mb-6 z-50">
               <div className="absolute inset-0 flex flex-col items-center justify-center">
-                <div className="text-7xl font-bold mb-2 text-gray-800 dark:text-gray-100">
+                <div className="text-8xl font-bold mb-2 text-gray-800 dark:text-gray-100">
                   {formatTime(timerData.secondsLeft)}
                 </div>
                 <div className="text-sm uppercase font-medium tracking-wider text-gray-600 dark:text-gray-400">
@@ -148,10 +153,10 @@ const TrainingTimer: React.FC = () => {
               </div>
             </div>
           </>
-        ) : currentSession.timerView === TimerViewEnum.CIRCLE ? (
+        ) : (
           <>
             <CircularProgressbar
-              className={"mb-4"}
+              className={"pb-6"}
               maxValue={100}
               minValue={0}
               value={progress}
@@ -165,55 +170,60 @@ const TrainingTimer: React.FC = () => {
               })}
               counterClockwise
             />
-            <div className="text-lg uppercase font-medium mb-1 tracking-wider text-gray-600 dark:text-gray-400">
-              {getStateDescription(timerData.timerState)}
+            <div className={"inline-flex pb-6"}>
+              <span className="text-xl uppercase font-extrabold tracking-wider text-gray-600 dark:text-gray-400">
+                {getStateDescription(timerData.timerState)}
+              </span>
             </div>
           </>
-        ) : null}
-        <div className="text-center mb-4 z-50">
-          {!isPreparation ? (
-            <>
-              <h3 className="text-4xl font-semibold mb-2 text-gray-800 dark:text-gray-100">
-                {currentSet.gripType}
-              </h3>
-              <p className="text-lg text-gray-600 dark:text-gray-300">
-                Rep {timerData.currentRepetition + 1} / {currentSet.repetitions}
-                {currentSet.additionalWeight > 0 && (
-                  <span className="ml-2 text-blue-600 dark:text-blue-400">
-                    +{currentSet.additionalWeight}kg
-                  </span>
-                )}
-              </p>
-              <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
-                Set {timerData.currentSetIndex + 1} of{" "}
-                {currentSession.sets.length}
-              </p>
-            </>
-          ) : (
-            <>
-              <h3 className="text-4xl font-semibold mb-2 text-gray-800 dark:text-gray-100">
-                GET READY
-              </h3>
-              <p className="text-lg text-gray-600 dark:text-gray-300">
-                Grip Type{" "}
-                <span className={"dark:text-blue-400"}>
-                  {currentSet.gripType}
-                </span>{" "}
-                / {currentSet.repetitions} Rep
-                {currentSet.repetitions > 1 ? "s" : ""}
-                {currentSet.additionalWeight > 0 && (
-                  <span className="ml-2 text-blue-600 dark:text-blue-400">
-                    +{currentSet.additionalWeight}kg
-                  </span>
-                )}
-              </p>
-              <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
-                Set {timerData.currentSetIndex + 1} of{" "}
-                {currentSession.sets.length}
-              </p>
-            </>
-          )}
-        </div>
+        )}
+        <Card
+          className={`z-50 text-center min-h-[142px]  justify-center py-4 ${isTimerViewBar ? "max-w-sm min-w-64" : "w-full dark:bg-gray-800"}`}
+        >
+          <CardContent>
+            <div className={"grid gap-2"}>
+              {!isPreparation ? (
+                <>
+                  <h3 className="text-3xl font-semibold text-gray-800 dark:text-gray-100 truncate">
+                    {currentSet.gripType}
+                  </h3>
+                  <p className="text-xl text-gray-600 dark:text-gray-300">
+                    Rep {timerData.currentRepetition + 1} /{" "}
+                    {currentSet.repetitions}
+                    {currentSet.additionalWeight > 0 && (
+                      <span className="ml-2 text-blue-600 dark:text-blue-400">
+                        +{currentSet.additionalWeight}kg
+                      </span>
+                    )}
+                  </p>
+                  <p className="text-lg text-gray-500 dark:text-gray-400">
+                    Set {timerData.currentSetIndex + 1} of{" "}
+                    {currentSession.sets.length}
+                  </p>
+                </>
+              ) : (
+                <>
+                  <h3 className="text-xl font-semibold text-gray-800 dark:text-gray-100">
+                    🚀 Get Ready!
+                  </h3>
+                  <p className="text-2xl text-gray-600 dark:text-gray-300 truncate">
+                    {currentSet.gripType} / {currentSet.repetitions} Rep
+                    {currentSet.repetitions > 1 ? "s" : ""}
+                    {currentSet.additionalWeight > 0 && (
+                      <span className="ml-2 text-blue-600 dark:text-blue-400">
+                        +{currentSet.additionalWeight}kg
+                      </span>
+                    )}
+                  </p>
+                  <p className="text-xl text-gray-500 dark:text-gray-400">
+                    Set {timerData.currentSetIndex + 1} of{" "}
+                    {currentSession.sets.length}
+                  </p>
+                </>
+              )}
+            </div>
+          </CardContent>
+        </Card>
       </div>
       <div className="flex justify-center items-center space-x-6 py-6 border-t border-gray-200 dark:border-gray-700">
         {isIdle && !isFinished && (

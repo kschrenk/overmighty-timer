@@ -8,9 +8,9 @@ import {
   PlusCircle,
   Trash,
 } from "lucide-react";
-import { useTraining } from "../context/TrainingContext/TrainingContext";
-import { formatTime } from "../utils/timerUtils";
-import { useAuth } from "../context/AuthContext";
+import { useTraining } from "@/context/TrainingContext/TrainingContext";
+import { formatTime } from "@/utils/timerUtils";
+import { useAuth } from "@/context/AuthContext";
 import {
   Accordion,
   AccordionContent,
@@ -136,7 +136,7 @@ const TrainingList: React.FC = () => {
                   <Card className="dark:bg-gray-800 border dark:border-gray-700 p-4">
                     <AccordionTrigger className="py-0">
                       <div>
-                        <h3 className="text-xl font-semibold text-gray-800 dark:text-gray-100 mb-3">
+                        <h3 className="text-xl font-semibold text-gray-800 dark:text-gray-100 mb-3 truncate">
                           {session.name}
                         </h3>
                         <div className="flex items-center text-gray-500 dark:text-gray-300">
@@ -163,18 +163,10 @@ const TrainingList: React.FC = () => {
                             className="py-4 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors duration-200"
                           >
                             <div className="flex justify-between items-center">
-                              <div>
-                                <span className="font-medium text-gray-700 dark:text-gray-200">
-                                  Set {index + 1}: {set.gripType}
-                                </span>
-                                {set.setRepetitions &&
-                                  set.setRepetitions > 1 && (
-                                    <span className="ml-2 text-xs text-purple-600 dark:text-purple-400">
-                                      ({set.setRepetitions}x)
-                                    </span>
-                                  )}
-                              </div>
-                              <span className="text-gray-500 dark:text-gray-300">
+                              <span className="font-medium text-gray-700 dark:text-gray-200 truncate">
+                                Set {index + 1}: {set.gripType}
+                              </span>
+                              <span className="text-gray-500 dark:text-gray-300 text-nowrap">
                                 {set.repetitions}x {set.hangTime}s
                               </span>
                             </div>
