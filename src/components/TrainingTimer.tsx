@@ -14,7 +14,6 @@ const TrainingTimer: React.FC = () => {
   const { timerData } = state;
 
   const [progress, setProgress] = useState(100);
-  console.log("🚀", { progress });
 
   const currentSession = timerData.currentSession;
   const currentSet = currentSession?.sets[timerData.currentSetIndex];
