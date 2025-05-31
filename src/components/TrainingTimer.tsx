@@ -7,9 +7,9 @@ import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { buildStyles, CircularProgressbar } from "react-circular-progressbar";
-import { Card, CardContent } from "@/components/ui/card";
 import { getNextSet } from "@/lib/trainingReducer.helper";
 import { TrainingTimerInfo } from "@/components/TrainingTimerInfo";
+import { TrainingTimerInfoWrapper } from "@/components/TrainingTimerInfoWrapper";
 
 const TrainingTimer: React.FC = () => {
   const { state, dispatch } = useTraining();
@@ -132,8 +132,9 @@ const TrainingTimer: React.FC = () => {
     timerState === TimerState.PREPARATION ||
     timerData.previousTimerState === TimerState.PREPARATION;
   const isTimerViewBar = currentSession.timerView === TimerViewEnum.BAR;
-  const isDisplayNextSetInformation =
-    timerState === TimerState.RESTING_AFTER_SET && nextSet;
+  const isDisplayNextSetInformation = Boolean(
+    nextSet && timerState === TimerState.RESTING_AFTER_SET,
+  );
 
   return (
     <div
@@ -183,63 +184,56 @@ const TrainingTimer: React.FC = () => {
           </>
         )}
         {!isFinished && (
-          <Card
-            className={`z-50 text-center min-h-[142px]  justify-center py-4 ${isTimerViewBar ? "max-w-sm min-w-64" : "w-full "} ${isDisplayNextSetInformation ? "dark:bg-green-900/[30%]" : "dark:bg-gray-900"}`}
+          <TrainingTimerInfoWrapper
+            isTimerViewBar={isTimerViewBar}
+            isDisplayNextSetInformation={isDisplayNextSetInformation}
+            timerState={timerState}
           >
-            <CardContent className={"px-4 relative"}>
-              <div className={"grid gap-2"}>
-                {!isPreparation ? (
-                  <TrainingTimerInfo
-                    gripType={
-                      isDisplayNextSetInformation
-                        ? nextSet?.gripType
-                        : currentSet.gripType
-                    }
-                    currentRepetition={
-                      isDisplayNextSetInformation
-                        ? 0
-                        : timerData.currentRepetition
-                    }
-                    currentSetIndex={
-                      isDisplayNextSetInformation
-                        ? nextSetIndex
-                        : currentSetIndex
-                    }
-                    repetitions={
-                      isDisplayNextSetInformation
-                        ? nextSet?.repetitions
-                        : currentSet.repetitions
-                    }
-                    additionalWeight={
-                      isDisplayNextSetInformation
-                        ? nextSet?.additionalWeight
-                        : currentSet.additionalWeight
-                    }
-                    setLength={currentSession.sets.length}
-                    infoText={isDisplayNextSetInformation ? "next" : "none"}
-                  />
-                ) : (
-                  <>
-                    <h3 className="text-xl font-semibold text-gray-800 dark:text-gray-100">
-                      🚀 Get Ready!
-                    </h3>
-                    <p className="text-2xl text-gray-600 dark:text-gray-300 truncate">
-                      {currentSet.gripType} / {currentSet.repetitions} Rep
-                      {currentSet.repetitions > 1 ? "s" : ""}
-                      {currentSet.additionalWeight > 0 && (
-                        <span className="ml-2 text-blue-600 dark:text-blue-400">
-                          +{currentSet.additionalWeight}kg
-                        </span>
-                      )}
-                    </p>
-                    <p className="text-xl text-gray-500 dark:text-gray-400">
-                      Set {nextSetIndex} of {currentSession.sets.length}
-                    </p>
-                  </>
-                )}
-              </div>
-            </CardContent>
-          </Card>
+            {!isPreparation ? (
+              <TrainingTimerInfo
+                gripType={
+                  isDisplayNextSetInformation
+                    ? nextSet?.gripType
+                    : currentSet.gripType
+                }
+                currentRepetition={
+                  isDisplayNextSetInformation ? 0 : timerData.currentRepetition
+                }
+                currentSetIndex={
+                  isDisplayNextSetInformation ? nextSetIndex : currentSetIndex
+                }
+                repetitions={
+                  isDisplayNextSetInformation
+                    ? nextSet?.repetitions
+                    : currentSet.repetitions
+                }
+                additionalWeight={
+                  isDisplayNextSetInformation
+                    ? nextSet?.additionalWeight
+                    : currentSet.additionalWeight
+                }
+                setLength={currentSession.sets.length}
+              />
+            ) : (
+              <>
+                <h3 className="text-xl font-semibold text-gray-800 dark:text-gray-100">
+                  🚀 Get Ready!
+                </h3>
+                <p className="text-2xl text-gray-600 dark:text-gray-300 truncate">
+                  {currentSet.gripType} / {currentSet.repetitions} Rep
+                  {currentSet.repetitions > 1 ? "s" : ""}
+                  {currentSet.additionalWeight > 0 && (
+                    <span className="ml-2 text-blue-600 dark:text-blue-400">
+                      +{currentSet.additionalWeight}kg
+                    </span>
+                  )}
+                </p>
+                <p className="text-xl text-gray-500 dark:text-gray-400">
+                  Set {nextSetIndex} of {currentSession.sets.length}
+                </p>
+              </>
+            )}
+          </TrainingTimerInfoWrapper>
         )}
       </div>
       <div className="flex justify-center items-center space-x-6 py-6 border-t border-gray-200 dark:border-gray-700">
