@@ -57,3 +57,18 @@ export function hasRestAfterSet(
 ) {
   return currentSession.sets[currentSetIndex].restAfter > 0;
 }
+
+/**
+ * Retrieves the next set in the training session if it exists.
+ * @param {TrainingSession | null} currentSession - The current training session or null.
+ * @param {number} currentSetIndex - The index of the current set.
+ * @returns {Set | null} - The next set if it exists, otherwise null.
+ */
+export function getNextSet(
+  currentSession: TrainingSession | null,
+  currentSetIndex: number,
+): Set | null {
+  return currentSession && hasNextSet(currentSetIndex, currentSession)
+    ? currentSession?.sets[currentSetIndex + 1]
+    : null;
+}

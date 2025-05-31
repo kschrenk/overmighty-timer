@@ -21,3 +21,5 @@ dist-ssr
 .firebase
 .env*
 emulator-data
+*storybook.log
+storybook-static
