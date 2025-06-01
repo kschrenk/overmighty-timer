@@ -27,4 +27,4 @@ export default tseslint.config({ ignores: ['dist'] }, {
     ],
     "@typescript-eslint/consistent-type-imports": "error",
   },
-}, eslintConfigPrettier, storybook.configs["flat/recommended"]);
+}, eslintConfigPrettier, ...storybook.configs["flat/recommended"]);

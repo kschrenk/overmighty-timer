@@ -1,4 +1,4 @@
-import { FC, ReactNode } from "react";
+import type { FC, ReactNode } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { TimerState } from "@/types/training";
 import { Badge } from "@/components/ui/badge";
