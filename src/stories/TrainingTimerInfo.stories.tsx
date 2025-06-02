@@ -1,6 +1,8 @@
-import { TrainingTimerInfo } from "@/components/TrainingTimerInfo";
+import {
+  TrainingTimerInfo,
+  TrainingTimerInfoWrapper,
+} from "@/components/TrainingTimerInfo";
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { TrainingTimerInfoWrapper } from "@/components/TrainingTimerInfoWrapper";
 import { TimerState } from "@/types/training";
 
 type Props = React.ComponentProps<typeof TrainingTimerInfo>;
@@ -8,6 +10,7 @@ type Props = React.ComponentProps<typeof TrainingTimerInfo>;
 interface ExtendedProps extends Props {
   timerState: TimerState;
   isDisplayNextSetInformation: boolean;
+  isTimerViewBar?: boolean;
 }
 
 const meta = {
@@ -38,14 +41,18 @@ const meta = {
       control: { type: "boolean" },
       description: "Display next set information",
     },
+    isTimerViewBar: {
+      control: { type: "boolean" },
+      description: "Display in timer view bar style",
+    },
   },
   render: (args) => {
     return (
       <div className={"dark max-w-md pt-12 px-4 mx-auto"}>
         <TrainingTimerInfoWrapper
-          isTimerViewBar={false}
           isDisplayNextSetInformation={args.isDisplayNextSetInformation}
           timerState={args.timerState}
+          isTimerViewBar={args.isTimerViewBar}
         >
           <TrainingTimerInfo {...args} />
         </TrainingTimerInfoWrapper>

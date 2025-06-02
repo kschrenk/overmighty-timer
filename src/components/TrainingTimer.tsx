@@ -7,9 +7,7 @@ import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { buildStyles, CircularProgressbar } from "react-circular-progressbar";
-import { getNextSet } from "@/lib/trainingReducer.helper";
-import { TrainingTimerInfo } from "@/components/TrainingTimerInfo";
-import { TrainingTimerInfoWrapper } from "@/components/TrainingTimerInfoWrapper";
+import { TrainingTimerInfoContainer } from "@/components/TrainingTimerInfo";
 
 const TrainingTimer: React.FC = () => {
   const { state, dispatch } = useTraining();
@@ -18,8 +16,6 @@ const TrainingTimer: React.FC = () => {
   const { timerData } = state;
   const { currentSession, currentSetIndex, timerState } = timerData;
   const currentSet = currentSession?.sets[currentSetIndex] ?? null;
-  const nextSet = getNextSet(currentSession, currentSetIndex);
-  const nextSetIndex = currentSetIndex + 1;
 
   useEffect(() => {
     const { timerState } = timerData;
@@ -128,13 +124,7 @@ const TrainingTimer: React.FC = () => {
   const isFinished = timerState === TimerState.FINISHED;
   const isPaused = timerState === TimerState.PAUSED;
   const isRunning = !isIdle && !isFinished && !isPaused;
-  const isPreparation =
-    timerState === TimerState.PREPARATION ||
-    timerData.previousTimerState === TimerState.PREPARATION;
   const isTimerViewBar = currentSession.timerView === TimerViewEnum.BAR;
-  const isDisplayNextSetInformation = Boolean(
-    nextSet && timerState === TimerState.RESTING_AFTER_SET,
-  );
 
   return (
     <div
@@ -153,7 +143,7 @@ const TrainingTimer: React.FC = () => {
                 <div className="text-8xl font-bold mb-2 text-gray-800 dark:text-gray-100">
                   {formatTime(timerData.secondsLeft)}
                 </div>
-                <div className="text-sm uppercase font-medium tracking-wider text-gray-600 dark:text-gray-400">
+                <div className="text-lg uppercase font-medium tracking-wider text-gray-600 dark:text-white">
                   {getStateDescription(timerState)}
                 </div>
               </div>
@@ -183,58 +173,7 @@ const TrainingTimer: React.FC = () => {
             </div>
           </>
         )}
-        {!isFinished && (
-          <TrainingTimerInfoWrapper
-            isTimerViewBar={isTimerViewBar}
-            isDisplayNextSetInformation={isDisplayNextSetInformation}
-            timerState={timerState}
-          >
-            {!isPreparation ? (
-              <TrainingTimerInfo
-                gripType={
-                  isDisplayNextSetInformation
-                    ? nextSet?.gripType
-                    : currentSet.gripType
-                }
-                currentRepetition={
-                  isDisplayNextSetInformation ? 0 : timerData.currentRepetition
-                }
-                currentSetIndex={
-                  isDisplayNextSetInformation ? nextSetIndex : currentSetIndex
-                }
-                repetitions={
-                  isDisplayNextSetInformation
-                    ? nextSet?.repetitions
-                    : currentSet.repetitions
-                }
-                additionalWeight={
-                  isDisplayNextSetInformation
-                    ? nextSet?.additionalWeight
-                    : currentSet.additionalWeight
-                }
-                setLength={currentSession.sets.length}
-              />
-            ) : (
-              <>
-                <h3 className="text-xl font-semibold text-gray-800 dark:text-gray-100">
-                  🚀 Get Ready!
-                </h3>
-                <p className="text-2xl text-gray-600 dark:text-gray-300 truncate">
-                  {currentSet.gripType} / {currentSet.repetitions} Rep
-                  {currentSet.repetitions > 1 ? "s" : ""}
-                  {currentSet.additionalWeight > 0 && (
-                    <span className="ml-2 text-blue-600 dark:text-blue-400">
-                      +{currentSet.additionalWeight}kg
-                    </span>
-                  )}
-                </p>
-                <p className="text-xl text-gray-500 dark:text-gray-400">
-                  Set {nextSetIndex} of {currentSession.sets.length}
-                </p>
-              </>
-            )}
-          </TrainingTimerInfoWrapper>
-        )}
+        <TrainingTimerInfoContainer />
       </div>
       <div className="flex justify-center items-center space-x-6 py-6 border-t border-gray-200 dark:border-gray-700">
         {isIdle && !isFinished && (
