@@ -19,6 +19,7 @@ import { Input } from "@/components/ui/input";
 import { createInvite } from "@/lib/firestoreUtils";
 import { Loader2 } from "lucide-react";
 import { useState } from "react";
+import { useWakeLock } from "@/hooks/useWakeLock";
 
 const formSchema = z.object({
   email: z.string().email({ message: "Invalid email address" }),
@@ -29,6 +30,7 @@ export const Account: FC = () => {
   const { dispatch } = useTraining();
   const [isInviteLoading, setIsInviteLoading] = useState(false);
   const [isLogoutLoading, setIsLogoutLoading] = useState(false);
+  const { isSupported } = useWakeLock();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -95,6 +97,9 @@ export const Account: FC = () => {
             </p>
             <p className="text-gray-700 dark:text-gray-300">
               <strong>User ID:</strong> {currentUser.uid}
+            </p>
+            <p className="text-gray-700 dark:text-gray-300">
+              <strong>Wake Lock Support:</strong> {String(isSupported)}
             </p>
           </div>
           <div className={"flex gap-4 justify-end"}>

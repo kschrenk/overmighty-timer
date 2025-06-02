@@ -15,18 +15,31 @@ import { Account } from "@/components/Account";
 import { RegisterForm } from "@/components/form/RegisterForm";
 import { RegisterUserListener } from "@/components/RegisterUserListener";
 import { isUidTestUser } from "@/lib/testUser";
+import { Button } from "./components/ui/button";
 
 const AppContent: React.FC = () => {
   const { state } = useTraining();
-  const { currentUser } = useAuth();
+  const { currentUser, logout } = useAuth();
 
   return (
     <div className="flex flex-col min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors duration-200">
       <Header />
       <main className="grow">
         {isUidTestUser(currentUser?.uid) && (
-          <div className="bg-yellow-100 text-yellow-800 p-2 text-center">
-            You are using the app as a Test User. Your data will not be saved.
+          <div className={"bg-yellow-100 text-yellow-800 p-2"}>
+            <div className={"max-w-sm"}>
+              <p className={"inline"}>
+                You are using the app as a Test User. Your data will not be
+                saved.
+              </p>
+              <Button
+                onClick={logout}
+                className={"font-bold"}
+                variant={"ghost"}
+              >
+                Login
+              </Button>
+            </div>
           </div>
         )}
         {currentUser ? (
