@@ -8,14 +8,24 @@ import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { buildStyles, CircularProgressbar } from "react-circular-progressbar";
 import { TrainingTimerInfoContainer } from "@/components/TrainingTimerInfo";
+import { useWakeLock } from "@/hooks/useWakeLock";
 
 const TrainingTimer: React.FC = () => {
   const { state, dispatch } = useTraining();
   const [progress, setProgress] = useState(100);
+  const { requestWakeLock, releaseWakeLock } = useWakeLock();
 
   const { timerData } = state;
   const { currentSession, currentSetIndex, timerState } = timerData;
   const currentSet = currentSession?.sets[currentSetIndex] ?? null;
+
+  useEffect(() => {
+    requestWakeLock();
+
+    return () => {
+      releaseWakeLock();
+    };
+  }, [releaseWakeLock, requestWakeLock]);
 
   useEffect(() => {
     const { timerState } = timerData;
