@@ -1,3 +1,19 @@
+# [1.8.0](https://github.com/kschrenk/overmighty-timer/compare/v1.7.1...v1.8.0) (2025-06-02)
+
+
+### Bug Fixes
+
+* **eslint:** fix eslint config ([e3224bf](https://github.com/kschrenk/overmighty-timer/commit/e3224bfc332f8a4b771220dcb211c2a11b4d0e03))
+
+
+### Features
+
+* **storybook:** add storybook ([c9ccd39](https://github.com/kschrenk/overmighty-timer/commit/c9ccd3965d5bb839a351d845ba04a8bc38d7bfdb))
+* **theme:** set dark as default theme ([84a64ee](https://github.com/kschrenk/overmighty-timer/commit/84a64ee1a1c34df7b15a876fd7b31d90ea5efff5))
+* **timer:** avoid screen lock ([3112cae](https://github.com/kschrenk/overmighty-timer/commit/3112caef22ecb3c540f4b64828330efddd8e7132))
+* **timer:** display next set information ([80c8350](https://github.com/kschrenk/overmighty-timer/commit/80c8350b1b1a441b04ef63a833ba87772403b5b6))
+* **training-timer:** add color states to timer info ([b25b940](https://github.com/kschrenk/overmighty-timer/commit/b25b940dbe68ffee737bafd214efee966d814858))
+
 ## [1.7.1](https://github.com/kschrenk/overmighty-timer/compare/v1.7.0...v1.7.1) (2025-05-29)
 
 
