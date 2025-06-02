@@ -1,10 +1,10 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 
 export const useWakeLock = () => {
   const [wakeLock, setWakeLock] = useState<WakeLockSentinel | null>(null);
   const [isSupported, setIsSupported] = useState<boolean>(false);
 
-  useCallback(() => {
+  useEffect(() => {
     if ("wakeLock" in navigator) {
       setIsSupported(true);
     } else {
@@ -14,15 +14,11 @@ export const useWakeLock = () => {
 
   const requestWakeLock = useCallback(async () => {
     if (!isSupported) {
-      alert(
-        "This browser does not support Wake Lock API. Please try a different browser.",
-      );
       return;
     }
 
     try {
       if (wakeLock) {
-        console.log("Wake Lock is already active.");
         return;
       }
 
@@ -47,5 +43,6 @@ export const useWakeLock = () => {
   return {
     requestWakeLock,
     releaseWakeLock,
+    isSupported,
   };
 };

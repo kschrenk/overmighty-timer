@@ -20,11 +20,12 @@ const TrainingTimer: React.FC = () => {
   const currentSet = currentSession?.sets[currentSetIndex] ?? null;
 
   useEffect(() => {
-    requestWakeLock();
-
-    return () => {
-      releaseWakeLock();
-    };
+    (async () => {
+      await requestWakeLock();
+      return () => {
+        releaseWakeLock();
+      };
+    })();
   }, [releaseWakeLock, requestWakeLock]);
 
   useEffect(() => {
