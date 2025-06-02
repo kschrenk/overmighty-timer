@@ -1,4 +1,4 @@
-import type { FC } from "react";
+import type { FC, ReactNode } from "react";
 
 type Props = {
   gripType?: string;
@@ -19,20 +19,26 @@ export const TrainingTimerInfo: FC<Props> = ({
 }) => {
   return (
     <>
-      <h3 className="text-2xl font-semibold text-gray-800 dark:text-gray-100 truncate">
+      <h3 className="text-2xl font-semibold text-gray-800 dark:text-white truncate">
         {gripType}
       </h3>
-      <p className="text-xl text-gray-600 dark:text-gray-300">
-        Rep {currentRepetition + 1} / {repetitions}
+      <p className="text-xl dark:text-white">
+        <StyledSpan>Rep </StyledSpan>
+        {currentRepetition + 1} / {repetitions}
         {additionalWeight && additionalWeight > 0 ? (
           <span className="ml-2 text-blue-600 dark:text-blue-400">
             +{additionalWeight}kg
           </span>
         ) : null}
       </p>
-      <p className="text-lg text-gray-500 dark:text-gray-400">
-        Set {currentSetIndex + 1} of {setLength}
+      <p className="text-lg dark:text-white">
+        <StyledSpan>Set </StyledSpan>
+        {currentSetIndex + 1} of {setLength}
       </p>
     </>
   );
 };
+
+const StyledSpan = ({ children }: { children: ReactNode }) => (
+  <span className="dark:text-gray-400">{children}</span>
+);

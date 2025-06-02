@@ -41,7 +41,7 @@ const meta = {
   },
   render: (args) => {
     return (
-      <div className={"dark max-w-md"}>
+      <div className={"dark max-w-md pt-12 px-4 mx-auto"}>
         <TrainingTimerInfoWrapper
           isTimerViewBar={false}
           isDisplayNextSetInformation={args.isDisplayNextSetInformation}

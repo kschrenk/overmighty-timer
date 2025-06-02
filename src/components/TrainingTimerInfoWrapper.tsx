@@ -10,27 +10,28 @@ type Props = {
   timerState: TimerState;
 };
 
-function getBackgroundColor(
-  timerState: TimerState,
-  isDisplayNextSetInformation: boolean = false,
-): string {
-  if (
-    (isDisplayNextSetInformation &&
-      timerState === TimerState.RESTING_AFTER_SET) ||
-    timerState === TimerState.RESTING_BETWEEN_REPS
-  ) {
-    return `dark:bg-red-600/[30%]`;
+function getBackgroundColor(timerState: TimerState): string {
+  if (timerState === TimerState.RESTING_AFTER_SET) {
+    return `dark:bg-blue-600/[20%]`;
+  }
+
+  if (timerState === TimerState.RESTING_BETWEEN_REPS) {
+    return `dark:bg-red-600/[20%]`;
   }
 
   if (timerState === TimerState.HANGING) {
-    return `dark:bg-green-600/[30%]`;
+    return `dark:bg-green-600/[20%]`;
   }
 
   if (timerState === TimerState.PREPARATION) {
-    return `dark:bg-yello-600/[30%]`;
+    return `dark:bg-yellow-600/[20%]`;
   }
 
-  return `dark:bg-gray-900/[30%]`;
+  if (timerState === TimerState.PAUSED) {
+    return `dark:bg-gray-500/[20%]`;
+  }
+
+  return `dark:bg-gray-900/[20%]`;
 }
 
 export const TrainingTimerInfoWrapper: FC<Props> = ({
@@ -41,23 +42,52 @@ export const TrainingTimerInfoWrapper: FC<Props> = ({
 }) => {
   return (
     <Card
-      className={`z-50 text-center min-h-[142px]  justify-center ${isTimerViewBar ? "max-w-sm min-w-64" : "w-full "} ${getBackgroundColor(timerState, isDisplayNextSetInformation)}`}
+      className={`z-50 text-center min-h-[142px]  justify-center ${isTimerViewBar ? "max-w-sm min-w-64" : "w-full "} ${getBackgroundColor(timerState)}`}
     >
       <CardContent className={"px-4 relative"}>
         <div className={"grid gap-2"}>{children}</div>
-        {timerState === TimerState.RESTING_AFTER_SET &&
+        <BadgeContainer
+          timerState={timerState}
+          isDisplayNextSetInformation={isDisplayNextSetInformation}
+        />
+      </CardContent>
+    </Card>
+  );
+};
+
+const BadgeContainer: FC<{
+  timerState: TimerState;
+  isDisplayNextSetInformation?: boolean;
+}> = ({ timerState, isDisplayNextSetInformation }) => {
+  return (
+    <>
+      {timerState === TimerState.RESTING_AFTER_SET ? (
         isDisplayNextSetInformation ? (
-          <div
-            className={
-              "absolute top-0 bottom-0 my-auto flex flex-col justify-center"
-            }
-          >
+          <BadgeWrapper>
             <Badge variant={"outline"} className={"uppercase"}>
               Next
             </Badge>
-          </div>
-        ) : null}
-      </CardContent>
-    </Card>
+          </BadgeWrapper>
+        ) : (
+          <BadgeWrapper>
+            <Badge variant={"outline"} className={"uppercase"}>
+              Last
+            </Badge>
+          </BadgeWrapper>
+        )
+      ) : null}
+    </>
+  );
+};
+
+const BadgeWrapper: FC<{
+  children: ReactNode;
+}> = ({ children }) => {
+  return (
+    <div
+      className={"absolute top-0 bottom-0 my-auto flex flex-col justify-center"}
+    >
+      {children}
+    </div>
   );
 };
