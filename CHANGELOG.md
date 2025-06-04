@@ -1,3 +1,10 @@
+# [1.9.0](https://github.com/kschrenk/overmighty-timer/compare/v1.8.0...v1.9.0) (2025-06-04)
+
+
+### Features
+
+* **timer:** add last three seconds tone ([c000110](https://github.com/kschrenk/overmighty-timer/commit/c0001109e478edd8d2aefb0fddc43751554b635a))
+
 # [1.8.0](https://github.com/kschrenk/overmighty-timer/compare/v1.7.1...v1.8.0) (2025-06-02)
 
 
