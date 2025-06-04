@@ -4,6 +4,7 @@ import { TimerState } from "@/types/training";
 import { generateId } from "@/utils/timerUtils";
 import { initialTimerData } from "@/data/defaultData";
 import {
+  getCurrentSetFromSession,
   getHangTimeFromNextSet,
   hasNextRepetition,
   hasNextSet,
@@ -74,7 +75,10 @@ export const trainingReducer = (
 
       if (!currentSession) return state;
 
-      const currentSet = currentSession.sets[currentSetIndex];
+      const currentSet = getCurrentSetFromSession(
+        currentSession,
+        currentSetIndex,
+      );
 
       if (timerState === TimerState.PREPARATION) {
         return {
@@ -108,7 +112,10 @@ export const trainingReducer = (
               ...state.timerData,
               currentSetIndex: currentSetIndex,
               timerState: TimerState.RESTING_AFTER_SET,
-              secondsLeft: currentSession.sets[currentSetIndex].restAfter,
+              secondsLeft: getCurrentSetFromSession(
+                currentSession,
+                currentSetIndex,
+              ).restAfter,
             },
           };
         }

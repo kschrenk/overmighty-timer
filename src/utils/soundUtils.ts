@@ -106,12 +106,12 @@ export const playToneSequence = (
 
 // Sound for starting a hang
 export const playStartHangSound = (): void => {
-  playTone(FREQUENCIES.startHang);
+  playTone(FREQUENCIES.startHang, 440);
 };
 
 // Sound for ending a hang
 export const playEndHangSound = (): void => {
-  playTone(FREQUENCIES.endHang);
+  playTone(FREQUENCIES.endHang, 440);
 };
 
 // Sound for starting a rest period
@@ -132,6 +132,11 @@ export const playEndTrainingSound = (): void => {
 // Sound for preparing a training session
 export const playPreparationSound = (): void => {
   playTone(FREQUENCIES.preparation, 300);
+};
+
+// Sound for last three seconds of a hang
+export const playLastThreeSecondsSound = (): void => {
+  playTone(810, 80);
 };
 
 // General state change notification
