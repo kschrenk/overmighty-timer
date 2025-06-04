@@ -7,7 +7,10 @@ import React, {
 } from "react";
 import type { TrainingSession, TimerData } from "@/types/training";
 import { TimerState } from "@/types/training";
-import { playStateChangeSound } from "@/utils/soundUtils";
+import {
+  playLastThreeSecondsSound,
+  playStateChangeSound,
+} from "@/utils/soundUtils";
 import type { TrainingAction } from "@/lib/trainingReducer";
 import { trainingReducer } from "@/lib/trainingReducer";
 import { useAuth } from "@/context/AuthContext";
@@ -111,10 +114,21 @@ export const TrainingProvider: React.FC<{ children: React.ReactNode }> = ({
     };
   }, [state.timerData.timerState]);
 
-  // play sound
+  // play sound for timer state change
   useEffect(() => {
     playStateChangeSound(state.timerData.timerState);
   }, [state.timerData.timerState]);
+
+  // play sound for last three seconds of a hang
+  useEffect(() => {
+    const { currentSession, timerState, secondsLeft } = state.timerData;
+
+    if (currentSession && timerState === TimerState.HANGING) {
+      if (secondsLeft < 3) {
+        return playLastThreeSecondsSound();
+      }
+    }
+  }, [state.timerData]);
 
   // helper
   function getSessionById(sessionId: string) {

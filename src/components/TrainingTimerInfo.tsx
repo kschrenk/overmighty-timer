@@ -3,7 +3,10 @@ import { TimerState, TimerViewEnum } from "@/types/training";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { useTraining } from "@/context/TrainingContext/TrainingContext";
-import { getNextSet } from "@/lib/trainingReducer.helper";
+import {
+  getCurrentSetFromSession,
+  getNextSet,
+} from "@/lib/trainingReducer.helper";
 
 type TrainingTimerInfoProps = {
   gripType?: string;
@@ -117,7 +120,7 @@ export const TrainingTimerInfoContainer = () => {
     return null;
   }
 
-  const currentSet = currentSession.sets[currentSetIndex];
+  const currentSet = getCurrentSetFromSession(currentSession, currentSetIndex);
   const isTimerViewBar = currentSession.timerView === TimerViewEnum.BAR;
   const setLength = currentSession.sets.length;
   const nextSet = getNextSet(currentSession, currentSetIndex);
