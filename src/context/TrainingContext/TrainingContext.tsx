@@ -112,7 +112,7 @@ export const TrainingProvider: React.FC<{ children: React.ReactNode }> = ({
         window.clearInterval(timerId);
       }
     };
-  }, [state.timerData.timerState]);
+  }, [state.timerData.timerState, timerId]);
 
   // play sound for timer state change
   useEffect(() => {
