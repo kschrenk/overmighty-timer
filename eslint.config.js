@@ -26,5 +26,7 @@ export default tseslint.config({ ignores: ['dist'] }, {
       { allowConstantExport: true },
     ],
     "@typescript-eslint/consistent-type-imports": "error",
+    "react-hooks/rules-of-hooks": "error",
+    "react-hooks/exhaustive-deps": "error"
   },
 }, eslintConfigPrettier, ...storybook.configs["flat/recommended"]);
