@@ -22,7 +22,7 @@ const AppContent: React.FC = () => {
   const { currentUser, logout } = useAuth();
 
   return (
-    <div className="flex flex-col min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors duration-200">
+    <div className="flex flex-col min-h-screen bg-gray-50 dark:bg-gray-950 transition-colors duration-200">
       <Header />
       <main className="grow">
         {isUidTestUser(currentUser?.uid) && (

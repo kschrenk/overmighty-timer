@@ -34,16 +34,14 @@ export const TrainingTimerInfo: FC<TrainingTimerInfoProps> = ({
       <h3 className="text-2xl font-semibold text-gray-800 dark:text-white truncate">
         {gripType}
       </h3>
-      <p className="text-xl dark:text-white">
+      <p className="text-xl dark:text-gray-100">
         <StyledSpan>Rep</StyledSpan>
         {currentRepetition + 1} / {repetitions}
         {additionalWeight && additionalWeight > 0 ? (
-          <span className="ml-2 text-blue-600 dark:text-blue-400">
-            +{additionalWeight}kg
-          </span>
+          <span className="ml-2 text-sky-300">+{additionalWeight}kg</span>
         ) : null}
       </p>
-      <p className="text-lg dark:text-white">
+      <p className="text-lg dark:text-gray-100">
         <StyledSpan>Set</StyledSpan>
         {currentSetIndex + 1} / {setLength}
       </p>
@@ -51,31 +49,28 @@ export const TrainingTimerInfo: FC<TrainingTimerInfoProps> = ({
   );
 };
 
-function getBackgroundColor(
-  timerState: TimerState,
-  isTimerViewBar?: boolean,
-): string {
+function getBackgroundColor(timerState: TimerState): string {
   if (timerState === TimerState.RESTING_AFTER_SET) {
-    return isTimerViewBar ? "dark:bg-blue-600" : "dark:bg-blue-600/[20%]";
+    return "bg-blue-700";
   }
 
   if (timerState === TimerState.RESTING_BETWEEN_REPS) {
-    return isTimerViewBar ? "dark:bg-red-600" : "dark:bg-red-600/[20%]";
+    return "bg-red-700";
   }
 
   if (timerState === TimerState.HANGING) {
-    return isTimerViewBar ? "dark:bg-green-600" : "dark:bg-green-600/[20%]";
+    return "bg-green-700";
   }
 
   if (timerState === TimerState.PREPARATION) {
-    return isTimerViewBar ? "dark:bg-yellow-600" : "dark:bg-yellow-600/[20%]";
+    return "bg-yellow-600";
   }
 
   if (timerState === TimerState.PAUSED) {
-    return isTimerViewBar ? "dark:bg-gray-500" : "dark:bg-gray-500/[20%]";
+    return "bg-gray-500";
   }
 
-  return isTimerViewBar ? "dark:bg-gray-900" : "dark:bg-gray-900/[20%]";
+  return "dark:bg-gray-900";
 }
 
 type TrainingTimerInfoWrapperProps = {
@@ -93,7 +88,7 @@ export const TrainingTimerInfoWrapper: FC<TrainingTimerInfoWrapperProps> = ({
 }) => {
   return (
     <Card
-      className={`z-50 text-center min-h-[142px]  justify-center ${isTimerViewBar ? "max-w-sm min-w-64" : "w-full "} ${getBackgroundColor(timerState, isTimerViewBar)}`}
+      className={`z-50 text-center min-h-[142px]  justify-center ${isTimerViewBar ? "max-w-sm min-w-64" : "w-full "} ${getBackgroundColor(timerState)}`}
     >
       <CardContent className={"px-4 relative"}>
         <div className={"grid gap-2"}>{children}</div>

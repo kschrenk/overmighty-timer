@@ -150,7 +150,7 @@ const TrainingEditor: React.FC = () => {
 
   return (
     <div className="mx-auto px-4 py-6 max-w-lg">
-      <Card className={"gap-3 px-4 mb-4"}>
+      <Card className={"gap-3 px-4 mb-4 dark:bg-gray-900"}>
         <LabelWrapper className={"gap-3 pb-6"}>
           <Label htmlFor="sessionName">
             <FolderPen size={16} />
