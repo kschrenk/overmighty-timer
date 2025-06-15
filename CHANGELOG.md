@@ -1,3 +1,10 @@
+## [1.9.1](https://github.com/kschrenk/overmighty-timer/compare/v1.9.0...v1.9.1) (2025-06-15)
+
+
+### Bug Fixes
+
+* **types:** align types package version ([d1fb6f1](https://github.com/kschrenk/overmighty-timer/commit/d1fb6f19348219d9e90a92ede485036d7304875c))
+
 # [1.9.0](https://github.com/kschrenk/overmighty-timer/compare/v1.8.0...v1.9.0) (2025-06-04)
 
 
