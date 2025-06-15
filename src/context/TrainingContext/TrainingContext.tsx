@@ -112,7 +112,8 @@ export const TrainingProvider: React.FC<{ children: React.ReactNode }> = ({
         window.clearInterval(timerId);
       }
     };
-  }, [state.timerData.timerState, timerId]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [state.timerData.timerState]);
 
   // play sound for timer state change
   useEffect(() => {
