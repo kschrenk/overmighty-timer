@@ -34,7 +34,7 @@ const Header: FC = () => {
   };
 
   return (
-    <header className="bg-linear-to-r from-blue-600 to-blue-800 dark:from-gray-900 dark:to-gray-800 text-white p-4 shadow-md">
+    <header className="bg-linear-to-r from-blue-600 to-blue-800 dark:from-gray-950 dark:to-gray-900 text-white p-4 shadow-md">
       <div className="max-w-5xl mx-auto flex items-center justify-between">
         <div className="flex items-center">
           {activeView !== "list" && (
@@ -46,7 +46,9 @@ const Header: FC = () => {
               <ArrowLeft size={24} />
             </button>
           )}
-          <h1 className="text-2xl font-bold tracking-tight">{getTitle()}</h1>
+          <h1 className="text-2xl font-bold tracking-tight bg-gradient-to-r from-blue-600   to-pink-500 inline-block text-transparent bg-clip-text">
+            {getTitle()}
+          </h1>
         </div>
         {currentUser &&
         !isUidTestUser(currentUser.uid) &&
