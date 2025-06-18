@@ -81,7 +81,6 @@ export const ProgressIndicatorCircle: FC<ProgressIndicatorProps> = ({
   description,
   textColor = "var(--color-foreground)",
 }) => {
-  console.log("🚀", { progress });
   return (
     <Wrapper>
       <CircularProgressbar
