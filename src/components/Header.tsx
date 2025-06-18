@@ -4,6 +4,7 @@ import { useTraining } from "@/context/TrainingContext/TrainingContext";
 import { removeSearchParameters } from "@/lib/removeSearchParameters";
 import { useAuth } from "@/context/AuthContext";
 import { isUidTestUser } from "@/lib/testUser";
+import { OvermightyText } from "@/components/OvermightyText";
 
 const Header: FC = () => {
   const { state, dispatch } = useTraining();
@@ -12,8 +13,6 @@ const Header: FC = () => {
 
   const getTitle = () => {
     switch (activeView) {
-      case "timer":
-        return state.timerData.currentSession?.name || "Training Timer";
       case "editor":
         return state.editingSession?.id
           ? `Edit: ${state.editingSession.name}`
@@ -33,6 +32,10 @@ const Header: FC = () => {
     dispatch({ type: "GO_TO_HOME" });
   };
 
+  if (activeView === "timer") {
+    return null;
+  }
+
   return (
     <header className="bg-linear-to-r from-blue-600 to-blue-800 dark:from-gray-950 dark:to-gray-900 text-white p-4 shadow-md">
       <div className="max-w-5xl mx-auto flex items-center justify-between">
@@ -46,8 +49,8 @@ const Header: FC = () => {
               <ArrowLeft size={24} />
             </button>
           )}
-          <h1 className="text-2xl font-bold tracking-tight bg-gradient-to-r from-blue-600   to-pink-500 inline-block text-transparent bg-clip-text">
-            {getTitle()}
+          <h1 className="text-2xl font-bold tracking-tight">
+            <OvermightyText>{getTitle()}</OvermightyText>
           </h1>
         </div>
         {currentUser &&

@@ -1,4 +1,3 @@
-import React from "react";
 import {
   TrainingProvider,
   useTraining,
@@ -16,13 +15,14 @@ import { RegisterForm } from "@/components/form/RegisterForm";
 import { RegisterUserListener } from "@/components/RegisterUserListener";
 import { isUidTestUser } from "@/lib/testUser";
 import { Button } from "./components/ui/button";
+import type { FC } from "react";
 
-const AppContent: React.FC = () => {
+const AppContent: FC = () => {
   const { state } = useTraining();
   const { currentUser, logout } = useAuth();
 
   return (
-    <div className="flex flex-col min-h-screen bg-gray-50 dark:bg-gray-950 transition-colors duration-200">
+    <div className="flex flex-col bg-gray-50 dark:bg-gray-950">
       <Header />
       <main className="grow">
         {isUidTestUser(currentUser?.uid) && (

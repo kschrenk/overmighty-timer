@@ -82,6 +82,7 @@ const TrainingEditor: React.FC = () => {
       .finally(() => {
         toast.success(`Session "${updatedSession.name}" saved successfully!`, {
           position: "top-center",
+          duration: 3000,
         });
       });
   };

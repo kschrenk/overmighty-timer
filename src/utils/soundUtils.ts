@@ -50,6 +50,7 @@ const FREQUENCIES = {
   startHang: 880, // A5
   endHang: 660, // E5
   startRest: 440, // A4
+  endRest: 220, // A3
   endSet: 220, // A3
   endTraining: [440, 660, 880], // A4, E5, A5 chord
   preparation: 1100, // C6
@@ -117,6 +118,11 @@ export const playEndHangSound = (): void => {
 // Sound for starting a rest period
 export const playStartRestSound = (): void => {
   playTone(FREQUENCIES.startRest);
+};
+
+// Sound for ending a rest period
+export const playEndRestSound = (): void => {
+  playTone(FREQUENCIES.endRest, 100);
 };
 
 // Sound for ending a set

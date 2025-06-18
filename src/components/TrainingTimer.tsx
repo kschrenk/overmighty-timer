@@ -3,10 +3,21 @@ import { useTraining } from "@/context/TrainingContext/TrainingContext";
 import { TimerState, TimerViewEnum } from "@/types/training";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
-import { TrainingTimerInfoContainer } from "@/components/TrainingTimerInfo";
 import { useWakeLock } from "@/hooks/useWakeLock";
 import { TrainingTimerProgressIndicatorContainer } from "@/components/TrainingTimerProgressIndicator";
 import { TrainingTimerControls } from "@/components/TrainingTimerControls";
+import { TrainingTimerInfoContainer } from "@/components/TrainingTimerInfo/TrainingTimerInfoContainer";
+import { Slide, SliderContainer } from "@/components/SliderContainer";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { OvermightyText } from "@/components/OvermightyText";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "./ui/table";
 
 const TrainingTimer: React.FC = () => {
   const { state, dispatch } = useTraining();
@@ -51,7 +62,7 @@ const TrainingTimer: React.FC = () => {
     if (!currentTime) return;
 
     const rawProgress =
-      ((currentTime - timerData.secondsLeft) * 100) / currentTime;
+      ((currentTime - timerData.secondsLeft) / currentTime) * 100;
 
     setProgress(Math.max(0, Math.min(100, rawProgress)));
   }, [
@@ -71,8 +82,9 @@ const TrainingTimer: React.FC = () => {
   };
 
   const handleStop = () => {
-    toast("Are you sure you want to stop the timer?", {
+    toast.warning("Stop the timer?", {
       position: "top-center",
+      closeButton: true,
       action: {
         label: "OK",
         onClick: () => {
@@ -89,6 +101,11 @@ const TrainingTimer: React.FC = () => {
 
   const handleResume = () => {
     dispatch({ type: "RESUME_TIMER" });
+  };
+
+  const handleRestart = () => {
+    dispatch({ type: "RESET_TIMER" });
+    handleStart();
   };
 
   if (!currentSession || !currentSet) {
@@ -114,22 +131,75 @@ const TrainingTimer: React.FC = () => {
   const isTimerViewBar = currentSession.timerView === TimerViewEnum.BAR;
 
   return (
-    <div
-      className={`max-w-md mx-auto py-4 flex flex-col min-h-[calc(100vh-4rem)] ${!isTimerViewBar ? "px-6" : "px-0"}`}
-    >
-      <TrainingTimerProgressIndicatorContainer progress={progress} />
-      <TrainingTimerInfoContainer />
-      <TrainingTimerControls
-        isIdle={isIdle}
-        isFinished={isFinished}
-        isRunning={isRunning}
-        isPaused={isPaused}
-        handleStart={handleStart}
-        handlePause={handlePause}
-        handleResume={handleResume}
-        handleStop={handleStop}
-      />
-    </div>
+    <SliderContainer>
+      <Slide>
+        <div
+          className={`flex flex-col max-w-md mx-auto py-4 ${!isTimerViewBar ? "px-6" : "px-0"} h-full justify-between`}
+        >
+          <div>
+            <h3 className={"text-center truncate font-semibold text-gray-400"}>
+              <OvermightyText>{currentSession.name}</OvermightyText>
+            </h3>
+            <TrainingTimerProgressIndicatorContainer progress={progress} />
+            <TrainingTimerInfoContainer />
+          </div>
+          <TrainingTimerControls
+            isIdle={isIdle}
+            isFinished={isFinished}
+            isRunning={isRunning}
+            isPaused={isPaused}
+            handleStart={handleStart}
+            handlePause={handlePause}
+            handleResume={handleResume}
+            handleStop={handleStop}
+            handleRestart={handleRestart}
+          />
+        </div>
+      </Slide>
+      <Slide>
+        <div className={"p-4"}>
+          <Card className={"mb-6"}>
+            <CardHeader>
+              <CardTitle>{currentSession.name}</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Set</TableHead>
+                    <TableHead>Hang Time</TableHead>
+                    <TableHead>Reps</TableHead>
+                    <TableHead>Rest</TableHead>
+                    <TableHead>Rest After</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {currentSession.sets.map((set, index) => (
+                    <TableRow
+                      key={set.id}
+                      className={
+                        currentSetIndex === index ? "dark:bg-pink-800" : ""
+                      }
+                    >
+                      <TableCell>{index + 1}</TableCell>
+                      <TableCell>{set.hangTime} sec</TableCell>
+                      <TableCell>{set.repetitions}</TableCell>
+                      <TableCell>{set.rest} sec</TableCell>
+                      <TableCell>{set.restAfter} sec</TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </CardContent>
+          </Card>
+          <div>
+            <Button onClick={() => dispatch({ type: "GO_TO_HOME" })}>
+              Go to home
+            </Button>
+          </div>
+        </div>
+      </Slide>
+    </SliderContainer>
   );
 };
 

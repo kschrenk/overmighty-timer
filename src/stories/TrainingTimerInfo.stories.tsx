@@ -1,9 +1,7 @@
-import {
-  TrainingTimerInfo,
-  TrainingTimerInfoWrapper,
-} from "@/components/TrainingTimerInfo";
+import { TrainingTimerInfo } from "@/components/TrainingTimerInfo/TrainingTimerInfo";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { TimerState } from "@/types/training";
+import { TrainingTimerInfoWrapper } from "@/components/TrainingTimerInfo/TrainingTimerInfoWrapper";
 
 type Props = React.ComponentProps<typeof TrainingTimerInfo>;
 
