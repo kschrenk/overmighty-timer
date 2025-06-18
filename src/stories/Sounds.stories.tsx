@@ -6,6 +6,7 @@ import {
   playEndTrainingSound,
   playPreparationSound,
   playLastThreeSecondsSound,
+  playEndRestSound,
 } from "@/utils/soundUtils";
 import { Button } from "@/components/ui/button";
 
@@ -18,6 +19,7 @@ export const SoundsDemo = () => (
     <Button onClick={playStartHangSound}>Play Start Hang Sound</Button>
     <Button onClick={playEndHangSound}>Play End Hang Sound</Button>
     <Button onClick={playStartRestSound}>Play Start Rest Sound</Button>
+    <Button onClick={playEndRestSound}>Play End Rest Sound</Button>
     <Button onClick={playEndSetSound}>Play End Set Sound</Button>
     <Button onClick={playEndTrainingSound}>Play End Training Sound</Button>
     <Button onClick={playPreparationSound}>Play Preparation Sound</Button>

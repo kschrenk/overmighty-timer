@@ -1,5 +1,6 @@
 import "../src/index.css";
 import type { Preview } from "@storybook/react-vite";
+import "react-circular-progressbar/dist/styles.css";
 
 const preview: Preview = {
   parameters: {
