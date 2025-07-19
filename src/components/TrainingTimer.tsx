@@ -8,7 +8,6 @@ import { TrainingTimerProgressIndicatorContainer } from "@/components/TrainingTi
 import { TrainingTimerControls } from "@/components/TrainingTimerControls";
 import { TrainingTimerInfoContainer } from "@/components/TrainingTimerInfo/TrainingTimerInfoContainer";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { OvermightyText } from "@/components/OvermightyText";
 import {
   Table,
   TableBody,
@@ -138,13 +137,6 @@ const TrainingTimer: React.FC = () => {
         <div
           className={`flex flex-col max-w-md mx-auto py-4 ${!isTimerViewBar ? "px-6" : "px-0"} h-full justify-between`}
         >
-          <h3
-            className={
-              "text-center truncate font-semibold text-gray-400 shrink-0"
-            }
-          >
-            <OvermightyText>{currentSession.name}</OvermightyText>
-          </h3>
           <div className="flex-1 flex items-center justify-center max-h-[64dvh]">
             <TrainingTimerProgressIndicatorContainer progress={progress} />
           </div>
@@ -173,7 +165,7 @@ const TrainingTimer: React.FC = () => {
           />
           <Card className={"mb-6"}>
             <CardHeader>
-              <CardTitle>{currentSession.name}</CardTitle>
+              <CardTitle>Session Overview</CardTitle>
             </CardHeader>
             <CardContent>
               <Table>

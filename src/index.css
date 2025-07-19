@@ -120,7 +120,7 @@
   [data-sonner-toast][data-styled=true] [data-title] {
     @apply text-base;
   }
-  [data-sonner-toast][data-styled=true] [data-close-button] {
-    @apply !bg-[var(--normal-text)]
-  }
+  /*[data-sonner-toast][data-styled=true] [data-close-button] {*/
+  /*  @apply !bg-[var(--normal-text)]*/
+  /*}*/
 }

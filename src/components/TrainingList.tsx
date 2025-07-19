@@ -23,6 +23,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { toast } from "sonner";
 import { removeTrainingSession } from "@/lib/firestoreUtils";
 import { isUidTestUser } from "@/lib/testUser";
+import { Footer } from "@/components/Footer";
 
 const TrainingList: React.FC = () => {
   const { state, dispatch, loading, getSessionById } = useTraining();
@@ -209,6 +210,7 @@ const TrainingList: React.FC = () => {
           </div>
         )}
       </div>
+      <Footer />
     </>
   );
 };
