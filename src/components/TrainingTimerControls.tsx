@@ -37,7 +37,7 @@ export const TrainingTimerControls: FC<Props> = ({
 
   if (isFinished) {
     return (
-      <div className="flex justify-center items-center space-x-6 pt-4 border-t border-gray-200 dark:border-gray-700">
+      <div className="flex justify-center items-center space-x-6 border-t border-gray-200 dark:border-gray-700">
         <Button
           onClick={() => {
             dispatch({ type: "RESET_TIMER" });
@@ -67,7 +67,7 @@ export const TrainingTimerControls: FC<Props> = ({
   }
 
   return (
-    <div className="flex justify-center items-center space-x-6 pt-4 border-t border-gray-200 dark:border-gray-700">
+    <div className="flex justify-center items-center space-x-6 pt-4 mt-4 border-t border-gray-200 dark:border-gray-700">
       {isIdle && !isFinished && (
         <Button
           onClick={handleStart}

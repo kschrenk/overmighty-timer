@@ -7,7 +7,6 @@ import { useWakeLock } from "@/hooks/useWakeLock";
 import { TrainingTimerProgressIndicatorContainer } from "@/components/TrainingTimerProgressIndicator";
 import { TrainingTimerControls } from "@/components/TrainingTimerControls";
 import { TrainingTimerInfoContainer } from "@/components/TrainingTimerInfo/TrainingTimerInfoContainer";
-import { Slide, SliderContainer } from "@/components/SliderContainer";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { OvermightyText } from "@/components/OvermightyText";
 import {
@@ -18,6 +17,8 @@ import {
   TableHeader,
   TableRow,
 } from "./ui/table";
+import { Slide, Slider } from "@/components/ui/slider";
+import { HeaderTitle } from "@/components/HeaderTitle";
 
 const TrainingTimer: React.FC = () => {
   const { state, dispatch } = useTraining();
@@ -90,6 +91,7 @@ const TrainingTimer: React.FC = () => {
         onClick: () => {
           dispatch({ type: "RESET_TIMER" });
           dispatch({ type: "GO_TO_HOME" });
+          toast.success("Timer stopped and returned to home");
         },
       },
     });
@@ -131,16 +133,22 @@ const TrainingTimer: React.FC = () => {
   const isTimerViewBar = currentSession.timerView === TimerViewEnum.BAR;
 
   return (
-    <SliderContainer>
+    <Slider>
       <Slide>
         <div
           className={`flex flex-col max-w-md mx-auto py-4 ${!isTimerViewBar ? "px-6" : "px-0"} h-full justify-between`}
         >
-          <div>
-            <h3 className={"text-center truncate font-semibold text-gray-400"}>
-              <OvermightyText>{currentSession.name}</OvermightyText>
-            </h3>
+          <h3
+            className={
+              "text-center truncate font-semibold text-gray-400 shrink-0"
+            }
+          >
+            <OvermightyText>{currentSession.name}</OvermightyText>
+          </h3>
+          <div className="flex-1 flex items-center justify-center max-h-[64dvh]">
             <TrainingTimerProgressIndicatorContainer progress={progress} />
+          </div>
+          <div className="shrink-0">
             <TrainingTimerInfoContainer />
           </div>
           <TrainingTimerControls
@@ -157,7 +165,12 @@ const TrainingTimer: React.FC = () => {
         </div>
       </Slide>
       <Slide>
-        <div className={"p-4"}>
+        <div className={"grid gap-6 px-4 py-6"}>
+          <HeaderTitle
+            title={currentSession.name}
+            showBackButton
+            onBack={() => dispatch({ type: "GO_TO_HOME" })}
+          />
           <Card className={"mb-6"}>
             <CardHeader>
               <CardTitle>{currentSession.name}</CardTitle>
@@ -193,13 +206,18 @@ const TrainingTimer: React.FC = () => {
             </CardContent>
           </Card>
           <div>
-            <Button onClick={() => dispatch({ type: "GO_TO_HOME" })}>
+            <Button
+              onClick={() => {
+                dispatch({ type: "RESET_TIMER" });
+                dispatch({ type: "GO_TO_HOME" });
+              }}
+            >
               Go to home
             </Button>
           </div>
         </div>
       </Slide>
-    </SliderContainer>
+    </Slider>
   );
 };
 

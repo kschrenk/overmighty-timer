@@ -8,7 +8,7 @@ type SlideProps = {
   children: ReactNode;
 };
 
-export const SliderContainer: FC<SliderContainerProps> = ({ children }) => {
+export const Slider: FC<SliderContainerProps> = ({ children }) => {
   return (
     <div
       className={
@@ -22,7 +22,7 @@ export const SliderContainer: FC<SliderContainerProps> = ({ children }) => {
 
 export const Slide: FC<SlideProps> = ({ children }) => {
   return (
-    <section className={"h-dvh w-full snap-start overflow-hidden"}>
+    <section className={"h-full w-full snap-start overflow-hidden"}>
       {children}
     </section>
   );

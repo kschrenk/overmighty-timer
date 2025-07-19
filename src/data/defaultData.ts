@@ -5,7 +5,6 @@ export const initialTimerData: TimerData = {
   currentSession: null,
   currentSetIndex: 0,
   currentRepetition: 0,
-  currentSetRepetition: 0,
   timerState: TimerState.IDLE,
   secondsLeft: 0,
 };

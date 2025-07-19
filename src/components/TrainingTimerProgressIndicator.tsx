@@ -84,7 +84,7 @@ export const ProgressIndicatorCircle: FC<ProgressIndicatorProps> = ({
   return (
     <Wrapper>
       <CircularProgressbar
-        className={"pb-6"}
+        className={"h-full"}
         value={progress}
         text={secondsLeft}
         styles={buildStyles({
@@ -96,7 +96,7 @@ export const ProgressIndicatorCircle: FC<ProgressIndicatorProps> = ({
         })}
         counterClockwise
       />
-      <div className={"inline-flex pb-6"}>
+      <div className={"inline-flex"}>
         <span className="text-xl uppercase font-extrabold tracking-wider text-gray-600 dark:text-gray-400">
           {description}
         </span>
@@ -133,7 +133,7 @@ const ProgressIndicatorBar: FC<ProgressIndicatorProps> = ({
 };
 
 const Wrapper = ({ children }: { children: ReactNode }) => (
-  <div className="grow flex flex-col items-center justify-center py-8 relative">
+  <div className="flex flex-col items-center relative gap-4 basis-full shrink">
     {children}
   </div>
 );
