@@ -1,3 +1,10 @@
+# [1.10.0](https://github.com/kschrenk/overmighty-timer/compare/v1.9.1...v1.10.0) (2025-07-19)
+
+
+### Features
+
+* **layout:** add vertical scroll snap slides ([#22](https://github.com/kschrenk/overmighty-timer/issues/22)) ([4af5f5e](https://github.com/kschrenk/overmighty-timer/commit/4af5f5e1dbdebb9ac22dce5816c0a3793fce59d4))
+
 ## [1.9.1](https://github.com/kschrenk/overmighty-timer/compare/v1.9.0...v1.9.1) (2025-06-15)
 
 
