@@ -23,6 +23,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { toast } from "sonner";
 import { removeTrainingSession } from "@/lib/firestoreUtils";
 import { isUidTestUser } from "@/lib/testUser";
+import { Footer } from "@/components/Footer";
 
 const TrainingList: React.FC = () => {
   const { state, dispatch, loading, getSessionById } = useTraining();
@@ -92,7 +93,7 @@ const TrainingList: React.FC = () => {
 
   return (
     <>
-      <div className="max-w-4xl mx-auto p-6">
+      <div className="min-h-dvh max-w-4xl mx-auto p-6">
         <div className="flex justify-between items-center mb-8">
           <h2 className="text-2xl font-bold text-gray-800 dark:text-gray-100">
             Sessions
@@ -133,13 +134,13 @@ const TrainingList: React.FC = () => {
             {state.trainingSessions.map((session, index) => (
               <Accordion key={session.id} type={"multiple"}>
                 <AccordionItem value={`session-${index}`}>
-                  <Card className="dark:bg-gray-800 border dark:border-gray-700 p-4">
+                  <Card className="p-4">
                     <AccordionTrigger className="py-0">
                       <div>
-                        <h3 className="text-xl font-semibold text-gray-800 dark:text-gray-100 mb-3 truncate">
+                        <h3 className="text-xl font-semibold  text-gray-200 mb-3 truncate">
                           {session.name}
                         </h3>
-                        <div className="flex items-center text-gray-500 dark:text-gray-300">
+                        <div className="flex items-center text-gray-300">
                           <Clock size={16} className="mr-1" />
                           <span className="text-sm font-medium mr-3">
                             {formatTime(calculateSessionDuration(session.id))}
@@ -155,7 +156,7 @@ const TrainingList: React.FC = () => {
                         </div>
                       </div>
                     </AccordionTrigger>
-                    <AccordionContent className="pb-0">
+                    <AccordionContent className="AccordionContent pb-0">
                       <div className="divide-y divide-gray-100 dark:divide-gray-700">
                         {session.sets.map((set, index) => (
                           <div
@@ -209,6 +210,7 @@ const TrainingList: React.FC = () => {
           </div>
         )}
       </div>
+      <Footer />
     </>
   );
 };

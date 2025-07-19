@@ -1,11 +1,11 @@
 import React, {
   createContext,
   useContext,
-  useReducer,
   useEffect,
+  useReducer,
   useState,
 } from "react";
-import type { TrainingSession, TimerData } from "@/types/training";
+import type { TimerData, TrainingSession } from "@/types/training";
 import { TimerState } from "@/types/training";
 import {
   playLastThreeSecondsSound,
@@ -124,7 +124,13 @@ export const TrainingProvider: React.FC<{ children: React.ReactNode }> = ({
   useEffect(() => {
     const { currentSession, timerState, secondsLeft } = state.timerData;
 
-    if (currentSession && timerState === TimerState.HANGING) {
+    if (!currentSession) return;
+
+    if (
+      timerState === TimerState.HANGING ||
+      timerState === TimerState.RESTING_BETWEEN_REPS ||
+      timerState === TimerState.RESTING_AFTER_SET
+    ) {
       if (secondsLeft < 3) {
         return playLastThreeSecondsSound();
       }

@@ -20,6 +20,7 @@ import { createInvite } from "@/lib/firestoreUtils";
 import { Loader2 } from "lucide-react";
 import { useState } from "react";
 import { useWakeLock } from "@/hooks/useWakeLock";
+import { Footer } from "@/components/Footer";
 
 const formSchema = z.object({
   email: z.string().email({ message: "Invalid email address" }),
@@ -82,83 +83,86 @@ export const Account: FC = () => {
   };
 
   return (
-    <div className="max-w-md mx-auto p-6 bg-white dark:bg-gray-800">
-      <h2 className="text-2xl font-semibold mb-4 text-gray-800 dark:text-white">
-        Settings
-      </h2>
-      {currentUser ? (
-        <div className={"grid space-y-6"}>
-          <div>
-            <p className="text-gray-700 dark:text-gray-300">
-              <strong>Name:</strong> {currentUser.displayName}
-            </p>
-            <p className="text-gray-700 dark:text-gray-300">
-              <strong>Email:</strong> {currentUser.email}
-            </p>
-            <p className="text-gray-700 dark:text-gray-300">
-              <strong>User ID:</strong> {currentUser.uid}
-            </p>
-            <p className="text-gray-700 dark:text-gray-300">
-              <strong>Wake Lock Support:</strong> {String(isSupported)}
-            </p>
-          </div>
-          <div className={"flex gap-4 justify-end"}>
-            <Button
-              variant={"destructive"}
-              onClick={handleLogout}
-              disabled={isLogoutLoading}
-            >
-              {isLogoutLoading ? (
-                <>
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  Logging out
-                </>
-              ) : (
-                "Logout"
-              )}
-            </Button>
-          </div>
-        </div>
-      ) : (
-        <p className="text-gray-700 dark:text-gray-300">No user logged in.</p>
-      )}
-      <div className="mt-12">
+    <>
+      <div className="max-w-md mx-auto p-6 bg-white dark:bg-gray-800">
         <h2 className="text-2xl font-semibold mb-4 text-gray-800 dark:text-white">
-          Invite a Friend
+          Settings
         </h2>
-        <Form {...form}>
-          <form
-            onSubmit={form.handleSubmit(handleInvite)}
-            className="space-y-8"
-          >
-            <FormField
-              control={form.control}
-              name="email"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Email</FormLabel>
-                  <FormControl>
-                    <Input {...field} autoComplete="username" />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <div className={"flex justify-end"}>
-              <Button type="submit" disabled={isInviteLoading}>
-                {isInviteLoading ? (
+        {currentUser ? (
+          <div className={"grid space-y-6"}>
+            <div>
+              <p className="text-gray-700 dark:text-gray-300">
+                <strong>Name:</strong> {currentUser.displayName}
+              </p>
+              <p className="text-gray-700 dark:text-gray-300">
+                <strong>Email:</strong> {currentUser.email}
+              </p>
+              <p className="text-gray-700 dark:text-gray-300">
+                <strong>User ID:</strong> {currentUser.uid}
+              </p>
+              <p className="text-gray-700 dark:text-gray-300">
+                <strong>Wake Lock Support:</strong> {String(isSupported)}
+              </p>
+            </div>
+            <div className={"flex gap-4 justify-end"}>
+              <Button
+                variant={"destructive"}
+                onClick={handleLogout}
+                disabled={isLogoutLoading}
+              >
+                {isLogoutLoading ? (
                   <>
                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                    Inviting...
+                    Logging out
                   </>
                 ) : (
-                  "Submit"
+                  "Logout"
                 )}
               </Button>
             </div>
-          </form>
-        </Form>
+          </div>
+        ) : (
+          <p className="text-gray-700 dark:text-gray-300">No user logged in.</p>
+        )}
+        <div className="mt-12">
+          <h2 className="text-2xl font-semibold mb-4 text-gray-800 dark:text-white">
+            Invite a Friend
+          </h2>
+          <Form {...form}>
+            <form
+              onSubmit={form.handleSubmit(handleInvite)}
+              className="space-y-8"
+            >
+              <FormField
+                control={form.control}
+                name="email"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Email</FormLabel>
+                    <FormControl>
+                      <Input {...field} autoComplete="username" />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <div className={"flex justify-end"}>
+                <Button type="submit" disabled={isInviteLoading}>
+                  {isInviteLoading ? (
+                    <>
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      Inviting...
+                    </>
+                  ) : (
+                    "Submit"
+                  )}
+                </Button>
+              </div>
+            </form>
+          </Form>
+        </div>
       </div>
-    </div>
+      <Footer />
+    </>
   );
 };

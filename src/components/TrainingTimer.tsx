@@ -1,14 +1,23 @@
 import React, { useEffect, useState } from "react";
 import { useTraining } from "@/context/TrainingContext/TrainingContext";
 import { TimerState, TimerViewEnum } from "@/types/training";
-import { formatTime, getStateDescription } from "@/utils/timerUtils";
-import { PauseCircle, Play, PlayCircle, StopCircle } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
-import { Progress } from "@/components/ui/progress";
-import { buildStyles, CircularProgressbar } from "react-circular-progressbar";
-import { TrainingTimerInfoContainer } from "@/components/TrainingTimerInfo";
 import { useWakeLock } from "@/hooks/useWakeLock";
+import { TrainingTimerProgressIndicatorContainer } from "@/components/TrainingTimerProgressIndicator";
+import { TrainingTimerControls } from "@/components/TrainingTimerControls";
+import { TrainingTimerInfoContainer } from "@/components/TrainingTimerInfo/TrainingTimerInfoContainer";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "./ui/table";
+import { Slide, Slider } from "@/components/ui/slider";
+import { HeaderTitle } from "@/components/HeaderTitle";
 
 const TrainingTimer: React.FC = () => {
   const { state, dispatch } = useTraining();
@@ -53,7 +62,7 @@ const TrainingTimer: React.FC = () => {
     if (!currentTime) return;
 
     const rawProgress =
-      ((currentTime - timerData.secondsLeft) * 100) / currentTime;
+      ((currentTime - timerData.secondsLeft) / currentTime) * 100;
 
     setProgress(Math.max(0, Math.min(100, rawProgress)));
   }, [
@@ -73,13 +82,15 @@ const TrainingTimer: React.FC = () => {
   };
 
   const handleStop = () => {
-    toast("Are you sure you want to stop the timer?", {
+    toast.warning("Stop the timer?", {
       position: "top-center",
+      closeButton: true,
       action: {
         label: "OK",
         onClick: () => {
           dispatch({ type: "RESET_TIMER" });
           dispatch({ type: "GO_TO_HOME" });
+          toast.success("Timer stopped and returned to home");
         },
       },
     });
@@ -91,6 +102,11 @@ const TrainingTimer: React.FC = () => {
 
   const handleResume = () => {
     dispatch({ type: "RESUME_TIMER" });
+  };
+
+  const handleRestart = () => {
+    dispatch({ type: "RESET_TIMER" });
+    handleStart();
   };
 
   if (!currentSession || !currentSet) {
@@ -109,28 +125,6 @@ const TrainingTimer: React.FC = () => {
     );
   }
 
-  const getProgressColor = (timerView?: TimerViewEnum) => {
-    switch (timerState) {
-      case TimerState.HANGING:
-        return timerView === TimerViewEnum.BAR
-          ? "bg-green-600"
-          : "var(--color-green-600)";
-      case TimerState.RESTING_BETWEEN_REPS:
-      case TimerState.RESTING_AFTER_SET:
-        return timerView === TimerViewEnum.BAR
-          ? "bg-red-600"
-          : "var(--color-red-600)";
-      case TimerState.PREPARATION:
-        return timerView === TimerViewEnum.BAR
-          ? "bg-yellow-600"
-          : "var(--color-yellow-600)";
-      default:
-        return timerView === TimerViewEnum.BAR
-          ? "bg-gray-300"
-          : "var(--color-gray-300)";
-    }
-  };
-
   const isIdle = timerState === TimerState.IDLE;
   const isFinished = timerState === TimerState.FINISHED;
   const isPaused = timerState === TimerState.PAUSED;
@@ -138,98 +132,84 @@ const TrainingTimer: React.FC = () => {
   const isTimerViewBar = currentSession.timerView === TimerViewEnum.BAR;
 
   return (
-    <div
-      className={`max-w-md mx-auto py-4 flex flex-col min-h-[calc(100vh-4rem)] ${!isTimerViewBar ? "px-6" : "px-0"}`}
-    >
-      <div className="grow flex flex-col items-center justify-center py-8 relative">
-        {isTimerViewBar ? (
-          <>
-            <Progress
-              value={progress}
-              classNameIndicator={getProgressColor(currentSession.timerView)}
-              className={"absolute inset-0 h-full rounded-none"}
-            />
-            <div className="relative w-64 h-64 mb-6 z-50">
-              <div className="absolute inset-0 flex flex-col items-center justify-center">
-                <div className="text-8xl font-bold mb-2 text-gray-800 dark:text-gray-100">
-                  {formatTime(timerData.secondsLeft)}
-                </div>
-                <div className="text-lg uppercase font-medium tracking-wider text-gray-600 dark:text-white">
-                  {getStateDescription(timerState)}
-                </div>
-              </div>
-            </div>
-          </>
-        ) : (
-          <>
-            <CircularProgressbar
-              className={"pb-6"}
-              maxValue={100}
-              minValue={0}
-              value={progress}
-              text={formatTime(timerData.secondsLeft)}
-              styles={buildStyles({
-                trailColor: "var(--color-gray-600)",
-                pathColor: getProgressColor(currentSession.timerView),
-                textColor: "var(--color-foreground)",
-                pathTransition:
-                  progress === 0 ? "none" : "stroke-dashoffset 0.5s ease 0s",
-              })}
-              counterClockwise
-            />
-            <div className={"inline-flex pb-6"}>
-              <span className="text-xl uppercase font-extrabold tracking-wider text-gray-600 dark:text-gray-400">
-                {getStateDescription(timerState)}
-              </span>
-            </div>
-          </>
-        )}
-        <TrainingTimerInfoContainer />
-      </div>
-      <div className="flex justify-center items-center space-x-6 py-6 border-t border-gray-200 dark:border-gray-700">
-        {isIdle && !isFinished && (
-          <Button
-            onClick={handleStart}
-            className="p-5 rounded-full bg-green-600 text-white hover:bg-green-700 transition-all duration-200 shadow-md hover:shadow-lg flex items-center"
-            aria-label="Start timer"
-          >
-            <Play size={36} className="mr-2" />
-            Start
-          </Button>
-        )}
-        {isRunning && (
-          <Button
-            onClick={handlePause}
-            aria-label="Pause timer"
-            variant={"default"}
-          >
-            <PauseCircle size={36} />
-            Pause
-          </Button>
-        )}
-        {isPaused && (
-          <Button
-            onClick={handleResume}
-            aria-label="Resume timer"
-            variant={"default"}
-            className={"dark:bg-yellow-500 dark:text-white"}
-          >
-            <PlayCircle size={36} />
-            Resume
-          </Button>
-        )}
-        {!isIdle && !isFinished && (
-          <Button
-            variant={"destructive"}
-            onClick={handleStop}
-            aria-label="Stop timer"
-          >
-            <StopCircle size={36} className="mr-2" />
-            Stop
-          </Button>
-        )}
-      </div>
-    </div>
+    <Slider>
+      <Slide>
+        <div
+          className={`flex flex-col max-w-md mx-auto py-4 ${!isTimerViewBar ? "px-6" : "px-0"} h-full justify-between`}
+        >
+          <div className="flex-1 flex items-center justify-center max-h-[64dvh]">
+            <TrainingTimerProgressIndicatorContainer progress={progress} />
+          </div>
+          <div className="shrink-0">
+            <TrainingTimerInfoContainer />
+          </div>
+          <TrainingTimerControls
+            isIdle={isIdle}
+            isFinished={isFinished}
+            isRunning={isRunning}
+            isPaused={isPaused}
+            handleStart={handleStart}
+            handlePause={handlePause}
+            handleResume={handleResume}
+            handleStop={handleStop}
+            handleRestart={handleRestart}
+          />
+        </div>
+      </Slide>
+      <Slide>
+        <div className={"grid gap-6 px-4 py-6"}>
+          <HeaderTitle
+            title={currentSession.name}
+            showBackButton
+            onBack={() => dispatch({ type: "GO_TO_HOME" })}
+          />
+          <Card className={"mb-6"}>
+            <CardHeader>
+              <CardTitle>Session Overview</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Set</TableHead>
+                    <TableHead>Hang Time</TableHead>
+                    <TableHead>Reps</TableHead>
+                    <TableHead>Rest</TableHead>
+                    <TableHead>Rest After</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {currentSession.sets.map((set, index) => (
+                    <TableRow
+                      key={set.id}
+                      className={
+                        currentSetIndex === index ? "dark:bg-pink-800" : ""
+                      }
+                    >
+                      <TableCell>{index + 1}</TableCell>
+                      <TableCell>{set.hangTime} sec</TableCell>
+                      <TableCell>{set.repetitions}</TableCell>
+                      <TableCell>{set.rest} sec</TableCell>
+                      <TableCell>{set.restAfter} sec</TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </CardContent>
+          </Card>
+          <div>
+            <Button
+              onClick={() => {
+                dispatch({ type: "RESET_TIMER" });
+                dispatch({ type: "GO_TO_HOME" });
+              }}
+            >
+              Go to home
+            </Button>
+          </div>
+        </div>
+      </Slide>
+    </Slider>
   );
 };
 
