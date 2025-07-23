@@ -1,3 +1,10 @@
+# [1.11.0](https://github.com/kschrenk/overmighty-timer/compare/v1.10.0...v1.11.0) (2025-07-23)
+
+
+### Features
+
+* **account:** improve readability and add installation guide ([#23](https://github.com/kschrenk/overmighty-timer/issues/23)) ([d7ec55c](https://github.com/kschrenk/overmighty-timer/commit/d7ec55cd6020304bcf9b549d38fdf621e1272c57))
+
 # [1.10.0](https://github.com/kschrenk/overmighty-timer/compare/v1.9.1...v1.10.0) (2025-07-19)
 
 
