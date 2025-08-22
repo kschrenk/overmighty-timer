@@ -12,6 +12,7 @@ import {
 import { db } from "@/firebase";
 import type { TrainingSession } from "@/types/training";
 import type { User } from "firebase/auth";
+import { migrateTrainingSessions } from "@/utils/dataMigration";
 
 export async function isValidInvite(
   uid: string,
@@ -115,7 +116,9 @@ export async function fetchTrainingSessions(
     (doc) => ({ id: doc.id, ...doc.data() }) as TrainingSession,
   );
 
-  return data;
+  // Migrate old training sessions to ensure compatibility
+  // This handles cases where old database records might have timerView: "bar"
+  return migrateTrainingSessions(data);
 }
 
 export const updateTrainingSession = async ({

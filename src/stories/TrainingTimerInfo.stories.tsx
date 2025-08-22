@@ -8,7 +8,6 @@ type Props = React.ComponentProps<typeof TrainingTimerInfo>;
 interface ExtendedProps extends Props {
   timerState: TimerState;
   isDisplayNextSetInformation: boolean;
-  isTimerViewBar?: boolean;
 }
 
 const meta = {
@@ -39,10 +38,6 @@ const meta = {
       control: { type: "boolean" },
       description: "Display next set information",
     },
-    isTimerViewBar: {
-      control: { type: "boolean" },
-      description: "Display in timer view bar style",
-    },
   },
   render: (args) => {
     return (
@@ -50,7 +45,6 @@ const meta = {
         <TrainingTimerInfoWrapper
           isDisplayNextSetInformation={args.isDisplayNextSetInformation}
           timerState={args.timerState}
-          isTimerViewBar={args.isTimerViewBar}
         >
           <TrainingTimerInfo {...args} />
         </TrainingTimerInfoWrapper>
