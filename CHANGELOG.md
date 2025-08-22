@@ -1,3 +1,10 @@
+## [1.11.1](https://github.com/kschrenk/overmighty-timer/compare/v1.11.0...v1.11.1) (2025-08-22)
+
+
+### Bug Fixes
+
+* fixes the timer progress and ui indicator ([#25](https://github.com/kschrenk/overmighty-timer/issues/25)) ([0e4e4d3](https://github.com/kschrenk/overmighty-timer/commit/0e4e4d37402cd10eb1c73685da0a8367353907b2))
+
 # [1.11.0](https://github.com/kschrenk/overmighty-timer/compare/v1.10.0...v1.11.0) (2025-07-23)
 
 
