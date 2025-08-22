@@ -60,12 +60,14 @@ export const trainingReducer = (
     }
 
     case "TICK": {
-      if (state.timerData.secondsLeft > 0) {
+      const newSecondsLeft = state.timerData.secondsLeft - 1;
+
+      if (newSecondsLeft > 0) {
         return {
           ...state,
           timerData: {
             ...state.timerData,
-            secondsLeft: state.timerData.secondsLeft - 1,
+            secondsLeft: newSecondsLeft,
           },
         };
       }

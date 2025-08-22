@@ -10,6 +10,7 @@ import { TimerState } from "@/types/training";
 import {
   playLastThreeSecondsSound,
   playStateChangeSound,
+  isInPriorityWindow,
 } from "@/utils/soundUtils";
 import type { TrainingAction } from "@/lib/trainingReducer";
 import { trainingReducer } from "@/lib/trainingReducer";
@@ -120,20 +121,28 @@ export const TrainingProvider: React.FC<{ children: React.ReactNode }> = ({
     playStateChangeSound(state.timerData.timerState);
   }, [state.timerData.timerState]);
 
-  // play sound for last three seconds of a hang
+  // play sound for last three seconds of a phase (hang, rest or preparation)
+  const lastCountdownRef = React.useRef<number | null>(null);
   useEffect(() => {
     const { currentSession, timerState, secondsLeft } = state.timerData;
-
     if (!currentSession) return;
 
     if (
       timerState === TimerState.HANGING ||
       timerState === TimerState.RESTING_BETWEEN_REPS ||
-      timerState === TimerState.RESTING_AFTER_SET
+      timerState === TimerState.RESTING_AFTER_SET ||
+      timerState === TimerState.PREPARATION
     ) {
-      if (secondsLeft < 3) {
-        return playLastThreeSecondsSound();
+      if (secondsLeft <= 3 && secondsLeft > 0) {
+        if (lastCountdownRef.current !== secondsLeft && !isInPriorityWindow()) {
+          playLastThreeSecondsSound();
+          lastCountdownRef.current = secondsLeft;
+        }
+      } else if (secondsLeft > 3) {
+        lastCountdownRef.current = null;
       }
+    } else {
+      lastCountdownRef.current = null;
     }
   }, [state.timerData]);
 

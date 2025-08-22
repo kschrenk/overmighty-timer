@@ -21,8 +21,11 @@ import { HeaderTitle } from "@/components/HeaderTitle";
 
 const TrainingTimer: React.FC = () => {
   const { state, dispatch } = useTraining();
-  const [progress, setProgress] = useState(100);
+  const [progress, setProgress] = useState(0); // start at 0 for new phase
   const { requestWakeLock, releaseWakeLock } = useWakeLock();
+  const [previousTimerState, setPreviousTimerState] =
+    useState<TimerState | null>(null);
+  const [phaseDuration, setPhaseDuration] = useState<number | null>(null);
 
   const { timerData } = state;
   const { currentSession, currentSetIndex, timerState } = timerData;
@@ -38,42 +41,60 @@ const TrainingTimer: React.FC = () => {
   }, [releaseWakeLock, requestWakeLock]);
 
   useEffect(() => {
-    const { timerState } = timerData;
-    let currentTime = 0;
+    const currentTimerState = timerState;
 
-    switch (timerState) {
-      case TimerState.HANGING:
-        currentTime = currentSet?.hangTime ?? 0;
-        break;
-      case TimerState.RESTING_BETWEEN_REPS:
-        currentTime = currentSet?.rest ?? 0;
-        break;
-      case TimerState.RESTING_AFTER_SET:
-        currentTime = currentSet?.restAfter ?? 0;
-        break;
-      case TimerState.PREPARATION:
-        currentTime = currentSession?.preparationTime ?? 0;
-        break;
-      default:
-        currentTime = 0;
-        break;
+    // Detect phase change
+    if (previousTimerState !== currentTimerState) {
+      // Determine new duration for this phase
+      let newDuration = 0;
+      switch (currentTimerState) {
+        case TimerState.HANGING:
+          newDuration = currentSet?.hangTime ?? 0;
+          break;
+        case TimerState.RESTING_BETWEEN_REPS:
+          newDuration = currentSet?.rest ?? 0;
+          break;
+        case TimerState.RESTING_AFTER_SET:
+          newDuration = currentSet?.restAfter ?? 0;
+          break;
+        case TimerState.PREPARATION:
+          newDuration = currentSession?.preparationTime ?? 0;
+          break;
+        default:
+          newDuration = 0;
+      }
+      setPhaseDuration(newDuration || null);
+      setProgress(0); // fresh phase starts visually empty
+      setPreviousTimerState(currentTimerState);
+      return; // skip progress calc this render to avoid jump
     }
-
-    if (!currentTime) return;
-
-    const rawProgress =
-      ((currentTime - timerData.secondsLeft) / currentTime) * 100;
-
-    setProgress(Math.max(0, Math.min(100, rawProgress)));
   }, [
+    timerState,
+    previousTimerState,
     currentSet?.hangTime,
     currentSet?.rest,
     currentSet?.restAfter,
     currentSession?.preparationTime,
-    timerData,
-    timerData.secondsLeft,
-    timerState,
   ]);
+
+  // Recalculate progress when secondsLeft changes within the same phase
+  useEffect(() => {
+    if (!phaseDuration || phaseDuration <= 0) return;
+
+    const L = timerData.secondsLeft; // 1..phaseDuration while active (no 0)
+    // For duration 1 we can only show 0 -> immediate transition next tick; keep 0 (no rewind)
+    if (phaseDuration === 1) {
+      setProgress(0);
+      return;
+    }
+
+    // Progress formula ensuring:
+    //  L = phaseDuration => progress = 0
+    //  L = 1 => progress = 100
+    const raw = ((phaseDuration - L) / (phaseDuration - 1)) * 100;
+    const bounded = Math.max(0, Math.min(100, raw));
+    setProgress(bounded);
+  }, [phaseDuration, timerData.secondsLeft]);
 
   const handleStart = () => {
     if (currentSession) {
@@ -106,9 +127,25 @@ const TrainingTimer: React.FC = () => {
     dispatch({ type: "RESUME_TIMER" });
   };
 
-  const handleRestart = () => {
-    dispatch({ type: "RESET_TIMER" });
-    handleStart();
+  const handleRestartWithConfirm = () => {
+    if (!currentSession) return;
+    toast("Restart session?", {
+      position: "top-center",
+      closeButton: true,
+      action: {
+        label: "Restart",
+        onClick: () => {
+          dispatch({ type: "START_SESSION", payload: currentSession });
+          toast.success("Session restarted", { position: "top-center" });
+        },
+      },
+      cancel: {
+        label: "Cancel",
+        onClick: () => {
+          /* no-op cancel */
+        },
+      },
+    });
   };
 
   if (!currentSession || !currentSet) {
@@ -151,7 +188,7 @@ const TrainingTimer: React.FC = () => {
             handlePause={handlePause}
             handleResume={handleResume}
             handleStop={handleStop}
-            handleRestart={handleRestart}
+            handleRestart={handleRestartWithConfirm}
           />
         </div>
       </Slide>

@@ -5,6 +5,7 @@ import {
   Play,
   PlayCircle,
   StopCircle,
+  RotateCcw,
 } from "lucide-react";
 import type { FC } from "react";
 import { useTraining } from "@/context/TrainingContext/TrainingContext";
@@ -108,6 +109,17 @@ export const TrainingTimerControls: FC<Props> = ({
         >
           <StopCircle size={36} className="mr-2" />
           Stop
+        </Button>
+      )}
+      {!isIdle && !isFinished && (
+        <Button
+          onClick={handleRestart}
+          aria-label="Restart session"
+          variant={"outline"}
+          className="text-blue-600 dark:text-blue-400 hover:bg-blue-50 dark:hover:bg-gray-700"
+        >
+          <RotateCcw size={32} className="mr-2" />
+          Restart
         </Button>
       )}
     </div>
