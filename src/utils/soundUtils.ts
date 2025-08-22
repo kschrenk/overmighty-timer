@@ -56,6 +56,22 @@ const FREQUENCIES = {
   preparation: 1100, // C6
 };
 
+let lastPrioritySoundUntil = 0;
+const markPriorityWindow = (durationMs: number) => {
+  try {
+    lastPrioritySoundUntil = performance.now() + durationMs + 50; // small buffer
+  } catch {
+    lastPrioritySoundUntil = Date.now() + durationMs + 50;
+  }
+};
+export const isInPriorityWindow = () => {
+  try {
+    return performance.now() < lastPrioritySoundUntil;
+  } catch {
+    return Date.now() < lastPrioritySoundUntil;
+  }
+};
+
 // Play a tone with given frequency
 export const playTone = (frequency: number, duration: number = 200): void => {
   try {
@@ -107,41 +123,49 @@ export const playToneSequence = (
 
 // Sound for starting a hang
 export const playStartHangSound = (): void => {
+  markPriorityWindow(440);
   playTone(FREQUENCIES.startHang, 440);
 };
 
 // Sound for ending a hang
 export const playEndHangSound = (): void => {
+  markPriorityWindow(440);
   playTone(FREQUENCIES.endHang, 440);
 };
 
 // Sound for starting a rest period
 export const playStartRestSound = (): void => {
+  markPriorityWindow(200);
   playTone(FREQUENCIES.startRest);
 };
 
 // Sound for ending a rest period
 export const playEndRestSound = (): void => {
+  markPriorityWindow(100);
   playTone(FREQUENCIES.endRest, 100);
 };
 
 // Sound for ending a set
 export const playEndSetSound = (): void => {
+  markPriorityWindow(300);
   playTone(FREQUENCIES.endSet, 300);
 };
 
 // Sound for ending a training session
 export const playEndTrainingSound = (): void => {
+  markPriorityWindow(900); // sequence ~ 3 * 300
   playToneSequence(FREQUENCIES.endTraining, 300);
 };
 
 // Sound for preparing a training session
 export const playPreparationSound = (): void => {
+  markPriorityWindow(300);
   playTone(FREQUENCIES.preparation, 300);
 };
 
 // Sound for last three seconds of a hang
 export const playLastThreeSecondsSound = (): void => {
+  if (isInPriorityWindow()) return; // suppress if high priority active
   playTone(810, 80);
 };
 
