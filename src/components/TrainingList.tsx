@@ -1,13 +1,5 @@
 import React from "react";
-import {
-  Activity,
-  Clock,
-  Edit,
-  Eye,
-  Play,
-  PlusCircle,
-  Trash,
-} from "lucide-react";
+import { Activity, Clock, Edit, Play, PlusCircle, Trash } from "lucide-react";
 import { useTraining } from "@/context/TrainingContext/TrainingContext";
 import { formatTime } from "@/utils/timerUtils";
 import { useAuth } from "@/context/AuthContext";
@@ -148,10 +140,6 @@ const TrainingList: React.FC = () => {
                           <Activity size={16} className="mr-1" />
                           <span className="text-sm font-medium mr-3">
                             {`${session.sets.length} set${session.sets.length > 1 ? "s" : ""}`}
-                          </span>
-                          <Eye size={16} className="mr-1" />
-                          <span className="text-sm font-medium">
-                            {`${session.timerView}`}
                           </span>
                         </div>
                       </div>

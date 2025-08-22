@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Bath, Copy, Eye, FolderPen, Plus, Save, Trash2 } from "lucide-react";
+import { Bath, Copy, FolderPen, Plus, Save, Trash2 } from "lucide-react";
 import { useTraining } from "@/context/TrainingContext/TrainingContext";
 import type { Set } from "@/types/training";
 import { TimerViewEnum } from "@/types/training";
@@ -10,13 +10,6 @@ import { Label } from "./ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { isUidTestUser } from "@/lib/testUser";
 import { Card } from "@/components/ui/card";
 import { LabelWrapper } from "@/components/LabelWrapper";
@@ -27,9 +20,6 @@ const TrainingEditor: React.FC = () => {
   const { editingSession } = state;
 
   const [sessionName, setSessionName] = useState(editingSession?.name || "");
-  const [timerView, setTimerView] = useState<TimerViewEnum>(
-    editingSession?.timerView ?? TimerViewEnum.CIRCLE,
-  );
   const [preparationTime, setPreparationTime] = useState<number>(
     editingSession?.preparationTime ?? 0,
   );
@@ -60,8 +50,8 @@ const TrainingEditor: React.FC = () => {
     const updatedSession = {
       ...editingSession,
       name: sessionName,
-      timerView,
       preparationTime,
+      timerView: TimerViewEnum.CIRCLE,
     };
 
     if (isUidTestUser(currentUser?.uid)) {
@@ -178,22 +168,6 @@ const TrainingEditor: React.FC = () => {
             onChange={handlePreparationTimeChange}
           />
         </LabelWrapper>
-        <Label>
-          <Eye size={16} />
-          <span className={"text-nowrap"}>Timer View</span>
-        </Label>
-        <Select
-          defaultValue={timerView}
-          onValueChange={(value) => setTimerView(value as TimerViewEnum)}
-        >
-          <SelectTrigger className="w-full">
-            <SelectValue placeholder="Timer View" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value={TimerViewEnum.CIRCLE}>Circle</SelectItem>
-            <SelectItem value={TimerViewEnum.BAR}>Bar</SelectItem>
-          </SelectContent>
-        </Select>
       </Card>
 
       {editingSession.sets.length === 0 ? (

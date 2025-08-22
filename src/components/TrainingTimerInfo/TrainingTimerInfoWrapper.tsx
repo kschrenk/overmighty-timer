@@ -6,7 +6,6 @@ import { TrainingTimerInfoBadgeWrapper } from "@/components/TrainingTimerInfo/Tr
 
 type TrainingTimerInfoWrapperProps = {
   children: ReactNode;
-  isTimerViewBar?: boolean;
   timerState: TimerState;
   isDisplayNextSetInformation?: boolean;
 };
@@ -37,13 +36,12 @@ function getBackgroundColor(timerState: TimerState): string {
 
 export const TrainingTimerInfoWrapper: FC<TrainingTimerInfoWrapperProps> = ({
   children,
-  isTimerViewBar,
   timerState,
   isDisplayNextSetInformation = false,
 }) => {
   return (
     <Card
-      className={`z-50 py-4 text-center justify-center ${isTimerViewBar ? "max-w-sm min-w-64" : "w-full "} ${getBackgroundColor(timerState)}`}
+      className={`z-50 py-4 text-center justify-center w-full ${getBackgroundColor(timerState)}`}
     >
       <CardContent className={"px-4 relative"}>
         <div className={"grid gap-2"}>{children}</div>

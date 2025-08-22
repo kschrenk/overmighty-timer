@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useTraining } from "@/context/TrainingContext/TrainingContext";
-import { TimerState, TimerViewEnum } from "@/types/training";
+import { TimerState } from "@/types/training";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { useWakeLock } from "@/hooks/useWakeLock";
@@ -90,7 +90,9 @@ const TrainingTimer: React.FC = () => {
         onClick: () => {
           dispatch({ type: "RESET_TIMER" });
           dispatch({ type: "GO_TO_HOME" });
-          toast.success("Timer stopped and returned to home");
+          toast.success("Timer stopped and returned to home", {
+            position: "top-center",
+          });
         },
       },
     });
@@ -129,14 +131,11 @@ const TrainingTimer: React.FC = () => {
   const isFinished = timerState === TimerState.FINISHED;
   const isPaused = timerState === TimerState.PAUSED;
   const isRunning = !isIdle && !isFinished && !isPaused;
-  const isTimerViewBar = currentSession.timerView === TimerViewEnum.BAR;
 
   return (
     <Slider>
       <Slide>
-        <div
-          className={`flex flex-col max-w-md mx-auto py-4 ${!isTimerViewBar ? "px-6" : "px-0"} h-full justify-between`}
-        >
+        <div className="flex flex-col max-w-md mx-auto py-4 px-6 h-full justify-between">
           <div className="flex-1 flex items-center justify-center max-h-[64dvh]">
             <TrainingTimerProgressIndicatorContainer progress={progress} />
           </div>

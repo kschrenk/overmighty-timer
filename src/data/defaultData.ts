@@ -39,7 +39,7 @@ export const DEFAULT_TRAINING_SESSIONS: TrainingSession[] = [
   {
     id: "2",
     name: "Intermediate Training",
-    timerView: TimerViewEnum.BAR,
+    timerView: TimerViewEnum.CIRCLE,
     preparationTime: 10,
     sets: [
       {

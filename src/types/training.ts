@@ -10,7 +10,6 @@ export interface Set {
 
 export enum TimerViewEnum {
   CIRCLE = "circle",
-  BAR = "bar",
 }
 
 export interface TrainingSession {

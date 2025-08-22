@@ -3,7 +3,7 @@ import {
   getCurrentSetFromSession,
   getNextSet,
 } from "@/lib/trainingReducer.helper";
-import { TimerState, TimerViewEnum } from "@/types/training";
+import { TimerState } from "@/types/training";
 import { TrainingTimerInfo } from "@/components/TrainingTimerInfo/TrainingTimerInfo";
 import { TrainingTimerInfoWrapper } from "@/components/TrainingTimerInfo/TrainingTimerInfoWrapper";
 
@@ -18,7 +18,6 @@ export const TrainingTimerInfoContainer = () => {
   }
 
   const currentSet = getCurrentSetFromSession(currentSession, currentSetIndex);
-  const isTimerViewBar = currentSession.timerView === TimerViewEnum.BAR;
   const setLength = currentSession.sets.length;
   const nextSet = getNextSet(currentSession, currentSetIndex);
   const nextSetIndex = currentSetIndex + 1;
@@ -51,7 +50,6 @@ export const TrainingTimerInfoContainer = () => {
 
   return (
     <TrainingTimerInfoWrapper
-      isTimerViewBar={isTimerViewBar}
       timerState={timerState}
       isDisplayNextSetInformation={isDisplayNextSetInformation}
     >
