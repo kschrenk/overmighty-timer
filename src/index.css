@@ -124,3 +124,10 @@
   /*  @apply !bg-[var(--normal-text)]*/
   /*}*/
 }
+
+@layer components {
+  .timer-progress .CircularProgressbar-text {
+    @apply font-extrabold tracking-wide;
+    font-variant-numeric: tabular-nums;
+  }
+}

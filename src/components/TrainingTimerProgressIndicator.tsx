@@ -61,13 +61,14 @@ export const ProgressIndicatorCircle: FC<ProgressIndicatorProps> = ({
   return (
     <Wrapper>
       <CircularProgressbar
-        className={"h-full"}
+        className={"h-full timer-progress"}
         value={progress}
         text={secondsLeft}
         styles={buildStyles({
           trailColor: "var(--color-gray-600)",
           pathColor,
           textColor,
+          textSize: "1.4rem",
           pathTransition:
             progress === 0 ? "none" : "stroke-dashoffset 0.5s ease 0s",
         })}
