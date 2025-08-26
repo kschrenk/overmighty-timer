@@ -146,6 +146,15 @@ export const TrainingProvider: React.FC<{ children: React.ReactNode }> = ({
     }
   }, [state.timerData]);
 
+  // clear hash when navigating back to home view (strip only the hash, do not change history length)
+  useEffect(() => {
+    if (state.activeView === "list" && window.location.hash) {
+      const urlWithoutHash = window.location.href.split("#")[0];
+      // replaceState updates current entry (no new history entry) while only removing hash
+      window.history.replaceState(window.history.state, "", urlWithoutHash);
+    }
+  }, [state.activeView]);
+
   // helper
   function getSessionById(sessionId: string) {
     return state.trainingSessions.find((s) => s.id === sessionId);
