@@ -1,3 +1,10 @@
+## [1.12.1](https://github.com/kschrenk/overmighty-timer/compare/v1.12.0...v1.12.1) (2025-08-26)
+
+
+### Reverts
+
+* Revert "feat: improve register journey ([#26](https://github.com/kschrenk/overmighty-timer/issues/26))" ([#27](https://github.com/kschrenk/overmighty-timer/issues/27)) ([2dec054](https://github.com/kschrenk/overmighty-timer/commit/2dec054c8e0767bae4eac70bb0329f5a11803348))
+
 # [1.12.0](https://github.com/kschrenk/overmighty-timer/compare/v1.11.1...v1.12.0) (2025-08-26)
 
 
