@@ -83,7 +83,7 @@ export const RegisterForm: FC = () => {
         toast.success(
           `Welcome ${name}! Before you start your overmighty hangboard session, install Overmighty on your home screen for a native-like experience.`,
           {
-            position: "top-center",
+            position: "bottom-center",
             duration: Infinity,
             description:
               "This is a Progressive Web App (not from an app store). Installing lets you launch full screen, keep the screen awake and track sets faster. Tap below to open the installation guide.",
