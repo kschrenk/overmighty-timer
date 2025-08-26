@@ -81,19 +81,18 @@ export const RegisterForm: FC = () => {
         dispatch({ type: "GO_TO_HOME" });
         // Show persistent toast guiding user to install the PWA
         toast.success(
-          `Welcome ${name}! Next step: install Overmighty to your home screen for a native-like experience.`,
+          `Welcome ${name}! Before you start your overmighty hangboard session, install Overmighty on your home screen for a native-like experience.`,
           {
             position: "top-center",
-            duration: Infinity, // Require user interaction
+            duration: Infinity,
             description:
-              "Because this is a Progressive Web App (not from an app store), you should install it manually. Tap below to open the installation guide.",
+              "This is a Progressive Web App (not from an app store). Installing lets you launch full screen, keep the screen awake and track sets faster. Tap below to open the installation guide.",
             action: {
               label: "Show Guide",
               onClick: () => {
                 dispatch({ type: "GO_TO_ACCOUNT" });
-                // Defer setting hash so Account view can mount first
                 setTimeout(() => {
-                  window.location.hash = "installation-guide"; // triggers auto-scroll in Account
+                  window.location.hash = "installation-guide";
                 }, 0);
               },
             },
