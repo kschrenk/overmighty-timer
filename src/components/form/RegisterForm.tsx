@@ -75,20 +75,37 @@ export const RegisterForm: FC = () => {
     setIsSubmitting(true);
     signup({ name, email, password })
       .then(() => {
-        dispatch({ type: "GO_TO_HOME" });
-      })
-      .finally(() => {
+        // Remove invite params only after successful signup
         removeSearchParameters();
+        // Stay (or land) on home for now
+        dispatch({ type: "GO_TO_HOME" });
+        // Show persistent toast guiding user to install the PWA
         toast.success(
-          `Welcome ${name}. Enjoy your overmighty hangboard sessions!`,
-          { position: "top-center" },
+          `Welcome ${name}! Next step: install Overmighty to your home screen for a native-like experience.`,
+          {
+            position: "top-center",
+            duration: Infinity, // Require user interaction
+            description:
+              "Because this is a Progressive Web App (not from an app store), you should install it manually. Tap below to open the installation guide.",
+            action: {
+              label: "Show Guide",
+              onClick: () => {
+                dispatch({ type: "GO_TO_ACCOUNT" });
+                // Defer setting hash so Account view can mount first
+                setTimeout(() => {
+                  window.location.hash = "installation-guide"; // triggers auto-scroll in Account
+                }, 0);
+              },
+            },
+          },
         );
-        setIsSubmitting(false);
       })
       .catch((error) => {
         if (error instanceof Error) {
-          toast.error(error.message);
+          toast.error(error.message, { position: "top-center" });
         }
+      })
+      .finally(() => {
         setIsSubmitting(false);
       });
   };
