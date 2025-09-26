@@ -21,8 +21,6 @@ const AppContent: FC = () => {
   const { state } = useTraining();
   const { currentUser, logout } = useAuth();
 
-  console.log("🚀 AppContent", { view: state.activeView });
-
   return (
     <div className="flex flex-col bg-gray-50 dark:bg-gray-950">
       <Header />
