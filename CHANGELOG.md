@@ -1,3 +1,11 @@
+# [1.12.0](https://github.com/kschrenk/overmighty-timer/compare/v1.11.1...v1.12.0) (2025-09-26)
+
+
+### Features
+
+* **register:** improved register and help ([#32](https://github.com/kschrenk/overmighty-timer/issues/32)) ([4c47f1e](https://github.com/kschrenk/overmighty-timer/commit/4c47f1e94aa1758544f7a8d5df5a4d74e586ef5a))
+* update readme ([#30](https://github.com/kschrenk/overmighty-timer/issues/30)) ([9772ce8](https://github.com/kschrenk/overmighty-timer/commit/9772ce85fe5473d5413cf034633cdb9e91ebb072))
+
 # [1.12.0](https://github.com/kschrenk/overmighty-timer/compare/v1.11.1...v1.12.0) (2025-09-21)
 
 
