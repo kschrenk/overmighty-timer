@@ -15,31 +15,23 @@ import type { User } from "firebase/auth";
 import { migrateTrainingSessions } from "@/utils/dataMigration";
 
 export async function isValidInvite(
-  uid: string,
   email: string,
+  signal?: AbortSignal,
 ): Promise<boolean> {
-  try {
-    // TODO: Can be improved by checking if uid is valid.
-    if (!uid || uid.trim() === "") {
-      return false;
-    }
+  const mailRef = collection(db, "invitations");
+  const inviteQuery = query(mailRef, where("to", "==", email), limit(1));
+  const inviteSnapshot = await getDocs(inviteQuery);
 
-    const mailRef = collection(db, "invitations");
-    // TODO: Add with delivery: state === 'pending' when deployed and working.
-    const inviteQuery = query(mailRef, where("to", "==", email), limit(1));
-    const inviteSnapshot = await getDocs(inviteQuery);
-
-    if (inviteSnapshot.empty) {
-      console.warn("No invitation found for this email.");
-      return false;
-    }
-
-    // If an invite exists, return true
-    return true;
-  } catch (error) {
-    console.error("Error validating invite:", error);
-    return false;
+  // If the component unmounted while waiting, abort the operation.
+  if (signal?.aborted) {
+    throw new DOMException("Aborted", "AbortError");
   }
+
+  if (inviteSnapshot.empty) {
+    throw new Error(`No valid invitation found. Please contact support.`);
+  }
+
+  return true;
 }
 
 export async function createInvite(invitedBy: User, invitedEmail: string) {

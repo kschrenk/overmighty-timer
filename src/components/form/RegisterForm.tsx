@@ -21,6 +21,7 @@ import useSearchParams from "@/hooks/useSearchParams";
 import { useTraining } from "@/context/TrainingContext/TrainingContext";
 import { removeSearchParameters } from "@/lib/removeSearchParameters";
 import { Loader2 } from "lucide-react";
+import { helpAction } from "@/toast/action";
 
 const formSchema = z
   .object({
@@ -45,6 +46,9 @@ const formSchema = z
         message: "Password must contain at least one special character",
       }),
     confirmPassword: z.string(),
+    termsAccepted: z.boolean().refine((v) => v === true, {
+      message: "You must accept the terms to register",
+    }),
   })
   .refine((data) => data.password === data.confirmPassword, {
     message: "Passwords do not match",
@@ -64,6 +68,7 @@ export const RegisterForm: FC = () => {
       email: getParam("invitedEmail") ?? "",
       password: "",
       confirmPassword: "",
+      termsAccepted: false,
     },
   });
 
@@ -87,7 +92,9 @@ export const RegisterForm: FC = () => {
       })
       .catch((error) => {
         if (error instanceof Error) {
-          toast.error(error.message);
+          toast.error(error.message, {
+            action: helpAction(email, error),
+          });
         }
         setIsSubmitting(false);
       });
@@ -102,7 +109,7 @@ export const RegisterForm: FC = () => {
       <div>
         <h2 className={"text-xl mb-2"}>Register</h2>
         <p className={"text-gray-400 text-sm"}>
-          You are close to become overmighty.
+          Create your account to start training and create your own sessions.
         </p>
       </div>
       <Form {...form}>
@@ -163,6 +170,16 @@ export const RegisterForm: FC = () => {
                     {showPassword ? "Hide password" : "Show password"}
                   </span>
                 </Button>
+                <FormDescription>
+                  Password requirements:
+                  <ul className="list-disc list-inside space-y-0.5 text-muted-foreground">
+                    <li>At least 6 characters</li>
+                    <li>One uppercase letter (A-Z)</li>
+                    <li>One lowercase letter (a-z)</li>
+                    <li>One number (0-9)</li>
+                    <li>One special character (!@#$...)</li>
+                  </ul>
+                </FormDescription>
                 <FormMessage />
               </FormItem>
             )}
@@ -179,6 +196,40 @@ export const RegisterForm: FC = () => {
                     {...field}
                     type={showPassword ? "text" : "password"}
                   />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="termsAccepted"
+            render={({ field }) => (
+              <FormItem>
+                <FormControl>
+                  <div className="flex items-start space-x-3">
+                    <input
+                      id="termsAccepted"
+                      type="checkbox"
+                      className="mt-1 h-4 w-4 cursor-pointer rounded border border-gray-600 bg-transparent accent-blue-600"
+                      checked={field.value}
+                      onChange={(e) => field.onChange(e.target.checked)}
+                    />
+                    <div className="space-y-1 text-sm leading-snug">
+                      <label
+                        htmlFor="termsAccepted"
+                        className="font-medium cursor-pointer"
+                      >
+                        I accept the testing terms & conditions
+                      </label>
+                      <p className="text-xs text-muted-foreground mt-2">
+                        This app runs on Google (Firebase) services and is
+                        currently under active testing. Data may be reset and
+                        features may change without notice. Do not store
+                        sensitive information. You must accept this to register.
+                      </p>
+                    </div>
+                  </div>
                 </FormControl>
                 <FormMessage />
               </FormItem>

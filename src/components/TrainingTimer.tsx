@@ -113,6 +113,7 @@ const TrainingTimer: React.FC = () => {
           dispatch({ type: "GO_TO_HOME" });
           toast.success("Timer stopped and returned to home", {
             position: "top-center",
+            closeButton: true,
           });
         },
       },

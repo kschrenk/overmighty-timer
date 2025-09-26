@@ -4,6 +4,7 @@ import useSearchParams from "@/hooks/useSearchParams";
 import { useTraining } from "@/context/TrainingContext/TrainingContext";
 import { isValidInvite } from "@/lib/firestoreUtils";
 import { toast } from "sonner";
+import { helpAction } from "@/toast/action";
 
 /**
  * `RegisterUserListener` component.
@@ -20,17 +21,39 @@ export const RegisterUserListener: FC = () => {
   const invitedEmail = getParam("invitedEmail");
 
   useEffect(() => {
-    if (invitedBy && invitedEmail) {
-      isValidInvite(invitedBy, invitedEmail)
-        .then(() => {
+    const controller = new AbortController();
+    const { signal } = controller;
+
+    async function validateInvite(email: string) {
+      try {
+        const isValid = await isValidInvite(email, signal);
+        if (isValid) {
           dispatch({ type: "GO_TO_REGISTER" });
-        })
-        .catch((error) => {
-          if (error instanceof Error) {
-            toast.error(error.message);
-          }
-        });
+        }
+      } catch (error) {
+        if (error instanceof DOMException && error.name === "AbortError") {
+          console.log("Validation aborted.");
+          return;
+        }
+
+        if (error instanceof Error) {
+          toast.error(error.message, {
+            position: "top-center",
+            duration: Infinity,
+            closeButton: true,
+            action: helpAction(invitedEmail, error),
+          });
+        }
+      }
     }
+
+    if (invitedBy && invitedEmail) {
+      validateInvite(invitedEmail);
+    }
+
+    return () => {
+      controller.abort();
+    };
   }, [invitedBy, invitedEmail, dispatch]);
 
   return null;
