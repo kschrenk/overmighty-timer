@@ -4,6 +4,7 @@ import useSearchParams from "@/hooks/useSearchParams";
 import { useTraining } from "@/context/TrainingContext/TrainingContext";
 import { isValidInvite } from "@/lib/firestoreUtils";
 import { toast } from "sonner";
+import { helpAction } from "@/toast/action";
 
 /**
  * `RegisterUserListener` component.
@@ -40,16 +41,7 @@ export const RegisterUserListener: FC = () => {
             position: "top-center",
             duration: Infinity,
             closeButton: true,
-            action: {
-              label: "Help",
-              onClick: () => {
-                const subject = "Help with Invalid Invite";
-                const body = `Hello,\n\nI'm having trouble registering with the email: ${invitedEmail}.\nThe error message is: "${error.message}"\n\nCan you please help?`;
-                window.location.href = `mailto:info@overmighty.de?subject=${encodeURIComponent(
-                  subject,
-                )}&body=${encodeURIComponent(body)}`;
-              },
-            },
+            action: helpAction(invitedEmail, error),
           });
         }
       }

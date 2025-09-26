@@ -21,6 +21,7 @@ import useSearchParams from "@/hooks/useSearchParams";
 import { useTraining } from "@/context/TrainingContext/TrainingContext";
 import { removeSearchParameters } from "@/lib/removeSearchParameters";
 import { Loader2 } from "lucide-react";
+import { helpAction } from "@/toast/action";
 
 const formSchema = z
   .object({
@@ -91,7 +92,9 @@ export const RegisterForm: FC = () => {
       })
       .catch((error) => {
         if (error instanceof Error) {
-          toast.error(error.message);
+          toast.error(error.message, {
+            action: helpAction(email, error),
+          });
         }
         setIsSubmitting(false);
       });
