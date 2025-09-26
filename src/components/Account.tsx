@@ -18,7 +18,7 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Input } from "@/components/ui/input";
 import { createInvite } from "@/lib/firestoreUtils";
-import { Download, Loader2, Send, Settings } from "lucide-react";
+import { Download, Loader2, Send, Settings, Mail } from "lucide-react";
 import { useWakeLock } from "@/hooks/useWakeLock";
 import packageJson from "../../package.json";
 import {
@@ -48,10 +48,10 @@ export const Account: FC = () => {
   });
 
   useEffect(() => {
-    if (window.location.hash === "#installation-guide") {
-      const element = document.getElementById("installation-guide");
+    if (window.location.hash) {
+      const id = window.location.hash.replace(/^#/, "");
+      const element = document.getElementById(id);
       if (element) {
-        // Timeout to ensure the element is rendered before scrolling
         setTimeout(() => {
           element.scrollIntoView({ behavior: "smooth", block: "start" });
         }, 100);
@@ -138,6 +138,17 @@ export const Account: FC = () => {
             className="cursor-pointer text-sm font-medium text-muted-foreground transition-colors hover:text-primary"
           >
             Installation
+          </Link>
+          <Link
+            activeClass="text-primary"
+            to="contact"
+            spy={true}
+            smooth={true}
+            offset={-80}
+            duration={500}
+            className="cursor-pointer text-sm font-medium text-muted-foreground transition-colors hover:text-primary"
+          >
+            Contact
           </Link>
         </div>
       </nav>
@@ -283,6 +294,57 @@ export const Account: FC = () => {
                 </li>
               </ol>
             </div>
+          </CardContent>
+        </Card>
+        <Card id="contact" className={"bg-transparent border-2"}>
+          <CardHeader>
+            <CardTitle className="flex items-center pb-2">
+              <Mail className="mr-2" />
+              <span>Contact & Feedback</span>
+            </CardTitle>
+            <CardDescription>
+              Need help or want to share an idea? Reach out anytime.
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <p className="text-sm text-gray-700 dark:text-gray-300">
+              This project is in continuous improvement. If you have issues,
+              suggestions, or training feature requests, I’d love to hear from
+              you.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-3">
+              <Button
+                type="button"
+                onClick={() => {
+                  const subject = "Overmighty Timer Feedback / Support";
+                  const body = `Hello,\n\nI would like to give the following feedback / need help with: \n\n`;
+                  window.location.href = `mailto:info@overmighty.de?subject=${encodeURIComponent(
+                    subject,
+                  )}&body=${encodeURIComponent(body)}`;
+                }}
+              >
+                Email us
+              </Button>
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => {
+                  navigator.clipboard
+                    .writeText("info@overmighty.de")
+                    .then(() =>
+                      toast.success("Email copied", { position: "top-center" }),
+                    )
+                    .catch(() =>
+                      toast.error("Copy failed", { position: "top-center" }),
+                    );
+                }}
+              >
+                Copy address
+              </Button>
+            </div>
+            <p className="text-xs text-muted-foreground">
+              You can also include device / browser info if reporting a bug.
+            </p>
           </CardContent>
         </Card>
       </div>

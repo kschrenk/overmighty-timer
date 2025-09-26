@@ -20,17 +20,48 @@ export const RegisterUserListener: FC = () => {
   const invitedEmail = getParam("invitedEmail");
 
   useEffect(() => {
-    if (invitedBy && invitedEmail) {
-      isValidInvite(invitedBy, invitedEmail)
-        .then(() => {
+    const controller = new AbortController();
+    const { signal } = controller;
+
+    async function validateInvite(email: string) {
+      try {
+        const isValid = await isValidInvite(email, signal);
+        if (isValid) {
           dispatch({ type: "GO_TO_REGISTER" });
-        })
-        .catch((error) => {
-          if (error instanceof Error) {
-            toast.error(error.message);
-          }
-        });
+        }
+      } catch (error) {
+        if (error instanceof DOMException && error.name === "AbortError") {
+          console.log("Validation aborted.");
+          return;
+        }
+
+        if (error instanceof Error) {
+          toast.error(error.message, {
+            position: "top-center",
+            duration: Infinity,
+            closeButton: true,
+            action: {
+              label: "Help",
+              onClick: () => {
+                const subject = "Help with Invalid Invite";
+                const body = `Hello,\n\nI'm having trouble registering with the email: ${invitedEmail}.\nThe error message is: "${error.message}"\n\nCan you please help?`;
+                window.location.href = `mailto:info@overmighty.de?subject=${encodeURIComponent(
+                  subject,
+                )}&body=${encodeURIComponent(body)}`;
+              },
+            },
+          });
+        }
+      }
     }
+
+    if (invitedBy && invitedEmail) {
+      validateInvite(invitedEmail);
+    }
+
+    return () => {
+      controller.abort();
+    };
   }, [invitedBy, invitedEmail, dispatch]);
 
   return null;
