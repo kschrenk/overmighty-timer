@@ -30,12 +30,6 @@ const TrainingEditor: React.FC = () => {
     setSessionName(e.target.value);
   };
 
-  const handlePreparationTimeChange = (
-    e: React.ChangeEvent<HTMLInputElement>,
-  ) => {
-    setPreparationTime(parseInt(e.target.value));
-  };
-
   const handleSave = () => {
     if (!editingSession) return;
 
@@ -159,20 +153,17 @@ const TrainingEditor: React.FC = () => {
           />
         </LabelWrapper>
         <LabelWrapper className={"gap-3 pb-6"}>
-          <Label htmlFor="preparationTime">
-            <Bath size={16} />
-            Preparation Time (seconds)
-          </Label>
-          <Input
-            min={0}
-            type="number"
+          <TimeSecondsInput
             id="preparationTime"
+            labelNode={<span className={'flex'}><Bath size={16} className={'mr-1'} /> Preparation Time</span>}
             value={preparationTime}
-            onChange={handlePreparationTimeChange}
+            min={0}
+            max={60}
+            unitSuffix="s"
+            onChange={setPreparationTime}
           />
         </LabelWrapper>
       </Card>
-
       {editingSession.sets.length === 0 ? (
         <div className="text-center py-8 bg-gray-50 dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-700">
           <p className="text-gray-600 dark:text-gray-300 mb-4">
@@ -226,18 +217,15 @@ const TrainingEditor: React.FC = () => {
                     >
                       Grip Type
                     </label>
-                    <input
-                      type="text"
-                      id={`gripType-${set.id}`}
-                      value={set.gripType}
-                      maxLength={39}
-                      onChange={(e) =>
-                        handleSetChange(set.id, "gripType", e.target.value)
-                      }
-                      className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-xs focus:outline-hidden focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-800 dark:text-gray-100"
-                    />
+                    <Input
+                        type={'text'}
+                        id={`gripType-${set.id}`}
+                        value={set.gripType}
+                        maxLength={39}
+                        onChange={(e) =>
+                          handleSetChange(set.id, "gripType", e.target.value)
+                    } />
                   </div>
-
                   <div>
                     <TimeSecondsInput
                       id={`hangTime-${set.id}`}
@@ -245,103 +233,64 @@ const TrainingEditor: React.FC = () => {
                       value={set.hangTime}
                       min={1}
                       max={60}
+                      unitSuffix="s"
                       onChange={(value) =>
                         handleSetChange(set.id, "hangTime", value)
                       }
                     />
                   </div>
                   <div>
-                    <label
-                      htmlFor={`rest-${set.id}`}
-                      className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1"
-                    >
-                      Rest (seconds)
-                    </label>
-                    <input
-                      type="number"
+                    <TimeSecondsInput
                       id={`rest-${set.id}`}
+                      label={"Rest (seconds)"}
                       value={set.rest}
-                      min="1"
-                      onChange={(e) =>
-                        handleSetChange(
-                          set.id,
-                          "rest",
-                          parseInt(e.target.value),
-                        )
+                      min={1}
+                      max={300}
+                      unitSuffix="s"
+                      onChange={(value) =>
+                        handleSetChange(set.id, "rest", value)
                       }
-                      className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-xs focus:outline-hidden focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-800 dark:text-gray-100"
                     />
                   </div>
-
                   <div>
-                    <label
-                      htmlFor={`repetitions-${set.id}`}
-                      className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1"
-                    >
-                      Repetitions
-                    </label>
-                    <input
-                      type="number"
+                    <TimeSecondsInput
                       id={`repetitions-${set.id}`}
+                      label={"Repetitions"}
                       value={set.repetitions}
-                      min="1"
-                      max="20"
-                      onChange={(e) =>
-                        handleSetChange(
-                          set.id,
-                          "repetitions",
-                          parseInt(e.target.value),
-                        )
+                      min={1}
+                      max={20}
+                      unitSuffix="x"
+                      onChange={(value) =>
+                        handleSetChange(set.id, "repetitions", value)
                       }
-                      className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-xs focus:outline-hidden focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-800 dark:text-gray-100"
                     />
                   </div>
 
                   <div>
-                    <label
-                      htmlFor={`restAfter-${set.id}`}
-                      className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1"
-                    >
-                      Rest After Set (seconds)
-                    </label>
-                    <input
-                      type="number"
+                    <TimeSecondsInput
                       id={`restAfter-${set.id}`}
+                      label={"Rest After Set (seconds)"}
                       value={set.restAfter}
-                      min="0"
-                      max="300"
-                      onChange={(e) =>
-                        handleSetChange(
-                          set.id,
-                          "restAfter",
-                          parseInt(e.target.value),
-                        )
+                      min={0}
+                      max={600}
+                      unitSuffix="s"
+                      onChange={(value) =>
+                        handleSetChange(set.id, "restAfter", value)
                       }
-                      className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-xs focus:outline-hidden focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-800 dark:text-gray-100"
                     />
                   </div>
 
                   <div>
-                    <label
-                      htmlFor={`additionalWeight-${set.id}`}
-                      className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1"
-                    >
-                      Additional Weight (kg)
-                    </label>
-                    <input
-                      type="number"
+                    <TimeSecondsInput
                       id={`additionalWeight-${set.id}`}
+                      label={"Additional Weight (kg)"}
                       value={set.additionalWeight}
-                      min="0"
-                      max="100"
-                      onChange={(e) =>
-                        handleSetChange(
-                          set.id,
-                          "additionalWeight",
-                          parseInt(e.target.value),
-                        )
+                      min={0}
+                      max={100}
+                      unitSuffix="kg"
+                      onChange={(value) =>
+                        handleSetChange(set.id, "additionalWeight", value)
                       }
-                      className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-xs focus:outline-hidden focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-800 dark:text-gray-100"
                     />
                   </div>
                 </div>

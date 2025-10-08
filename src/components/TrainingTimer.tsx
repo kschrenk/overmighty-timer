@@ -16,7 +16,7 @@ import {
   TableHeader,
   TableRow,
 } from "./ui/table";
-import { Slide, Slider } from "@/components/ui/slider";
+import { SnapItem, SnapScrollContainer } from "@/components/ui/snapScrollContainer";
 import { HeaderTitle } from "@/components/HeaderTitle";
 
 const TrainingTimer: React.FC = () => {
@@ -171,8 +171,8 @@ const TrainingTimer: React.FC = () => {
   const isRunning = !isIdle && !isFinished && !isPaused;
 
   return (
-    <Slider>
-      <Slide>
+    <SnapScrollContainer>
+      <SnapItem>
         <div className="flex flex-col max-w-md mx-auto py-4 px-6 h-full justify-between">
           <div className="flex-1 flex items-center justify-center max-h-[64dvh]">
             <TrainingTimerProgressIndicatorContainer progress={progress} />
@@ -192,8 +192,8 @@ const TrainingTimer: React.FC = () => {
             handleRestart={handleRestartWithConfirm}
           />
         </div>
-      </Slide>
-      <Slide>
+      </SnapItem>
+      <SnapItem>
         <div className={"grid gap-6 px-4 py-6"}>
           <HeaderTitle
             title={currentSession.name}
@@ -245,8 +245,8 @@ const TrainingTimer: React.FC = () => {
             </Button>
           </div>
         </div>
-      </Slide>
-    </Slider>
+      </SnapItem>
+    </SnapScrollContainer>
   );
 };
 

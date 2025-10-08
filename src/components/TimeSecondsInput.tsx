@@ -7,6 +7,7 @@ import {
   DrawerTitle,
 } from "@/components/ui/drawer";
 import debounce from "lodash.debounce";
+import {Slider} from "@/components/ui/slider";
 
 interface TimeSecondsInputProps {
   id: string;
@@ -20,6 +21,10 @@ interface TimeSecondsInputProps {
   className?: string;
   /** Delay (ms) for debouncing slider-driven changes. Defaults to 200ms. */
   debounceMs?: number;
+  /** Suffix unit displayed next to min/current/max values inside the drawer (default: 's'). */
+  unitSuffix?: string;
+  /** Optional rich label node (overrides label string if provided). */
+  labelNode?: React.ReactNode;
 }
 
 /**
@@ -39,8 +44,12 @@ export const TimeSecondsInput: React.FC<TimeSecondsInputProps> = ({
   disabled,
   className,
   debounceMs = 200,
+  unitSuffix = 's',
+  labelNode,
 }) => {
   const [open, setOpen] = useState(false);
+  // track previous open to dispatch deltas
+  const prevOpenRef = useRef<boolean>(false);
   const [internalValue, setInternalValue] = useState<number>(value);
   const inputRef = useRef<HTMLInputElement | null>(null);
   const hasInteractedRef = useRef(false);
@@ -61,19 +70,27 @@ export const TimeSecondsInput: React.FC<TimeSecondsInputProps> = ({
     }
   }, [value]);
 
-  const clamp = (val: number) => Math.min(max, Math.max(min, val));
 
-  const handleRangeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleRangeChange = (value: number[]) => {
     hasInteractedRef.current = true;
-    const v = clamp(parseInt(e.target.value, 10) || 0);
+    const [v] = value
     setInternalValue(v);
-    debouncedCommit(v); // debounced update
+    debouncedCommit(v);
   };
 
   const openDrawer = () => {
     if (disabled) return;
     setOpen(true);
   };
+
+  // Emit global event whenever drawer open state changes so other UI (e.g., scroll navigator) can react
+  useEffect(() => {
+    if (prevOpenRef.current !== open) {
+      const detail = { open };
+      window.dispatchEvent(new CustomEvent('app:drawer-open-change', { detail }));
+      prevOpenRef.current = open;
+    }
+  }, [open]);
 
   // Flush pending debounced updates when drawer closes or component unmounts
   useEffect(() => {
@@ -91,20 +108,19 @@ export const TimeSecondsInput: React.FC<TimeSecondsInputProps> = ({
 
   return (
     <div className={className}>
-      {label && (
+      {labelNode || label ? (
         <label
           htmlFor={id}
           className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1"
         >
-          {label}
+          {labelNode || label}
         </label>
-      )}
+      ) : null}
       <Drawer open={open} onOpenChange={setOpen}>
         <Input
           id={id}
           ref={inputRef}
           type="text"
-          // Prevent mobile keyboard: readOnly + inputMode none
           readOnly
           inputMode="none"
           disabled={disabled}
@@ -121,24 +137,17 @@ export const TimeSecondsInput: React.FC<TimeSecondsInputProps> = ({
             <DrawerHeader>
               <DrawerTitle>{label || "Select Time"}</DrawerTitle>
             </DrawerHeader>
-            <div className="px-6 pb-6 flex flex-col gap-8">
+            <div className="px-6 pb-8 flex flex-col gap-8">
               <div className="flex items-center justify-between text-sm text-muted-foreground">
-                <span>{min}s</span>
+                <span>{min}{unitSuffix}</span>
                 <span className="font-semibold text-base text-foreground">
-                  {internalValue}s
+                  {internalValue}{unitSuffix}
                 </span>
-                <span>{max}s</span>
+                <span>{max}{unitSuffix}</span>
               </div>
-              <input
-                type="range"
-                min={min}
-                max={max}
-                step={step}
-                value={internalValue}
-                onChange={handleRangeChange}
-                className="w-full h-2 rounded-lg appearance-none cursor-pointer bg-gradient-to-r from-blue-600 to-blue-400 disabled:opacity-50"
-                aria-label={label || "Seconds slider"}
-              />
+              <div data-vaul-no-drag>
+                <Slider value={[internalValue]} min={min} max={max} onValueChange={handleRangeChange} step={step} />
+              </div>
             </div>
           </DrawerContent>
         )}
