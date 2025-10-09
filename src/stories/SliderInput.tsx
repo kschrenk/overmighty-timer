@@ -1,16 +1,16 @@
 import React from "react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { TimeSecondsInput } from "@/components/TimeSecondsInput";
+import { SliderInput } from "@/components/SliderInput";
 
 // Stateful wrapper for controlled component behavior in stories
-const Stateful = (args: React.ComponentProps<typeof TimeSecondsInput>) => {
+const Stateful = (args: React.ComponentProps<typeof SliderInput>) => {
   const [val, setVal] = React.useState(args.value);
-  return <TimeSecondsInput {...args} value={val} onChange={setVal} />;
+  return <SliderInput {...args} value={val} onChange={setVal} />;
 };
 
 const meta = {
-  title: "TimeSecondsInput",
-  component: TimeSecondsInput,
+  title: "SliderInput",
+  component: SliderInput,
   tags: ["autodocs"],
   parameters: {
     layout: "centered",
@@ -42,7 +42,7 @@ const meta = {
     ),
   ],
   render: (args) => <Stateful {...args} />,
-} satisfies Meta<typeof TimeSecondsInput>;
+} satisfies Meta<typeof SliderInput>;
 
 export default meta;
 
@@ -50,7 +50,6 @@ type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
   args: {
-    id: "seconds-default",
     label: "Seconds",
     value: 30,
     min: 0,
@@ -61,7 +60,6 @@ export const Default: Story = {
 
 export const Disabled: Story = {
   args: {
-    id: "seconds-disabled",
     label: "Disabled",
     value: 45,
     disabled: true,
@@ -72,7 +70,6 @@ export const Disabled: Story = {
 
 export const ExtendedRange: Story = {
   args: {
-    id: "seconds-extended",
     label: "Rest After Set (s)",
     value: 90,
     min: 0,
@@ -83,7 +80,6 @@ export const ExtendedRange: Story = {
 
 export const NoLabel: Story = {
   args: {
-    id: "seconds-nolabel",
     value: 10,
     min: 0,
     max: 60,

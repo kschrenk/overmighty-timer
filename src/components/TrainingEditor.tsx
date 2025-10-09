@@ -14,7 +14,7 @@ import { isUidTestUser } from "@/lib/testUser";
 import { Card, CardContent } from "@/components/ui/card";
 import { LabelWrapper } from "@/components/LabelWrapper";
 import { SectionDividerWithTitle } from "@/components/ui/sectionDividerWithTitle";
-import TimeSecondsInput from "@/components/TimeSecondsInput";
+import SliderInput from "@/components/SliderInput";
 
 const TrainingEditor: React.FC = () => {
   const { currentUser } = useAuth();
@@ -153,8 +153,7 @@ const TrainingEditor: React.FC = () => {
           />
         </LabelWrapper>
         <LabelWrapper className={"gap-3 pb-6"}>
-          <TimeSecondsInput
-            id="preparationTime"
+          <SliderInput
             labelNode={<span className={'flex'}><Bath size={16} className={'mr-1'} /> Preparation Time</span>}
             value={preparationTime}
             min={0}
@@ -227,8 +226,7 @@ const TrainingEditor: React.FC = () => {
                     } />
                   </div>
                   <div>
-                    <TimeSecondsInput
-                      id={`hangTime-${set.id}`}
+                    <SliderInput
                       label={"Hang Time (seconds)"}
                       value={set.hangTime}
                       min={1}
@@ -240,8 +238,7 @@ const TrainingEditor: React.FC = () => {
                     />
                   </div>
                   <div>
-                    <TimeSecondsInput
-                      id={`rest-${set.id}`}
+                    <SliderInput
                       label={"Rest (seconds)"}
                       value={set.rest}
                       min={1}
@@ -253,8 +250,7 @@ const TrainingEditor: React.FC = () => {
                     />
                   </div>
                   <div>
-                    <TimeSecondsInput
-                      id={`repetitions-${set.id}`}
+                    <SliderInput
                       label={"Repetitions"}
                       value={set.repetitions}
                       min={1}
@@ -267,8 +263,7 @@ const TrainingEditor: React.FC = () => {
                   </div>
 
                   <div>
-                    <TimeSecondsInput
-                      id={`restAfter-${set.id}`}
+                    <SliderInput
                       label={"Rest After Set (seconds)"}
                       value={set.restAfter}
                       min={0}
@@ -281,8 +276,7 @@ const TrainingEditor: React.FC = () => {
                   </div>
 
                   <div>
-                    <TimeSecondsInput
-                      id={`additionalWeight-${set.id}`}
+                    <SliderInput
                       label={"Additional Weight (kg)"}
                       value={set.additionalWeight}
                       min={0}

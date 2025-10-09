@@ -15,7 +15,6 @@ import { RegisterForm } from "@/components/form/RegisterForm";
 import { RegisterUserListener } from "@/components/RegisterUserListener";
 import { isUidTestUser } from "@/lib/testUser";
 import { Button } from "./components/ui/button";
-import ScrollNavigator from "./components/ScrollNavigator";
 import type { FC } from "react";
 
 const AppContent: FC = () => {
@@ -47,12 +46,7 @@ const AppContent: FC = () => {
           <>
             {state.activeView === "list" && <TrainingList />}
             {state.activeView === "timer" && <TrainingTimer />}
-            {state.activeView === "editor" && (
-              <>
-                <TrainingEditor />
-                <ScrollNavigator variant="accent" />
-              </>
-            )}
+            {state.activeView === "editor" &&  <TrainingEditor />}
             {state.activeView === "account" && <Account />}
           </>
         ) : state.activeView === "register" ? (
