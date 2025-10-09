@@ -16,7 +16,10 @@ import {
   TableHeader,
   TableRow,
 } from "./ui/table";
-import { SnapItem, SnapScrollContainer } from "@/components/ui/snapScrollContainer";
+import {
+  SnapItem,
+  SnapScrollContainer,
+} from "@/components/ui/snapScrollContainer";
 import { HeaderTitle } from "@/components/HeaderTitle";
 
 const TrainingTimer: React.FC = () => {
@@ -26,6 +29,7 @@ const TrainingTimer: React.FC = () => {
   const [previousTimerState, setPreviousTimerState] =
     useState<TimerState | null>(null);
   const [phaseDuration, setPhaseDuration] = useState<number | null>(null);
+  const [isPending, setIsPending] = useState(false);
 
   const { timerData } = state;
   const { currentSession, currentSetIndex, timerState } = timerData;
@@ -103,9 +107,21 @@ const TrainingTimer: React.FC = () => {
   };
 
   const handleStop = () => {
+    dispatch({ type: "PAUSE_TIMER", payload: timerState });
+    setIsPending(true);
+
     toast.warning("Stop the timer?", {
+      description: "This will reset the current session progress.",
       position: "top-center",
       closeButton: true,
+      onAutoClose: () => {
+        setIsPending(false);
+        dispatch({ type: "RESUME_TIMER" });
+      },
+      onDismiss: () => {
+        setIsPending(false);
+        dispatch({ type: "RESUME_TIMER" });
+      },
       action: {
         label: "OK",
         onClick: () => {
@@ -114,6 +130,7 @@ const TrainingTimer: React.FC = () => {
           toast.success("Timer stopped and returned to home", {
             position: "top-center",
             closeButton: true,
+            duration: 1200,
           });
         },
       },
@@ -130,21 +147,28 @@ const TrainingTimer: React.FC = () => {
 
   const handleRestartWithConfirm = () => {
     if (!currentSession) return;
+    dispatch({ type: "PAUSE_TIMER", payload: timerState });
+    setIsPending(true);
     toast("Restart session?", {
       position: "top-center",
-      closeButton: true,
       action: {
         label: "Restart",
         onClick: () => {
           dispatch({ type: "START_SESSION", payload: currentSession });
           toast.success("Session restarted", { position: "top-center" });
+          setIsPending(false);
         },
       },
       cancel: {
         label: "Cancel",
         onClick: () => {
-          /* no-op cancel */
+          setIsPending(false);
+          dispatch({ type: "RESUME_TIMER" });
         },
+      },
+      onAutoClose: () => {
+        setIsPending(false);
+        dispatch({ type: "RESUME_TIMER" });
       },
     });
   };
@@ -190,6 +214,7 @@ const TrainingTimer: React.FC = () => {
             handleResume={handleResume}
             handleStop={handleStop}
             handleRestart={handleRestartWithConfirm}
+            isPending={isPending}
           />
         </div>
       </SnapItem>
