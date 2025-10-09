@@ -1,5 +1,5 @@
 // src/components/SliderInput.tsx
-          import React, { useState, useRef, useEffect, useMemo, useId} from "react";
+import React, { useState, useRef, useEffect, useMemo, useId } from "react";
           import { Input } from "@/components/ui/input";
           import {
             Drawer,
