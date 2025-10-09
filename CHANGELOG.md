@@ -1,3 +1,12 @@
+# [1.12.0](https://github.com/kschrenk/overmighty-timer/compare/v1.11.1...v1.12.0) (2025-10-09)
+
+
+### Features
+
+* **register:** improved register and help ([#32](https://github.com/kschrenk/overmighty-timer/issues/32)) ([4c47f1e](https://github.com/kschrenk/overmighty-timer/commit/4c47f1e94aa1758544f7a8d5df5a4d74e586ef5a))
+* **ui:** add TimeSecondsInput component with drawer and slider functionality ([#33](https://github.com/kschrenk/overmighty-timer/issues/33)) ([cb903c8](https://github.com/kschrenk/overmighty-timer/commit/cb903c873c91aa23cdfc2437c5f954f9100889f6))
+* update readme ([#30](https://github.com/kschrenk/overmighty-timer/issues/30)) ([9772ce8](https://github.com/kschrenk/overmighty-timer/commit/9772ce85fe5473d5413cf034633cdb9e91ebb072))
+
 # [1.12.0](https://github.com/kschrenk/overmighty-timer/compare/v1.11.1...v1.12.0) (2025-09-26)
 
 
