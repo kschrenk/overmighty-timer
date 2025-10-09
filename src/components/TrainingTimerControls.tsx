@@ -21,6 +21,7 @@ type Props = {
   handleResume: () => void;
   handleStop: () => void;
   handleRestart: () => void;
+  isPending: boolean;
 };
 
 export const TrainingTimerControls: FC<Props> = ({
@@ -33,6 +34,7 @@ export const TrainingTimerControls: FC<Props> = ({
   isRunning,
   isFinished,
   handleRestart,
+  isPending,
 }) => {
   const { dispatch } = useTraining();
 
@@ -84,6 +86,7 @@ export const TrainingTimerControls: FC<Props> = ({
           onClick={handlePause}
           aria-label="Pause timer"
           variant={"default"}
+          disabled={isPending}
         >
           <PauseCircle size={36} />
           Pause
@@ -95,6 +98,7 @@ export const TrainingTimerControls: FC<Props> = ({
           aria-label="Resume timer"
           variant={"default"}
           className={"dark:bg-yellow-600 dark:text-white"}
+          disabled={isPending}
         >
           <PlayCircle size={36} />
           Resume
@@ -106,6 +110,7 @@ export const TrainingTimerControls: FC<Props> = ({
           onClick={handleStop}
           aria-label="Stop timer"
           size={"lg"}
+          disabled={isPending}
         >
           <StopCircle size={36} className="mr-2" />
           Stop
@@ -117,6 +122,7 @@ export const TrainingTimerControls: FC<Props> = ({
           aria-label="Restart session"
           variant={"outline"}
           className="text-blue-600 dark:text-blue-400 hover:bg-blue-50 dark:hover:bg-gray-700"
+          disabled={isPending}
         >
           <RotateCcw size={32} className="mr-2" />
           Restart

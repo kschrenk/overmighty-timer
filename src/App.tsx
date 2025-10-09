@@ -46,7 +46,7 @@ const AppContent: FC = () => {
           <>
             {state.activeView === "list" && <TrainingList />}
             {state.activeView === "timer" && <TrainingTimer />}
-            {state.activeView === "editor" && <TrainingEditor />}
+            {state.activeView === "editor" &&  <TrainingEditor />}
             {state.activeView === "account" && <Account />}
           </>
         ) : state.activeView === "register" ? (
