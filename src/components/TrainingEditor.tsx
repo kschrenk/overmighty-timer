@@ -119,6 +119,18 @@ const TrainingEditor: React.FC = () => {
     dispatch({ type: "DUPLICATE_SET", payload: id });
   };
 
+  const handleSetFieldAll = (field: keyof Set, value: number) => {
+    if (!editingSession) return;
+    const updatedSets = editingSession.sets.map((s) => ({
+      ...s,
+      [field]: value,
+    }));
+    dispatch({
+      type: "UPDATE_SESSION",
+      payload: { ...editingSession, sets: updatedSets },
+    });
+  };
+
   if (!editingSession) {
     return (
       <div className="flex flex-col items-center justify-center h-full py-12">
@@ -154,12 +166,17 @@ const TrainingEditor: React.FC = () => {
         </LabelWrapper>
         <LabelWrapper className={"gap-3 pb-6"}>
           <SliderInput
-            labelNode={<span className={'flex'}><Bath size={16} className={'mr-1'} /> Preparation Time</span>}
+            labelNode={
+              <span className={"flex"}>
+                <Bath size={16} className={"mr-1"} /> Preparation Time
+              </span>
+            }
             value={preparationTime}
             min={0}
             max={60}
             unitSuffix="s"
             onChange={setPreparationTime}
+            onChangeAll={(v) => setPreparationTime(v)}
           />
         </LabelWrapper>
       </Card>
@@ -217,13 +234,14 @@ const TrainingEditor: React.FC = () => {
                       Grip Type
                     </label>
                     <Input
-                        type={'text'}
-                        id={`gripType-${set.id}`}
-                        value={set.gripType}
-                        maxLength={39}
-                        onChange={(e) =>
-                          handleSetChange(set.id, "gripType", e.target.value)
-                    } />
+                      type={"text"}
+                      id={`gripType-${set.id}`}
+                      value={set.gripType}
+                      maxLength={39}
+                      onChange={(e) =>
+                        handleSetChange(set.id, "gripType", e.target.value)
+                      }
+                    />
                   </div>
                   <div>
                     <SliderInput
@@ -235,6 +253,7 @@ const TrainingEditor: React.FC = () => {
                       onChange={(value) =>
                         handleSetChange(set.id, "hangTime", value)
                       }
+                      onChangeAll={(v) => handleSetFieldAll("hangTime", v)}
                     />
                   </div>
                   <div>
@@ -247,6 +266,7 @@ const TrainingEditor: React.FC = () => {
                       onChange={(value) =>
                         handleSetChange(set.id, "rest", value)
                       }
+                      onChangeAll={(v) => handleSetFieldAll("rest", v)}
                     />
                   </div>
                   <div>
@@ -259,6 +279,7 @@ const TrainingEditor: React.FC = () => {
                       onChange={(value) =>
                         handleSetChange(set.id, "repetitions", value)
                       }
+                      onChangeAll={(v) => handleSetFieldAll("repetitions", v)}
                     />
                   </div>
 
@@ -272,6 +293,7 @@ const TrainingEditor: React.FC = () => {
                       onChange={(value) =>
                         handleSetChange(set.id, "restAfter", value)
                       }
+                      onChangeAll={(v) => handleSetFieldAll("restAfter", v)}
                     />
                   </div>
 
@@ -284,6 +306,9 @@ const TrainingEditor: React.FC = () => {
                       unitSuffix="kg"
                       onChange={(value) =>
                         handleSetChange(set.id, "additionalWeight", value)
+                      }
+                      onChangeAll={(v) =>
+                        handleSetFieldAll("additionalWeight", v)
                       }
                     />
                   </div>

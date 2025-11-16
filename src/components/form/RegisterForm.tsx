@@ -22,6 +22,7 @@ import { useTraining } from "@/context/TrainingContext/TrainingContext";
 import { removeSearchParameters } from "@/lib/removeSearchParameters";
 import { Loader2 } from "lucide-react";
 import { helpAction } from "@/toast/action";
+import { Checkbox } from "@/components/ui/checkbox";
 
 const formSchema = z
   .object({
@@ -208,12 +209,12 @@ export const RegisterForm: FC = () => {
               <FormItem>
                 <FormControl>
                   <div className="flex items-start space-x-3">
-                    <input
+                    <Checkbox
                       id="termsAccepted"
-                      type="checkbox"
-                      className="mt-1 h-4 w-4 cursor-pointer rounded border border-gray-600 bg-transparent accent-blue-600"
                       checked={field.value}
-                      onChange={(e) => field.onChange(e.target.checked)}
+                      onClick={() => {
+                        field.onChange(!field.value);
+                      }}
                     />
                     <div className="space-y-1 text-sm leading-snug">
                       <label
