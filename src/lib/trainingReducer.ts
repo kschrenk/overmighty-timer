@@ -28,7 +28,8 @@ export type TrainingAction =
   | { type: "ADD_SET"; payload: Set }
   | { type: "UPDATE_SET"; payload: Set }
   | { type: "DELETE_SET"; payload: string }
-  | { type: "DUPLICATE_SET"; payload: string };
+  | { type: "DUPLICATE_SET"; payload: string }
+  | { type: "UPDATE_SESSION"; payload: TrainingSession }; // <--- added
 
 export const trainingReducer = (
   state: TrainingContextState,
@@ -378,6 +379,23 @@ export const trainingReducer = (
           ...state.editingSession,
           sets: [...state.editingSession.sets, duplicatedSet],
         },
+      };
+    }
+
+    case "UPDATE_SESSION": {
+      if (!state.editingSession) return state;
+
+      // Only update the in-progress editingSession; do not touch saved list yet
+      // (that happens on SAVE_SESSION). Ensure IDs match to avoid accidental overwrite.
+      if (state.editingSession.id !== action.payload.id) {
+        return state;
+      }
+
+      return {
+        ...state,
+        editingSession: action.payload,
+        // keep activeView as editor
+        activeView: "editor",
       };
     }
 
