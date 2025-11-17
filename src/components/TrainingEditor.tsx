@@ -176,7 +176,6 @@ const TrainingEditor: React.FC = () => {
             max={60}
             unitSuffix="s"
             onChange={setPreparationTime}
-            onChangeAll={(v) => setPreparationTime(v)}
           />
         </LabelWrapper>
       </Card>
@@ -195,127 +194,135 @@ const TrainingEditor: React.FC = () => {
       ) : (
         <div className="space-y-4">
           <SectionDividerWithTitle title={"Sets"} />
-          {editingSession.sets.map((set, index) => (
-            <Card key={set.id}>
-              <CardContent>
-                <div className="flex justify-between items-center mb-4">
-                  <h4 className="font-medium text-gray-800 dark:text-gray-100">
-                    Set {index + 1}
-                  </h4>
-                  <div className="flex space-x-2">
-                    <button
-                      className="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 p-1 rounded-full hover:bg-blue-50 dark:hover:bg-blue-900 transition-colors duration-200"
-                      onClick={() => handleDuplicateSet(set.id)}
-                      title="Duplicate set"
-                    >
-                      <Copy size={18} />
-                    </button>
-                    <button
-                      className="text-red-600 hover:text-red-800 dark:text-red-400 dark:hover:text-red-300 p-1 rounded-full hover:bg-red-50 dark:hover:bg-red-900 transition-colors duration-200"
-                      onClick={() => handleDeleteSet(set.id)}
-                      disabled={editingSession.sets.length === 1}
-                      title={
-                        editingSession.sets.length === 1
-                          ? "Can't delete the only set"
-                          : "Delete set"
-                      }
-                    >
-                      <Trash2 size={18} />
-                    </button>
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div>
-                    <label
-                      htmlFor={`gripType-${set.id}`}
-                      className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1"
-                    >
-                      Grip Type
-                    </label>
-                    <Input
-                      type={"text"}
-                      id={`gripType-${set.id}`}
-                      value={set.gripType}
-                      maxLength={39}
-                      onChange={(e) =>
-                        handleSetChange(set.id, "gripType", e.target.value)
-                      }
-                    />
-                  </div>
-                  <div>
-                    <SliderInput
-                      label={"Hang Time (seconds)"}
-                      value={set.hangTime}
-                      min={1}
-                      max={60}
-                      unitSuffix="s"
-                      onChange={(value) =>
-                        handleSetChange(set.id, "hangTime", value)
-                      }
-                      onChangeAll={(v) => handleSetFieldAll("hangTime", v)}
-                    />
-                  </div>
-                  <div>
-                    <SliderInput
-                      label={"Rest (seconds)"}
-                      value={set.rest}
-                      min={1}
-                      max={300}
-                      unitSuffix="s"
-                      onChange={(value) =>
-                        handleSetChange(set.id, "rest", value)
-                      }
-                      onChangeAll={(v) => handleSetFieldAll("rest", v)}
-                    />
-                  </div>
-                  <div>
-                    <SliderInput
-                      label={"Repetitions"}
-                      value={set.repetitions}
-                      min={1}
-                      max={20}
-                      unitSuffix="x"
-                      onChange={(value) =>
-                        handleSetChange(set.id, "repetitions", value)
-                      }
-                      onChangeAll={(v) => handleSetFieldAll("repetitions", v)}
-                    />
+          {editingSession.sets.map((set, index) => {
+            const title = `Set ${index + 1}`;
+            return (
+              <Card key={set.id}>
+                <CardContent>
+                  <div className="flex justify-between items-center mb-4">
+                    <h4 className="font-medium text-gray-800 dark:text-gray-100">
+                      {title}
+                    </h4>
+                    <div className="flex space-x-2">
+                      <button
+                        className="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 p-1 rounded-full hover:bg-blue-50 dark:hover:bg-blue-900 transition-colors duration-200"
+                        onClick={() => handleDuplicateSet(set.id)}
+                        title="Duplicate set"
+                      >
+                        <Copy size={18} />
+                      </button>
+                      <button
+                        className="text-red-600 hover:text-red-800 dark:text-red-400 dark:hover:text-red-300 p-1 rounded-full hover:bg-red-50 dark:hover:bg-red-900 transition-colors duration-200"
+                        onClick={() => handleDeleteSet(set.id)}
+                        disabled={editingSession.sets.length === 1}
+                        title={
+                          editingSession.sets.length === 1
+                            ? "Can't delete the only set"
+                            : "Delete set"
+                        }
+                      >
+                        <Trash2 size={18} />
+                      </button>
+                    </div>
                   </div>
 
-                  <div>
-                    <SliderInput
-                      label={"Rest After Set (seconds)"}
-                      value={set.restAfter}
-                      min={0}
-                      max={600}
-                      unitSuffix="s"
-                      onChange={(value) =>
-                        handleSetChange(set.id, "restAfter", value)
-                      }
-                      onChangeAll={(v) => handleSetFieldAll("restAfter", v)}
-                    />
-                  </div>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <label
+                        htmlFor={`gripType-${set.id}`}
+                        className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1"
+                      >
+                        Grip Type
+                      </label>
+                      <Input
+                        type={"text"}
+                        id={`gripType-${set.id}`}
+                        value={set.gripType}
+                        maxLength={39}
+                        onChange={(e) =>
+                          handleSetChange(set.id, "gripType", e.target.value)
+                        }
+                      />
+                    </div>
+                    <div>
+                      <SliderInput
+                        label={"Hang Time (seconds)"}
+                        value={set.hangTime}
+                        min={1}
+                        max={60}
+                        unitSuffix="s"
+                        onChange={(value) =>
+                          handleSetChange(set.id, "hangTime", value)
+                        }
+                        onChangeAll={(v) => handleSetFieldAll("hangTime", v)}
+                        title={title}
+                      />
+                    </div>
+                    <div>
+                      <SliderInput
+                        label={"Rest (seconds)"}
+                        value={set.rest}
+                        min={1}
+                        max={300}
+                        unitSuffix="s"
+                        onChange={(value) =>
+                          handleSetChange(set.id, "rest", value)
+                        }
+                        onChangeAll={(v) => handleSetFieldAll("rest", v)}
+                        title={title}
+                      />
+                    </div>
+                    <div>
+                      <SliderInput
+                        label={"Repetitions"}
+                        value={set.repetitions}
+                        min={1}
+                        max={20}
+                        unitSuffix="x"
+                        onChange={(value) =>
+                          handleSetChange(set.id, "repetitions", value)
+                        }
+                        onChangeAll={(v) => handleSetFieldAll("repetitions", v)}
+                        title={title}
+                      />
+                    </div>
 
-                  <div>
-                    <SliderInput
-                      label={"Additional Weight (kg)"}
-                      value={set.additionalWeight}
-                      min={0}
-                      max={100}
-                      unitSuffix="kg"
-                      onChange={(value) =>
-                        handleSetChange(set.id, "additionalWeight", value)
-                      }
-                      onChangeAll={(v) =>
-                        handleSetFieldAll("additionalWeight", v)
-                      }
-                    />
+                    <div>
+                      <SliderInput
+                        label={"Rest After Set (seconds)"}
+                        value={set.restAfter}
+                        min={0}
+                        max={600}
+                        unitSuffix="s"
+                        onChange={(value) =>
+                          handleSetChange(set.id, "restAfter", value)
+                        }
+                        onChangeAll={(v) => handleSetFieldAll("restAfter", v)}
+                        title={title}
+                      />
+                    </div>
+
+                    <div>
+                      <SliderInput
+                        label={"Additional Weight (kg)"}
+                        value={set.additionalWeight}
+                        min={0}
+                        max={100}
+                        unitSuffix="kg"
+                        onChange={(value) =>
+                          handleSetChange(set.id, "additionalWeight", value)
+                        }
+                        onChangeAll={(v) =>
+                          handleSetFieldAll("additionalWeight", v)
+                        }
+                        title={title}
+                      />
+                    </div>
                   </div>
-                </div>
-              </CardContent>
-            </Card>
-          ))}
+                </CardContent>
+              </Card>
+            );
+          })}
           <div className={"flex justify-center"}>
             <Button onClick={handleAddSet} variant={"secondary"}>
               <Plus size={16} />

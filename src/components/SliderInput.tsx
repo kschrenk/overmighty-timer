@@ -21,6 +21,7 @@ interface TimeSecondsInputProps {
   max?: number;
   step?: number;
   label?: string;
+  setName?: string;
   disabled?: boolean;
   className?: string;
   debounceMs?: number;
@@ -34,6 +35,7 @@ interface TimeSecondsInputProps {
   mobileImmediateCommit?: boolean;
   /** When provided, and the user toggles "Edit all", updates will call this instead of onChange to apply value to all sets. */
   onChangeAll?: (value: number) => void;
+  title?: string;
 }
 
 export const SliderInput: React.FC<TimeSecondsInputProps> = ({
@@ -52,6 +54,7 @@ export const SliderInput: React.FC<TimeSecondsInputProps> = ({
   mobileFineStep = 1,
   mobileImmediateCommit = true,
   onChangeAll,
+  title,
 }) => {
   const id = useId();
 
@@ -154,12 +157,12 @@ export const SliderInput: React.FC<TimeSecondsInputProps> = ({
   return (
     <div className={className}>
       {(labelNode || label) && (
-        <label
+        <Label
           htmlFor={id}
           className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1"
         >
           {labelNode || label}
-        </label>
+        </Label>
       )}
       <Drawer open={open} onOpenChange={setOpen}>
         <Input
@@ -179,15 +182,22 @@ export const SliderInput: React.FC<TimeSecondsInputProps> = ({
         {open && (
           <DrawerContent>
             <DrawerHeader>
-              <DrawerTitle>{label || "Select Time"}</DrawerTitle>
+              <DrawerTitle
+                className={title ? "flex flex-col gap-1" : undefined}
+              >
+                {title ? (
+                  <span className={"dark:text-gray-500"}>{title}</span>
+                ) : null}
+                <span>{label || "Select Time"}</span>
+              </DrawerTitle>
             </DrawerHeader>
-            <div className="px-6 pb-8 flex flex-col gap-6">
+            <div className="px-6 pb-10 flex flex-col gap-8">
               <div className="flex items-center justify-between text-sm text-muted-foreground">
                 <span>
                   {min}
                   {unitSuffix}
                 </span>
-                <span className="font-semibold text-base text-foreground">
+                <span className="font-semibold text-lg text-foreground">
                   {internalValue}
                   {unitSuffix}
                 </span>
@@ -206,14 +216,18 @@ export const SliderInput: React.FC<TimeSecondsInputProps> = ({
                 />
               </div>
               {showMobileFineControls && (
-                <div className="flex gap-2 justify-between">
-                  <Label>
-                    <Checkbox
-                      checked={editAll}
-                      onClick={() => setEditAll((prevState) => !prevState)}
-                    />
-                    <span>{`Edit all`}</span>
-                  </Label>
+                <div
+                  className={`flex gap-2 ${onChangeAll ? "justify-between" : "justify-end"} items-center`}
+                >
+                  {onChangeAll ? (
+                    <Label>
+                      <Checkbox
+                        checked={editAll}
+                        onClick={() => setEditAll((prevState) => !prevState)}
+                      />
+                      <span>{`Edit all`}</span>
+                    </Label>
+                  ) : null}
                   <div className={"flex gap-3"}>
                     <Button
                       aria-label="Decrement"
