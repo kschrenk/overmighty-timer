@@ -1,6 +1,7 @@
 import "../src/index.css";
 import type { Preview } from "@storybook/react-vite";
 import "react-circular-progressbar/dist/styles.css";
+import { useEffect } from "react";
 
 const preview: Preview = {
   parameters: {
@@ -24,6 +25,17 @@ const preview: Preview = {
     // 👇 Set the initial background color
     backgrounds: { value: "dark" },
   },
+  decorators: [
+    (Story) => {
+      useEffect(() => {
+        document.body.classList.add("dark");
+        return () => {
+          document.body.classList.remove("dark");
+        };
+      }, []);
+      return <Story />;
+    },
+  ],
 };
 
 export default preview;
