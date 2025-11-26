@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useAuth } from "@/context/AuthContext";
 import { FirebaseError } from "firebase/app";
+import { toast } from "sonner";
 import { zodResolver } from "@hookform/resolvers/zod";
 import type { AuthFormValues } from "./AuthForm.display";
 import AuthFormDisplay, { authFormSchema } from "./AuthForm.display";
@@ -42,7 +43,7 @@ export default function AuthForm() {
     }
     try {
       await sendPasswordResetEmail(email);
-      alert("Password reset email sent. Please check your inbox.");
+      toast.success("Password reset email sent. Please check your inbox.");
     } catch (error) {
       if (error instanceof FirebaseError) {
         console.error(`Firebase error code: ${error.code}`);

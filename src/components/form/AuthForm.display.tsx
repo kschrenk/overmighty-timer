@@ -97,17 +97,17 @@ export default function AuthFormDisplay({
             <Button className={"w-full"} type="submit">
               Submit
             </Button>
+            <Button
+              type="button"
+              variant="link"
+              className="p-0 mx-auto block"
+              onClick={onForgotPassword}
+            >
+              Forgot Password?
+            </Button>
           </form>
         </Form>
       </Card>
-      <Button
-        type="button"
-        variant="link"
-        className="p-0 mt-4 mx-auto block"
-        onClick={onForgotPassword}
-      >
-        Forgot Password?
-      </Button>
       <div className={"pt-12"}>
         <Button
           className={"w-full"}
