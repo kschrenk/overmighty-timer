@@ -8,6 +8,7 @@ import {
   signOut,
   updateProfile,
   fetchSignInMethodsForEmail,
+  sendPasswordResetEmail as fbSendPasswordResetEmail,
 } from "firebase/auth";
 import { auth } from "@/firebase";
 import { isUidTestUser, TEST_USER } from "@/lib/testUser";
@@ -24,6 +25,7 @@ interface AuthContextType {
   signup: (signupArgs: SignupArguments) => Promise<void>;
   logout: () => Promise<void>;
   loginAsTestUser: () => void;
+  sendPasswordResetEmail: (email: string) => Promise<void>;
 }
 
 export const AuthContext = createContext<AuthContextType>({
@@ -32,6 +34,7 @@ export const AuthContext = createContext<AuthContextType>({
   signup: async () => {},
   logout: async () => {},
   loginAsTestUser: () => {},
+  sendPasswordResetEmail: async () => {},
 });
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
@@ -85,9 +88,20 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     } as User);
   };
 
+  const sendPasswordResetEmail = async (email: string) => {
+    await fbSendPasswordResetEmail(auth, email);
+  };
+
   return (
     <AuthContext.Provider
-      value={{ currentUser, login, signup, logout, loginAsTestUser }}
+      value={{
+        currentUser,
+        login,
+        signup,
+        logout,
+        loginAsTestUser,
+        sendPasswordResetEmail,
+      }}
     >
       {children}
     </AuthContext.Provider>
