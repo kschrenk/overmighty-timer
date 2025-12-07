@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from "react";
+import type { FC } from "react";
+import { useEffect, useState } from "react";
 import { useTraining } from "@/context/TrainingContext/TrainingContext";
 import { TimerState } from "@/types/training";
 import { toast } from "sonner";
@@ -22,7 +23,7 @@ import {
 } from "@/components/ui/snapScrollContainer";
 import { HeaderTitle } from "@/components/HeaderTitle";
 
-const TrainingTimer: React.FC = () => {
+const TrainingTimer: FC = () => {
   const { state, dispatch } = useTraining();
   const [progress, setProgress] = useState(0); // start at 0 for new phase
   const { requestWakeLock, releaseWakeLock } = useWakeLock();
@@ -197,25 +198,30 @@ const TrainingTimer: React.FC = () => {
   return (
     <SnapScrollContainer>
       <SnapItem>
-        <div className="flex flex-col max-w-md mx-auto py-4 px-6 h-full justify-between">
-          <div className="flex-1 flex items-center justify-center max-h-[64dvh]">
+        <div
+          data-testid={"training-timer-container"}
+          className="flex flex-col landscape:flex-row max-w-md landscape:max-w-full mx-auto py-4 px-6 h-full justify-between"
+        >
+          <div className="flex-1 flex items-center justify-center max-h-[64dvh] landscape:max-h-full">
             <TrainingTimerProgressIndicatorContainer progress={progress} />
           </div>
-          <div className="shrink-0">
-            <TrainingTimerInfoContainer />
+          <div>
+            <div className="shrink-0">
+              <TrainingTimerInfoContainer />
+            </div>
+            <TrainingTimerControls
+              isIdle={isIdle}
+              isFinished={isFinished}
+              isRunning={isRunning}
+              isPaused={isPaused}
+              handleStart={handleStart}
+              handlePause={handlePause}
+              handleResume={handleResume}
+              handleStop={handleStop}
+              handleRestart={handleRestartWithConfirm}
+              isPending={isPending}
+            />
           </div>
-          <TrainingTimerControls
-            isIdle={isIdle}
-            isFinished={isFinished}
-            isRunning={isRunning}
-            isPaused={isPaused}
-            handleStart={handleStart}
-            handlePause={handlePause}
-            handleResume={handleResume}
-            handleStop={handleStop}
-            handleRestart={handleRestartWithConfirm}
-            isPending={isPending}
-          />
         </div>
       </SnapItem>
       <SnapItem>

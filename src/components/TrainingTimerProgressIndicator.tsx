@@ -1,7 +1,7 @@
 import { formatTime, getStateDescription } from "@/utils/timerUtils";
 import { buildStyles, CircularProgressbar } from "react-circular-progressbar";
 import { TimerState } from "@/types/training";
-import type { FC, ReactNode } from "react";
+import type { FC } from "react";
 import { useTraining } from "@/context/TrainingContext/TrainingContext";
 
 const getProgressColor = (timerState: TimerState) => {
@@ -59,7 +59,7 @@ export const ProgressIndicatorCircle: FC<ProgressIndicatorProps> = ({
   textColor = "var(--color-foreground)",
 }) => {
   return (
-    <Wrapper>
+    <div className="flex flex-col items-center relative gap-4 basis-full shrink landscape:max-w-[360px]">
       <CircularProgressbar
         className={"h-full timer-progress"}
         value={progress}
@@ -74,17 +74,11 @@ export const ProgressIndicatorCircle: FC<ProgressIndicatorProps> = ({
         })}
         counterClockwise
       />
-      <div className={"inline-flex"}>
+      <div className={"inline-flex landscape:hidden"}>
         <span className="text-xl uppercase font-extrabold tracking-wider text-gray-600 dark:text-gray-400">
           {description}
         </span>
       </div>
-    </Wrapper>
+    </div>
   );
 };
-
-const Wrapper = ({ children }: { children: ReactNode }) => (
-  <div className="flex flex-col items-center relative gap-4 basis-full shrink">
-    {children}
-  </div>
-);
