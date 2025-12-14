@@ -10,6 +10,18 @@
 * **ui:** add TimeSecondsInput component with drawer and slider functionality ([#33](https://github.com/kschrenk/overmighty-timer/issues/33)) ([cb903c8](https://github.com/kschrenk/overmighty-timer/commit/cb903c873c91aa23cdfc2437c5f954f9100889f6))
 * update readme ([#30](https://github.com/kschrenk/overmighty-timer/issues/30)) ([9772ce8](https://github.com/kschrenk/overmighty-timer/commit/9772ce85fe5473d5413cf034633cdb9e91ebb072))
 
+# [1.12.0](https://github.com/kschrenk/overmighty-timer/compare/v1.11.1...v1.12.0) (2025-11-26)
+
+
+### Features
+
+* add title to slider input ([#35](https://github.com/kschrenk/overmighty-timer/issues/35)) ([ca0829b](https://github.com/kschrenk/overmighty-timer/commit/ca0829b4669d15512607c7c9d97dbf07c092e179))
+* improve slider input ([#34](https://github.com/kschrenk/overmighty-timer/issues/34)) ([4addbf5](https://github.com/kschrenk/overmighty-timer/commit/4addbf5690a997b8d3bbe1808b8f87cd99990d0c))
+* **register:** improved register and help ([#32](https://github.com/kschrenk/overmighty-timer/issues/32)) ([4c47f1e](https://github.com/kschrenk/overmighty-timer/commit/4c47f1e94aa1758544f7a8d5df5a4d74e586ef5a))
+* reset password ([#36](https://github.com/kschrenk/overmighty-timer/issues/36)) ([f3a8d55](https://github.com/kschrenk/overmighty-timer/commit/f3a8d552364a5566f2be43ded98fc01085ea32b7))
+* **ui:** add TimeSecondsInput component with drawer and slider functionality ([#33](https://github.com/kschrenk/overmighty-timer/issues/33)) ([cb903c8](https://github.com/kschrenk/overmighty-timer/commit/cb903c873c91aa23cdfc2437c5f954f9100889f6))
+* update readme ([#30](https://github.com/kschrenk/overmighty-timer/issues/30)) ([9772ce8](https://github.com/kschrenk/overmighty-timer/commit/9772ce85fe5473d5413cf034633cdb9e91ebb072))
+
 ### Features
 
 * update readme ([#30](https://github.com/kschrenk/overmighty-timer/issues/30)) ([9772ce8](https://github.com/kschrenk/overmighty-timer/commit/9772ce85fe5473d5413cf034633cdb9e91ebb072))
