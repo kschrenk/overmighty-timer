@@ -41,7 +41,7 @@ export const TrainingTimerInfoWrapper: FC<TrainingTimerInfoWrapperProps> = ({
 }) => {
   return (
     <Card
-      className={`z-50 py-4 text-center justify-center w-full ${getBackgroundColor(timerState)}`}
+      className={`z-50 py-4 text-center justify-center ${getBackgroundColor(timerState)}`}
     >
       <CardContent className={"px-4 relative"}>
         <div className={"grid gap-2"}>{children}</div>

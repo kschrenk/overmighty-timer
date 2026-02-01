@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from "react";
+import type { FC } from "react";
+import { useEffect, useState } from "react";
 import { useTraining } from "@/context/TrainingContext/TrainingContext";
 import { TimerState } from "@/types/training";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { useWakeLock } from "@/hooks/useWakeLock";
-import { TrainingTimerProgressIndicatorContainer } from "@/components/TrainingTimerProgressIndicator";
 import { TrainingTimerControls } from "@/components/TrainingTimerControls";
 import { TrainingTimerInfoContainer } from "@/components/TrainingTimerInfo/TrainingTimerInfoContainer";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -21,8 +21,13 @@ import {
   SnapScrollContainer,
 } from "@/components/ui/snapScrollContainer";
 import { HeaderTitle } from "@/components/HeaderTitle";
+import { formatTime, getStateDescription } from "@/utils/timerUtils";
+import { TrainingTimerProgressIndicatorDescription } from "@/components/TrainingTimerProgressIndicatorDescription";
+import { getProgressColor } from "@/helper/getProgressColor";
+import { buildStyles, CircularProgressbar } from "react-circular-progressbar";
+import { useIsLandscape } from "@/hooks/useIsLandscape";
 
-const TrainingTimer: React.FC = () => {
+const TrainingTimer: FC = () => {
   const { state, dispatch } = useTraining();
   const [progress, setProgress] = useState(0); // start at 0 for new phase
   const { requestWakeLock, releaseWakeLock } = useWakeLock();
@@ -30,6 +35,7 @@ const TrainingTimer: React.FC = () => {
     useState<TimerState | null>(null);
   const [phaseDuration, setPhaseDuration] = useState<number | null>(null);
   const [isPending, setIsPending] = useState(false);
+  const isLandscape = useIsLandscape();
 
   const { timerData } = state;
   const { currentSession, currentSetIndex, timerState } = timerData;
@@ -47,10 +53,8 @@ const TrainingTimer: React.FC = () => {
   useEffect(() => {
     const currentTimerState = timerState;
 
-    // Detect phase change
     if (previousTimerState !== currentTimerState) {
-      // Determine new duration for this phase
-      let newDuration = 0;
+      let newDuration: number;
       switch (currentTimerState) {
         case TimerState.HANGING:
           newDuration = currentSet?.hangTime ?? 0;
@@ -85,7 +89,7 @@ const TrainingTimer: React.FC = () => {
   useEffect(() => {
     if (!phaseDuration || phaseDuration <= 0) return;
 
-    const L = timerData.secondsLeft; // 1..phaseDuration while active (no 0)
+    const L = timerData.secondsLeft; // 1.phaseDuration while active (no 0)
     // For duration 1 we can only show 0 -> immediate transition next tick; keep 0 (no rewind)
     if (phaseDuration === 1) {
       setProgress(0);
@@ -197,25 +201,65 @@ const TrainingTimer: React.FC = () => {
   return (
     <SnapScrollContainer>
       <SnapItem>
-        <div className="flex flex-col max-w-md mx-auto py-4 px-6 h-full justify-between">
-          <div className="flex-1 flex items-center justify-center max-h-[64dvh]">
-            <TrainingTimerProgressIndicatorContainer progress={progress} />
+        <div
+          data-testid={"training-timer-container"}
+          className={"grid landscape:grid-cols-2 p-4 h-full"}
+        >
+          <div
+            data-testid={"training-timer-col-1"}
+            className={"flex flex-col items-center overflow-hidden"}
+          >
+            <CircularProgressbar
+              className={"timer-progress grow"}
+              value={progress}
+              text={formatTime(timerData.secondsLeft)}
+              styles={buildStyles({
+                trailColor: "var(--color-gray-600)",
+                pathColor: getProgressColor(timerState),
+                textColor: "var(--color-foreground)",
+                textSize: "1.4rem",
+                pathTransition:
+                  progress === 0 ? "none" : "stroke-dashoffset 0.5s ease 0s",
+              })}
+              counterClockwise
+            />
+            {isLandscape ? null : (
+              <TrainingTimerProgressIndicatorDescription
+                description={getStateDescription(timerState)}
+              />
+            )}
           </div>
-          <div className="shrink-0">
-            <TrainingTimerInfoContainer />
+          <div
+            data-testid={"training-timer-col-2"}
+            className={
+              "flex flex-col overflow-hidden justify-end landscape:justify-between landscape-max740-col-2"
+            }
+          >
+            {isLandscape ? (
+              <div className={"flex justify-center items-center h-16"}>
+                <TrainingTimerProgressIndicatorDescription
+                  description={getStateDescription(timerState)}
+                />
+              </div>
+            ) : null}
+            <div
+              className={`flex flex-col justify-center${!isLandscape ? " grow" : ""}`}
+            >
+              <TrainingTimerInfoContainer />
+            </div>
+            <TrainingTimerControls
+              isIdle={isIdle}
+              isFinished={isFinished}
+              isRunning={isRunning}
+              isPaused={isPaused}
+              handleStart={handleStart}
+              handlePause={handlePause}
+              handleResume={handleResume}
+              handleStop={handleStop}
+              handleRestart={handleRestartWithConfirm}
+              isPending={isPending}
+            />
           </div>
-          <TrainingTimerControls
-            isIdle={isIdle}
-            isFinished={isFinished}
-            isRunning={isRunning}
-            isPaused={isPaused}
-            handleStart={handleStart}
-            handlePause={handlePause}
-            handleResume={handleResume}
-            handleStop={handleStop}
-            handleRestart={handleRestartWithConfirm}
-            isPending={isPending}
-          />
         </div>
       </SnapItem>
       <SnapItem>

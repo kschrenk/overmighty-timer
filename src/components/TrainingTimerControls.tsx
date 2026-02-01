@@ -70,7 +70,7 @@ export const TrainingTimerControls: FC<Props> = ({
   }
 
   return (
-    <div className="flex justify-center items-center space-x-6 pt-4 mt-4 border-t border-gray-200 dark:border-gray-700">
+    <div className="flex justify-center landscape:justify-start items-center space-x-6 pt-4 mt-4 border-t border-gray-200 dark:border-gray-700 overflow-scroll">
       {isIdle && !isFinished && (
         <Button
           onClick={handleStart}
