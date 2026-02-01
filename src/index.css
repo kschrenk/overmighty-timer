@@ -120,14 +120,17 @@
   [data-sonner-toast][data-styled=true] [data-title] {
     @apply text-base;
   }
-  /*[data-sonner-toast][data-styled=true] [data-close-button] {*/
-  /*  @apply !bg-[var(--normal-text)]*/
-  /*}*/
 }
 
 @layer components {
   .timer-progress .CircularProgressbar-text {
     @apply font-extrabold tracking-wide;
     font-variant-numeric: tabular-nums;
+  }
+
+  @media (orientation: landscape) and (max-width: 740px) {
+    .landscape-max740-col-2 {
+      @apply pl-4
+    }
   }
 }
