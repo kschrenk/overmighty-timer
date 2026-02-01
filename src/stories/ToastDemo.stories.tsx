@@ -6,9 +6,10 @@ import { Toaster } from "@/components/ui/sonner";
 const ToastDemo = () => {
   const handleStopTimer = () => {
     toast.warning("Stop the timer?", {
+      description: "This will reset the current session progress.",
       position: "top-center",
       closeButton: true,
-      // duration: Infinity,
+      duration: Infinity,
       action: {
         label: "OK",
         onClick: () => {

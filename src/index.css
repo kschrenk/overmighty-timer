@@ -114,11 +114,9 @@
   * {
     @apply border-border outline-ring/50;
   }
+
   body {
     @apply bg-background text-foreground;
-  }
-  [data-sonner-toast][data-styled=true] [data-title] {
-    @apply text-base;
   }
 }
 
@@ -128,9 +126,25 @@
     font-variant-numeric: tabular-nums;
   }
 
+  [data-sonner-toast] [aria-label="Close toast"] svg {
+    @apply stroke-white;
+  }
+
+  [data-sonner-toast] button[aria-label="Close toast"]:hover svg {
+    @apply stroke-gray-900;
+  }
+
+  [data-sonner-toast][data-styled="true"] [data-title] {
+    @apply text-base;
+  }
+
+  [data-sonner-toast][data-styled="true"] [data-description] {
+    @apply !text-gray-200;
+  }
+
   @media (orientation: landscape) and (max-width: 740px) {
     .landscape-max740-col-2 {
-      @apply pl-4
+      @apply pl-4;
     }
   }
 }
