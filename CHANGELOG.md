@@ -1,3 +1,10 @@
+# [1.13.0](https://github.com/kschrenk/overmighty-timer/compare/v1.12.0...v1.13.0) (2026-02-01)
+
+
+### Features
+
+* **ui:** enhance landscape support ([#38](https://github.com/kschrenk/overmighty-timer/issues/38)) ([4840b87](https://github.com/kschrenk/overmighty-timer/commit/4840b87f0902445f38034499651b8e2e605b50ee))
+
 # [1.12.0](https://github.com/kschrenk/overmighty-timer/compare/v1.11.1...v1.12.0) (2025-11-26)
 
 
