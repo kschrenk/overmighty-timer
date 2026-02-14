@@ -8,8 +8,8 @@ import {
   RotateCcw,
 } from "lucide-react";
 import type { FC } from "react";
-import { useTraining } from "@/context/TrainingContext/TrainingContext";
 import { toast } from "sonner";
+import { useTraining } from "@/context/TrainingContext/useTraining";
 
 type Props = {
   isIdle: boolean;

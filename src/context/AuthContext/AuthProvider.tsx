@@ -1,5 +1,5 @@
 import type { ReactNode } from "react";
-import { createContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import type { User } from "firebase/auth";
 import {
   onAuthStateChanged,
@@ -12,30 +12,8 @@ import {
 } from "firebase/auth";
 import { auth } from "@/firebase";
 import { isUidTestUser, TEST_USER } from "@/lib/testUser";
-
-interface SignupArguments {
-  email: string;
-  password: string;
-  name: string;
-}
-
-interface AuthContextType {
-  currentUser: User | null;
-  login: (email: string, password: string) => Promise<void>;
-  signup: (signupArgs: SignupArguments) => Promise<void>;
-  logout: () => Promise<void>;
-  loginAsTestUser: () => void;
-  sendPasswordResetEmail: (email: string) => Promise<void>;
-}
-
-export const AuthContext = createContext<AuthContextType>({
-  currentUser: null,
-  login: async () => {},
-  signup: async () => {},
-  logout: async () => {},
-  loginAsTestUser: () => {},
-  sendPasswordResetEmail: async () => {},
-});
+import type { SignupArguments } from "@/context/AuthContext/useAuth";
+import { AuthContext } from "@/context/AuthContext/useAuth";
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [currentUser, setCurrentUser] = useState<User | null>(null);

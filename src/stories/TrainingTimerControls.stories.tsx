@@ -1,11 +1,10 @@
-// filepath: /Users/schrenkk/Projects/overmighty-timer/src/stories/TrainingTimerControls.stories.tsx
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import React, { useCallback, useState } from "react";
 import { TrainingTimerControls } from "@/components/TrainingTimerControls";
-import { TrainingContext } from "@/context/TrainingContext/TrainingContext";
 import type { TrainingContextState } from "@/context/TrainingContext/TrainingContext";
 import { initialTimerData } from "@/data/defaultData";
 import { Toaster } from "@/components/ui/sonner";
+import { TrainingContext } from "@/context/TrainingContext/useTraining";
 
 // A lightweight mock of the TrainingContext state. Only dispatch is used by the component
 // (in the finished state to go back home + reset timer and trigger a toast).
@@ -110,7 +109,7 @@ const StatefulDemo: React.FC = () => {
         handleResume={handleResume}
         handleStop={handleStop}
         handleRestart={handleRestart}
-        isRestartPending={isRestartPending}
+        isPending={isRestartPending}
       />
       <p className="text-xs text-muted-foreground leading-relaxed">
         Use the buttons above to move through states. Click "Simulate Finish" to
@@ -134,6 +133,7 @@ export const FinishedState: Story = {
       setIsRestartPending(true);
       setTimeout(() => setIsRestartPending(false), 600);
     };
+
     return (
       <TrainingTimerControls
         isIdle={false}
@@ -145,7 +145,7 @@ export const FinishedState: Story = {
         handleResume={() => {}}
         handleStop={() => {}}
         handleRestart={handleRestart}
-        isRestartPending={isRestartPending}
+        isPending={isRestartPending}
       />
     );
   },

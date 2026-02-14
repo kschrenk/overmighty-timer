@@ -1,6 +1,5 @@
 import React from "react";
 import { Activity, Clock, Edit, Play, PlusCircle, Trash } from "lucide-react";
-import { useTraining } from "@/context/TrainingContext/TrainingContext";
 import { formatTime } from "@/utils/timerUtils";
 import { useAuth } from "@/context/AuthContext";
 import {
@@ -16,6 +15,7 @@ import { toast } from "sonner";
 import { removeTrainingSession } from "@/lib/firestoreUtils";
 import { isUidTestUser } from "@/lib/testUser";
 import { Footer } from "@/components/Footer";
+import { useTraining } from "@/context/TrainingContext/useTraining";
 
 const TrainingList: React.FC = () => {
   const { state, dispatch, loading, getSessionById } = useTraining();

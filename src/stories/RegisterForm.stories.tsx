@@ -1,12 +1,11 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { RegisterForm } from "@/components/form/RegisterForm";
-import { AuthContext } from "@/context/AuthContext/AuthContext";
-import { TrainingContext } from "@/context/TrainingContext/TrainingContext";
 import type { TrainingContextState } from "@/context/TrainingContext/TrainingContext";
 import { initialTimerData } from "@/data/defaultData";
 import { Toaster } from "@/components/ui/sonner";
+import { AuthContext } from "@/context/AuthContext/useAuth";
+import { TrainingContext } from "@/context/TrainingContext/useTraining";
 
-// Minimal mock of the training state used by the RegisterForm (only dispatch is called there)
 const mockTrainingState: TrainingContextState = {
   trainingSessions: [],
   timerData: initialTimerData,
@@ -30,6 +29,7 @@ const meta: Meta<typeof RegisterForm> = {
             },
             logout: async () => {},
             loginAsTestUser: () => {},
+            sendPasswordResetEmail: async () => {},
           }}
         >
           <TrainingContext.Provider

@@ -1,4 +1,3 @@
-import { useTraining } from "@/context/TrainingContext/TrainingContext";
 import {
   getCurrentSetFromSession,
   getNextSet,
@@ -6,6 +5,7 @@ import {
 import { TimerState } from "@/types/training";
 import { TrainingTimerInfo } from "@/components/TrainingTimerInfo/TrainingTimerInfo";
 import { TrainingTimerInfoWrapper } from "@/components/TrainingTimerInfo/TrainingTimerInfoWrapper";
+import { useTraining } from "@/context/TrainingContext/useTraining";
 
 export const TrainingTimerInfoContainer = () => {
   const { state } = useTraining();

@@ -1,10 +1,10 @@
 import type { FC } from "react";
 import { useEffect } from "react";
 import useSearchParams from "@/hooks/useSearchParams";
-import { useTraining } from "@/context/TrainingContext/TrainingContext";
 import { isValidInvite } from "@/lib/firestoreUtils";
 import { toast } from "sonner";
 import { helpAction } from "@/toast/action";
+import { useTraining } from "@/context/TrainingContext/useTraining";
 
 /**
  * `RegisterUserListener` component.

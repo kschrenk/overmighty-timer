@@ -18,11 +18,11 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useAuth } from "@/context/AuthContext";
 import { toast } from "sonner";
 import useSearchParams from "@/hooks/useSearchParams";
-import { useTraining } from "@/context/TrainingContext/TrainingContext";
 import { removeSearchParameters } from "@/lib/removeSearchParameters";
 import { Loader2 } from "lucide-react";
 import { helpAction } from "@/toast/action";
 import { Checkbox } from "@/components/ui/checkbox";
+import { useTraining } from "@/context/TrainingContext/useTraining";
 
 const formSchema = z
   .object({
