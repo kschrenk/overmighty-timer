@@ -1,10 +1,10 @@
 import type { FC } from "react";
 import { CircleUser } from "lucide-react";
-import { useTraining } from "@/context/TrainingContext/TrainingContext";
 import { removeSearchParameters } from "@/lib/removeSearchParameters";
 import { useAuth } from "@/context/AuthContext";
 import { isUidTestUser } from "@/lib/testUser";
 import { HeaderTitle } from "@/components/HeaderTitle";
+import { useTraining } from "@/context/TrainingContext/useTraining";
 
 const Header: FC = () => {
   const { state, dispatch } = useTraining();

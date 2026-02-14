@@ -1,0 +1,12 @@
+import type { FieldPath, FieldValues } from "react-hook-form";
+
+export type FormItemContextValue = {
+  id: string;
+};
+
+export type FormFieldContextValue<
+  TFieldValues extends FieldValues = FieldValues,
+  TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>,
+> = {
+  name: TName;
+};

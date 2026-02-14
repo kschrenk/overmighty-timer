@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { Bath, Copy, FolderPen, Plus, Save, Trash2 } from "lucide-react";
-import { useTraining } from "@/context/TrainingContext/TrainingContext";
 import type { Set } from "@/types/training";
 import { TimerViewEnum } from "@/types/training";
 import { generateId } from "@/utils/timerUtils";
@@ -15,6 +14,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { LabelWrapper } from "@/components/LabelWrapper";
 import { SectionDividerWithTitle } from "@/components/ui/sectionDividerWithTitle";
 import SliderInput from "@/components/SliderInput";
+import { useTraining } from "@/context/TrainingContext/useTraining";
 
 const TrainingEditor: React.FC = () => {
   const { currentUser } = useAuth();

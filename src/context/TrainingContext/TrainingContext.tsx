@@ -1,27 +1,21 @@
-import React, {
-  createContext,
-  useContext,
-  useEffect,
-  useReducer,
-  useState,
-} from "react";
+import React, { useEffect, useReducer, useState } from "react";
 import type { TimerData, TrainingSession } from "@/types/training";
 import { TimerState } from "@/types/training";
 import {
+  isInPriorityWindow,
   playLastThreeSecondsSound,
   playStateChangeSound,
-  isInPriorityWindow,
 } from "@/utils/soundUtils";
-import type { TrainingAction } from "@/lib/trainingReducer";
 import { trainingReducer } from "@/lib/trainingReducer";
 import { useAuth } from "@/context/AuthContext";
 
 import { fetchTrainingSessions } from "@/lib/firestoreUtils";
 import { isUidTestUser } from "@/lib/testUser";
+import { DEFAULT_TRAINING_SESSIONS } from "@/data/defaultData";
 import {
-  DEFAULT_TRAINING_SESSIONS,
-  initialTimerData,
-} from "@/data/defaultData";
+  initialState,
+  TrainingContext,
+} from "@/context/TrainingContext/useTraining";
 
 export interface TrainingContextState {
   trainingSessions: TrainingSession[];
@@ -29,24 +23,6 @@ export interface TrainingContextState {
   activeView: "list" | "timer" | "editor" | "account" | "register";
   editingSession: TrainingSession | null;
 }
-
-const initialState: TrainingContextState = {
-  trainingSessions: [],
-  timerData: initialTimerData,
-  activeView: "list",
-  editingSession: null,
-};
-
-export const TrainingContext = createContext<{
-  state: TrainingContextState;
-  dispatch: React.Dispatch<TrainingAction>;
-  loading: boolean;
-  getSessionById?: (sessionId: string) => TrainingSession | undefined;
-}>({
-  state: initialState,
-  dispatch: () => null,
-  loading: false,
-});
 
 export const TrainingProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
@@ -158,14 +134,4 @@ export const TrainingProvider: React.FC<{ children: React.ReactNode }> = ({
       {children}
     </TrainingContext.Provider>
   );
-};
-
-export const useTraining = () => {
-  const context = useContext(TrainingContext);
-
-  if (!context) {
-    throw new Error(`useTraining() must be used within the context`);
-  }
-
-  return context;
 };

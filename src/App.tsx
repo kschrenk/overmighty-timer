@@ -1,7 +1,4 @@
-import {
-  TrainingProvider,
-  useTraining,
-} from "./context/TrainingContext/TrainingContext";
+import { TrainingProvider } from "./context/TrainingContext/TrainingContext";
 import Header from "./components/Header";
 import TrainingList from "./components/TrainingList";
 import TrainingTimer from "./components/TrainingTimer";
@@ -14,8 +11,9 @@ import { Account } from "@/components/Account";
 import { RegisterForm } from "@/components/form/RegisterForm";
 import { RegisterUserListener } from "@/components/RegisterUserListener";
 import { isUidTestUser } from "@/lib/testUser";
-import { Button } from "./components/ui/button";
+import { Button } from "./components/ui/button/button";
 import type { FC } from "react";
+import { useTraining } from "@/context/TrainingContext/useTraining";
 
 const AppContent: FC = () => {
   const { state } = useTraining();
@@ -46,7 +44,7 @@ const AppContent: FC = () => {
           <>
             {state.activeView === "list" && <TrainingList />}
             {state.activeView === "timer" && <TrainingTimer />}
-            {state.activeView === "editor" &&  <TrainingEditor />}
+            {state.activeView === "editor" && <TrainingEditor />}
             {state.activeView === "account" && <Account />}
           </>
         ) : state.activeView === "register" ? (

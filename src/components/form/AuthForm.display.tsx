@@ -1,5 +1,5 @@
 import type { UseFormReturn } from "react-hook-form";
-import { z } from "zod";
+import type { z } from "zod";
 import {
   Form,
   FormControl,
@@ -12,11 +12,7 @@ import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Eye, EyeOff } from "lucide-react";
-
-export const authFormSchema = z.object({
-  email: z.string().email({ message: "Invalid email address" }),
-  password: z.string(),
-});
+import type { authFormSchema } from "@/components/form/AuthForm.constants";
 
 export type AuthFormValues = z.infer<typeof authFormSchema>;
 

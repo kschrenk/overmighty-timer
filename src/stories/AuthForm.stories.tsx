@@ -1,11 +1,10 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import type { AuthFormValues } from "@/components/form/AuthForm.display";
-import AuthFormDisplay, {
-  authFormSchema,
-} from "@/components/form/AuthForm.display";
+import AuthFormDisplay from "@/components/form/AuthForm.display";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
+import { authFormSchema } from "@/components/form/AuthForm.constants";
 
 const meta: Meta<typeof AuthFormDisplay> = {
   component: AuthFormDisplay,

@@ -1,6 +1,5 @@
 import type { FC } from "react";
 import { useEffect, useState } from "react";
-import { useTraining } from "@/context/TrainingContext/TrainingContext";
 import { TimerState } from "@/types/training";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
@@ -26,6 +25,7 @@ import { TrainingTimerProgressIndicatorDescription } from "@/components/Training
 import { getProgressColor } from "@/helper/getProgressColor";
 import { buildStyles, CircularProgressbar } from "react-circular-progressbar";
 import { useIsLandscape } from "@/hooks/useIsLandscape";
+import { useTraining } from "@/context/TrainingContext/useTraining";
 
 const TrainingTimer: FC = () => {
   const { state, dispatch } = useTraining();

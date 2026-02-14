@@ -5,7 +5,8 @@ import { FirebaseError } from "firebase/app";
 import { toast } from "sonner";
 import { zodResolver } from "@hookform/resolvers/zod";
 import type { AuthFormValues } from "./AuthForm.display";
-import AuthFormDisplay, { authFormSchema } from "./AuthForm.display";
+import AuthFormDisplay from "./AuthForm.display";
+import { authFormSchema } from "@/components/form/AuthForm.constants";
 
 export default function AuthForm() {
   const { login, loginAsTestUser, sendPasswordResetEmail } = useAuth();

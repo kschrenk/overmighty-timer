@@ -4,7 +4,6 @@ import { useAuth } from "@/context/AuthContext";
 import { Button } from "@/components/ui/button";
 import { FirebaseError } from "firebase/app";
 import { toast } from "sonner";
-import { useTraining } from "@/context/TrainingContext/TrainingContext";
 import {
   Form,
   FormControl,
@@ -28,6 +27,7 @@ import {
   CardTitle,
   CardDescription,
 } from "@/components/ui/card";
+import { useTraining } from "@/context/TrainingContext/useTraining";
 
 const formSchema = z.object({
   email: z.string().email({ message: "Invalid email address" }),

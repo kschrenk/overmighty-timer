@@ -1,4 +1,7 @@
-import { SnapItem, SnapScrollContainer } from "@/components/ui/snapScrollContainer";
+import {
+  SnapItem,
+  SnapScrollContainer,
+} from "@/components/ui/snapScrollContainer";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 
 const meta = {
