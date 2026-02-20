@@ -14,7 +14,8 @@ jobs:
           fetch-depth: 0 # important for tags
       - uses: actions/setup-node@v4
         with:
-          node-version: "24.10.0"
+          node-version: "24.11.0"
+          cache: 'npm'
       - run: npm ci
       - run: npx semantic-release
         env:
