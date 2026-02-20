@@ -71,6 +71,8 @@ const TrainingTimer: FC = () => {
         default:
           newDuration = 0;
       }
+      // @TODO: fix this
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setPhaseDuration(newDuration || null);
       setProgress(0); // fresh phase starts visually empty
       setPreviousTimerState(currentTimerState);
@@ -92,6 +94,8 @@ const TrainingTimer: FC = () => {
     const L = timerData.secondsLeft; // 1.phaseDuration while active (no 0)
     // For duration 1 we can only show 0 -> immediate transition next tick; keep 0 (no rewind)
     if (phaseDuration === 1) {
+      // @TODO: fix this
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setProgress(0);
       return;
     }

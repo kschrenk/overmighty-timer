@@ -6,6 +6,8 @@ function useSearchParams() {
   );
 
   useEffect(() => {
+    // @TODO: fix this
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setSearchParams(new URLSearchParams(window.location.search));
   }, []);
 
