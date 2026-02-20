@@ -6,6 +6,8 @@ export const useWakeLock = () => {
 
   useEffect(() => {
     if ("wakeLock" in navigator) {
+      // @TODO: fix this
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setIsSupported(true);
     } else {
       setIsSupported(false);

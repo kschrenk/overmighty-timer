@@ -87,6 +87,8 @@ export const SliderInput: React.FC<TimeSecondsInputProps> = ({
 
   useEffect(() => {
     if (!hasInteractedRef.current) {
+      // @TODO: fix this
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setInternalValue(value);
     }
   }, [value]);

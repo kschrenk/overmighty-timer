@@ -13,7 +13,6 @@ export function useIsLandscape(): boolean {
     const handler = (e: MediaQueryListEvent) => setIsLandscape(e.matches);
 
     mql.addEventListener("change", handler);
-    setIsLandscape(mql.matches);
 
     return () => {
       mql.removeEventListener("change", handler);
